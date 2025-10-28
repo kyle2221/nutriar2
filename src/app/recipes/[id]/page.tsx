@@ -56,16 +56,16 @@ export default function SingleRecipePage({ params }: { params: { id: string } })
               />
             </div>
             <div className="md:w-2/3">
-              <CardTitle className="text-3xl font-bold font-headline mb-2">
+              <CardTitle className="text-4xl font-bold font-headline mb-4">
                 {sampleRecipe.recipeName}
               </CardTitle>
-              <CardDescription>{sampleRecipe.reasoning}</CardDescription>
-              <Separator className="my-4" />
-              <h3 className="font-semibold text-lg mb-2">Ingredients</h3>
-              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+              <CardDescription className="text-lg">{sampleRecipe.reasoning}</CardDescription>
+              <Separator className="my-6" />
+              <h3 className="font-semibold text-xl font-headline mb-4">Ingredients</h3>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-base">
                 {sampleRecipe.ingredients.map((ing, i) => (
-                  <li key={i} className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-primary" />
+                  <li key={i} className="flex items-center gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-primary" />
                     <span>{ing}</span>
                   </li>
                 ))}
@@ -74,15 +74,15 @@ export default function SingleRecipePage({ params }: { params: { id: string } })
           </div>
         </CardHeader>
         <CardContent>
-          <Separator className="mb-4" />
-          <h3 className="font-semibold text-lg mb-4">Instructions</h3>
-          <div className="space-y-4">
+          <Separator className="my-6" />
+          <h3 className="font-semibold text-xl font-headline mb-6">Instructions</h3>
+          <div className="space-y-6">
             {sampleRecipe.instructions.map((step, i) => (
               <div key={i} className="flex items-start gap-4">
-                <div className="flex-shrink-0 h-6 w-6 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm">
+                <div className="flex-shrink-0 h-8 w-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-base">
                   {i + 1}
                 </div>
-                <p className="flex-1 -mt-0.5">{step}</p>
+                <p className="flex-1 pt-0.5 text-base">{step}</p>
               </div>
             ))}
           </div>
