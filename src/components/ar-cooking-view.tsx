@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Card,
   CardContent,
@@ -17,14 +17,16 @@ import {
 } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Loader2, Wand2, Sparkles, Bot, User, ChevronsRight } from 'lucide-react';
+import { Loader2, Wand2, Sparkles, Bot, User, ChevronsRight, CameraOff } from 'lucide-react';
 import { highlightIngredients } from '@/ai/flows/highlight-ingredients';
 import { provideAdaptiveGuidance } from '@/ai/flows/provide-adaptive-guidance';
 import { provideRealTimeAssistance } from '@/ai/flows/provide-real-time-assistance';
 import { ScrollArea } from './ui/scroll-area';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { Avatar, AvatarFallback } from './ui/avatar';
 import { cn } from '@/lib/utils';
 import type { Recipe } from '@/lib/types';
+import { Alert, AlertDescription, AlertTitle } from './ui/alert';
+import { useToast } from '@/hooks/use-toast';
 
 type ArCookingViewProps = {
   recipe: Recipe;
@@ -62,7 +64,7 @@ const IngredientHighlighter = ({ recipe }: ArCookingViewProps) => {
       <CardHeader>
         <CardTitle>AR Ingredient Highlighting</CardTitle>
         <CardDescription>
-          Use AI to identify and highlight ingredients in your kitchen for the current step.
+          Use AI to identify and highlight ingredients in your kitchen for the current step. (Simulated)
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -179,18 +181,18 @@ const AiAssistant = ({ recipe }: ArCookingViewProps) => {
     };
 
     return (
-        <Card className="flex flex-col h-[600px]">
-            <CardHeader>
+        <Card className="flex flex-col h-[600px] bg-transparent border-0 shadow-none">
+            <CardHeader className='z-10'>
                 <CardTitle>AI Cooking Assistant</CardTitle>
                 <CardDescription>Ask questions and get tips as you cook.</CardDescription>
             </CardHeader>
-            <CardContent className="flex-grow flex flex-col">
+            <CardContent className="flex-grow flex flex-col z-10">
                 <ScrollArea className="flex-grow pr-4 -mr-4 mb-4">
                     <div className="space-y-6">
                         {conversation.map((msg, i) => (
                            <div key={i} className={cn("flex items-start gap-3", msg.role === 'user' ? "justify-end" : "")}>
                                 {msg.role === 'assistant' && <Avatar className="w-8 h-8"><AvatarFallback><Bot size={20}/></AvatarFallback></Avatar>}
-                                <div className={cn("p-3 rounded-lg max-w-[80%]", msg.role === 'user' ? "bg-primary text-primary-foreground" : "bg-secondary")}>
+                                <div className={cn("p-3 rounded-lg max-w-[80%]", msg.role === 'user' ? "bg-primary text-primary-foreground" : "bg-card/80 backdrop-blur-sm")}>
                                     <p className="text-sm">{msg.content}</p>
                                 </div>
                                 {msg.role === 'user' && <Avatar className="w-8 h-8"><AvatarFallback><User size={20}/></AvatarFallback></Avatar>}
@@ -217,6 +219,38 @@ const AiAssistant = ({ recipe }: ArCookingViewProps) => {
 
 export function ArCookingView({ recipe }: ArCookingViewProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const { toast } = useToast();
+  const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      const getCameraPermission = async () => {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          setHasCameraPermission(true);
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+          }
+        } catch (error) {
+          console.error('Error accessing camera:', error);
+          setHasCameraPermission(false);
+          toast({
+            variant: 'destructive',
+            title: 'Camera Access Denied',
+            description: 'Please enable camera permissions in your browser settings to use this feature.',
+          });
+        }
+      };
+      getCameraPermission();
+    } else {
+      if (videoRef.current?.srcObject) {
+        const stream = videoRef.current.srcObject as MediaStream;
+        stream.getTracks().forEach(track => track.stop());
+        videoRef.current.srcObject = null;
+      }
+    }
+  }, [isOpen, toast]);
 
   if (!isOpen) {
     return (
@@ -233,9 +267,21 @@ export function ArCookingView({ recipe }: ArCookingViewProps) {
   }
 
   return (
-    <Card className="bg-card/80 backdrop-blur-sm">
+    <Card className="bg-card/80 backdrop-blur-sm relative overflow-hidden">
+        <video ref={videoRef} className="absolute top-0 left-0 w-full h-full object-cover -z-10" autoPlay muted playsInline />
+        {!hasCameraPermission && (
+            <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center -z-0">
+                <CameraOff className="h-16 w-16 text-destructive mb-4" />
+                 <Alert variant="destructive" className="max-w-md">
+                    <AlertTitle>Camera Access Required</AlertTitle>
+                    <AlertDescription>
+                        Please enable camera permissions in your browser settings to use this feature. The AR view will use a black background until permission is granted.
+                    </AlertDescription>
+                </Alert>
+            </div>
+        )}
       <CardHeader>
-        <div className="flex justify-between items-start">
+        <div className="flex justify-between items-start z-10">
             <div>
                 <CardTitle className="text-2xl font-bold font-headline">
                 AR Cooking Session
@@ -248,7 +294,7 @@ export function ArCookingView({ recipe }: ArCookingViewProps) {
         </div>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="guidance">
+        <Tabs defaultValue="assistant">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="guidance">Adaptive Guidance</TabsTrigger>
             <TabsTrigger value="ingredients">Ingredient Highlighter</TabsTrigger>
