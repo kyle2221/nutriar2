@@ -1,3 +1,6 @@
+'use client';
+
+import React from 'react';
 import {
   Card,
   CardContent,
@@ -5,7 +8,6 @@ import {
   CardTitle,
   CardDescription,
 } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
 import {
   Table,
   TableBody,
@@ -17,19 +19,33 @@ import {
 import { Button } from '@/components/ui/button';
 import {
   Flame,
-  Beef,
-  Wheat,
-  Droplets,
   PlusCircle,
   MoreVertical,
+  Zap,
+  Wheat,
+  Drumstick,
 } from 'lucide-react';
+import {
+  PolarGrid,
+  PolarRadiusAxis,
+  RadialBar,
+  RadialBarChart,
+} from 'recharts';
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from '@/components/ui/chart';
 import type { Meal } from '@/lib/types';
 
 const nutritionData = {
-  calories: { value: 1250, goal: 2000, icon: Flame },
-  protein: { value: 80, goal: 120, icon: Beef },
-  carbs: { value: 150, goal: 250, icon: Wheat },
-  fat: { value: 40, goal: 60, icon: Droplets },
+  calories: { value: 1250, goal: 2000 },
+  macros: {
+    protein: { value: 80, goal: 120 },
+    carbs: { value: 150, goal: 250 },
+    fat: { value: 40, goal: 60 },
+  },
 };
 
 const meals: Meal[] = [
@@ -59,76 +75,145 @@ const meals: Meal[] = [
   },
 ];
 
-const NutritionCard = ({
+const chartData = [
+  {
+    name: 'Calories',
+    value: nutritionData.calories.value,
+    goal: nutritionData.calories.goal,
+    fill: 'hsl(var(--primary))',
+  },
+];
+
+const chartConfig = {
+  value: {
+    label: 'Calories',
+  },
+} satisfies ChartConfig;
+
+const CalorieGoalChart = () => (
+  <Card className="flex flex-col items-center justify-center p-4">
+    <CardHeader className="items-center p-2">
+      <CardTitle className="font-headline">Calories</CardTitle>
+    </CardHeader>
+    <CardContent className="flex-1 pb-0">
+      <ChartContainer
+        config={chartConfig}
+        className="mx-auto aspect-square w-full max-w-[250px]"
+      >
+        <RadialBarChart
+          data={chartData}
+          startAngle={90}
+          endAngle={-270}
+          innerRadius="70%"
+          outerRadius="100%"
+          barSize={20}
+          cy="50%"
+        >
+          <PolarGrid
+            gridType="circle"
+            radialLines={false}
+            stroke="none"
+            className="first:fill-muted last:fill-background"
+          />
+          <PolarRadiusAxis tick={false} tickLine={false} axisLine={false} />
+          <RadialBar
+            dataKey="value"
+            background
+            cornerRadius={10}
+            className="fill-primary"
+          />
+          <ChartTooltip
+            cursor={false}
+            content={<ChartTooltipContent hideLabel />}
+          />
+        </RadialBarChart>
+      </ChartContainer>
+    </CardContent>
+    <div className="flex flex-col items-center gap-1 text-center -mt-12 mb-4">
+      <span className="text-4xl font-bold tracking-tighter">
+        {nutritionData.calories.value}
+      </span>
+      <span className="text-sm text-muted-foreground">
+        / {nutritionData.calories.goal} kcal
+      </span>
+    </div>
+  </Card>
+);
+
+const MacroCard = ({
   title,
   value,
   goal,
   unit,
   icon: Icon,
+  colorClass,
 }: {
   title: string;
   value: number;
   goal: number;
   unit: string;
   icon: React.ElementType;
+  colorClass: string;
 }) => (
-  <Card>
-    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-      <CardTitle className="text-sm font-medium">{title}</CardTitle>
-      <Icon className="h-4 w-4 text-muted-foreground" />
-    </CardHeader>
-    <CardContent>
-      <div className="text-2xl font-bold">
+  <Card className="flex items-center p-4">
+    <div className={`p-3 rounded-full mr-4 ${colorClass}`}>
+      <Icon className="h-6 w-6 text-white" />
+    </div>
+    <div>
+      <p className="text-sm text-muted-foreground">{title}</p>
+      <p className="text-lg font-bold">
         {value}
-        <span className="text-xs text-muted-foreground">/{goal}{unit}</span>
-      </div>
-      <Progress value={(value / goal) * 100} className="mt-2 h-2" />
+        <span className="text-sm text-muted-foreground">
+          /{goal}
+          {unit}
+        </span>
+      </p>
+    </div>
+  </Card>
+);
+
+const MacrosOverview = () => (
+  <Card>
+    <CardHeader>
+      <CardTitle>Macros</CardTitle>
+      <CardDescription>Your macronutrient breakdown for today.</CardDescription>
+    </CardHeader>
+    <CardContent className="grid gap-4">
+      <MacroCard
+        title="Protein"
+        value={nutritionData.macros.protein.value}
+        goal={nutritionData.macros.protein.goal}
+        unit="g"
+        icon={Drumstick}
+        colorClass="bg-sky-500"
+      />
+      <MacroCard
+        title="Carbohydrates"
+        value={nutritionData.macros.carbs.value}
+        goal={nutritionData.macros.carbs.goal}
+        unit="g"
+        icon={Wheat}
+        colorClass="bg-orange-500"
+      />
+      <MacroCard
+        title="Fat"
+        value={nutritionData.macros.fat.value}
+        goal={nutritionData.macros.fat.goal}
+        unit="g"
+        icon={Zap}
+        colorClass="bg-purple-500"
+      />
     </CardContent>
   </Card>
 );
 
-const NutritionOverview = () => (
-  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-    <NutritionCard
-      title="Calories"
-      value={nutritionData.calories.value}
-      goal={nutritionData.calories.goal}
-      unit="kcal"
-      icon={nutritionData.calories.icon}
-    />
-    <NutritionCard
-      title="Protein"
-      value={nutritionData.protein.value}
-      goal={nutritionData.protein.goal}
-      unit="g"
-      icon={nutritionData.protein.icon}
-    />
-    <NutritionCard
-      title="Carbohydrates"
-      value={nutritionData.carbs.value}
-      goal={nutritionData.carbs.goal}
-      unit="g"
-      icon={nutritionData.carbs.icon}
-    />
-    <NutritionCard
-      title="Fat"
-      value={nutritionData.fat.value}
-      goal={nutritionData.fat.goal}
-      unit="g"
-      icon={nutritionData.fat.icon}
-    />
-  </div>
-);
-
 const MealLog = () => (
-  <Card>
+  <Card className="col-span-1 md:col-span-3">
     <CardHeader>
       <div className="flex items-center justify-between">
         <div>
           <CardTitle>Today's Meal Log</CardTitle>
-          <CardDescription>
-            A summary of your meals for today.
-          </CardDescription>
+          <CardDescription>A summary of your meals for today.</CardDescription>
         </div>
         <Button>
           <PlusCircle className="mr-2 h-4 w-4" /> Log Meal
@@ -176,10 +261,13 @@ export default function DashboardPage() {
           Dashboard
         </h1>
       </div>
-      <div className="space-y-4">
-        <NutritionOverview />
-        <MealLog />
+      <div className="grid gap-4 md:grid-cols-3">
+        <div className="md:col-span-2 grid gap-4">
+          <CalorieGoalChart />
+        </div>
+        <MacrosOverview />
       </div>
+      <MealLog />
     </div>
   );
 }
