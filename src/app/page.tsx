@@ -38,7 +38,7 @@ export default function DashboardPage() {
           Dashboard
         </h1>
       </div>
-      <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3">
+      <div className="grid gap-8 md:grid-cols-1 lg:grid-cols-3">
         <div className="lg:col-span-1">
           <CalorieGoalChart nutritionData={nutritionData} />
         </div>

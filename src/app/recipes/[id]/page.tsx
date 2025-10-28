@@ -54,13 +54,13 @@ export default function SingleRecipePage({ params }: { params: { id: string } })
                     alt={recipe.recipeName}
                     width={600}
                     height={400}
-                    className="rounded-t-lg md:rounded-l-lg md:rounded-t-none object-cover w-full h-full shadow-lg"
+                    className="rounded-t-lg md:rounded-l-lg md:rounded-t-none object-cover w-full h-full"
                     data-ai-hint={placeholderImage.imageHint}
                 />
             </div>
 
-            <div className="md:col-span-3 p-6">
-                <CardHeader className="p-0">
+            <div className="md:col-span-3 flex flex-col">
+                <CardHeader className="p-6">
                     <div className="flex justify-between items-start mb-4">
                         <CardTitle className="text-4xl font-bold font-headline">
                         {recipe.recipeName}
@@ -72,10 +72,10 @@ export default function SingleRecipePage({ params }: { params: { id: string } })
                     </div>
                     <CardDescription className="text-lg">{recipe.reasoning}</CardDescription>
                 </CardHeader>
-                <Separator className="my-6" />
-                <CardContent className="p-0">
+                <Separator />
+                <CardContent className="p-6 flex-grow">
                     <h3 className="font-semibold text-xl font-headline mb-4">Ingredients</h3>
-                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-base">
+                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-base">
                         {recipe.ingredients.map((ing, i) => (
                         <li key={i} className="flex items-center gap-3">
                             <CheckCircle2 className="h-5 w-5 text-primary" />
@@ -99,7 +99,7 @@ export default function SingleRecipePage({ params }: { params: { id: string } })
                 <div className="flex-shrink-0 h-10 w-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-lg">
                   {i + 1}
                 </div>
-                <p className="flex-1 pt-1 text-base leading-relaxed">{step}</p>
+                <p className="flex-1 pt-1.5 text-base leading-relaxed">{step}</p>
               </div>
             ))}
           </div>

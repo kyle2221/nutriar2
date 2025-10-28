@@ -54,7 +54,7 @@ const MacroCard = ({
 );
 
 const MacrosOverview: React.FC<MacrosOverviewProps> = ({ nutritionData }) => (
-    <div className="h-full flex flex-col gap-6">
+    <div className="h-full flex flex-col gap-8">
         <Card>
             <CardHeader>
                 <CardTitle className="font-headline">Macronutrients</CardTitle>

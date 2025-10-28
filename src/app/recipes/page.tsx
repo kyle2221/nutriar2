@@ -27,7 +27,7 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
   const placeholder = PlaceHolderImages.find(p => p.imageHint === recipe.imageHint) || PlaceHolderImages[0];
 
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col overflow-hidden transition-all hover:shadow-lg">
       <CardHeader className="p-0">
         <div className="relative w-full h-48">
           <Link href={`/recipes/${recipe.id}`} passHref>
@@ -35,14 +35,14 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
               src={placeholder.imageUrl}
               alt={recipe.recipeName}
               fill
-              className="object-cover rounded-t-lg cursor-pointer"
+              className="object-cover cursor-pointer"
               data-ai-hint={placeholder.imageHint}
             />
           </Link>
           <Button 
             variant="ghost" 
             size="icon" 
-            className="absolute top-2 right-2 bg-white/80 hover:bg-white rounded-full h-9 w-9 backdrop-blur-sm"
+            className="absolute top-3 right-3 bg-white/80 hover:bg-white rounded-full h-9 w-9 backdrop-blur-sm"
             onClick={() => toggleFavorite(recipe.id)}
           >
             <Heart className={recipe.isFavorited ? "text-red-500 fill-current" : "text-gray-500"} size={18} />
