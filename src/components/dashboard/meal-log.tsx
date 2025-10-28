@@ -17,9 +17,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { PlusCircle, MoreVertical, Camera } from 'lucide-react';
+import { MoreVertical, Camera } from 'lucide-react';
 import type { Meal } from '@/lib/types';
-import LogMealDialog from './log-meal-dialog';
 import LogMealCameraDialog from './log-meal-camera-dialog';
 
 type MealLogProps = {
@@ -37,15 +36,10 @@ const MealLog: React.FC<MealLogProps> = ({ meals }) => (
         </div>
         <div className="flex gap-2">
             <LogMealCameraDialog>
-                <Button variant="outline">
-                    <Camera className="mr-2 h-4 w-4" /> Log with AI
+                <Button>
+                    <Camera className="mr-2 h-4 w-4" /> Log Meal
                 </Button>
             </LogMealCameraDialog>
-            <LogMealDialog>
-                <Button>
-                    <PlusCircle className="mr-2 h-4 w-4" /> Log Manually
-                </Button>
-            </LogMealDialog>
         </div>
       </div>
     </CardHeader>
