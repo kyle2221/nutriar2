@@ -1,3 +1,10 @@
+export type Review = {
+    author: string;
+    avatarUrl: string;
+    rating: number;
+    comment: string;
+};
+
 export type Recipe = {
   id: string;
   recipeName: string;
@@ -12,6 +19,7 @@ export type Recipe = {
   carbs?: number;
   fat?: number;
   suitabilityScore?: number;
+  reviews?: Review[];
 };
 
 export type Meal = {

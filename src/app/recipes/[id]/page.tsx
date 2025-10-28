@@ -11,11 +11,15 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { CheckCircle2, AlertTriangle, Heart, Zap, Drumstick, Wheat, BrainCircuit } from 'lucide-react';
+import { CheckCircle2, AlertTriangle, Heart, Zap, Drumstick, Wheat, BrainCircuit, Star } from 'lucide-react';
 import { useRecipeStore } from '@/store/recipe-store';
 import { Button } from '@/components/ui/button';
 import { useMemo } from 'react';
 import { Badge } from '@/components/ui/badge';
+import type { Recipe, Review } from '@/lib/types';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { cn } from '@/lib/utils';
+
 
 function NutritionStat({ icon: Icon, label, value, unit }: { icon: React.ElementType, label: string, value?: number, unit: string }) {
     if (value === undefined) return null;
@@ -28,7 +32,55 @@ function NutritionStat({ icon: Icon, label, value, unit }: { icon: React.Element
         </div>
       </div>
     );
-  }
+}
+
+function StarRating({ rating, className }: { rating: number; className?: string }) {
+    return (
+      <div className={cn("flex items-center gap-0.5", className)}>
+        {[...Array(5)].map((_, i) => (
+          <Star
+            key={i}
+            className={cn(
+              "h-5 w-5",
+              i < Math.floor(rating) ? "text-amber-400 fill-amber-400" : "text-muted-foreground/50"
+            )}
+          />
+        ))}
+      </div>
+    );
+}
+
+function RecipeReviews({ reviews }: { reviews?: Review[] }) {
+    if (!reviews || reviews.length === 0) {
+      return null;
+    }
+  
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="font-headline text-xl">Reviews</CardTitle>
+          <CardDescription>See what others are saying about this recipe.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {reviews.map((review, index) => (
+            <div key={index} className="flex items-start gap-4">
+              <Avatar>
+                <AvatarImage src={review.avatarUrl} alt={review.author} />
+                <AvatarFallback>{review.author.charAt(0)}</AvatarFallback>
+              </Avatar>
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <p className="font-semibold">{review.author}</p>
+                  <StarRating rating={review.rating} />
+                </div>
+                <p className="text-muted-foreground mt-1 text-sm">{review.comment}</p>
+              </div>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+    );
+}
 
 export default function SingleRecipePage({ params }: { params: { id: string } }) {
   const { getRecipeById, toggleFavorite } = useRecipeStore((state) => ({
@@ -139,6 +191,7 @@ export default function SingleRecipePage({ params }: { params: { id: string } })
         </Card>
       </div>
 
+      <RecipeReviews reviews={recipe.reviews} />
 
       <ArCookingView recipe={recipe} />
     </div>
