@@ -23,7 +23,7 @@ import Link from 'next/link';
 import { Button } from './ui/button';
 
 const menuItems = [
-  { href: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/recipes', label: 'Recipes', icon: BookOpen },
   { href: '/meal-plan', label: 'Meal Plan', icon: CalendarCheck },
   { href: '/pantry-pal', label: 'Pantry Pal', icon: Scan },
@@ -36,16 +36,18 @@ export function AppSidebar() {
   return (
     <>
       <SidebarHeader>
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="h-9 w-9 text-sidebar-primary hover:bg-sidebar-accent">
-            <Leaf className="h-6 w-6" />
-          </Button>
-          <div className="flex flex-col">
-            <span className="font-semibold tracking-tight font-headline text-sidebar-foreground">
-              NutriAR
-            </span>
-          </div>
-        </div>
+        <Link href="/" className='w-full'>
+            <div className="flex items-center gap-2">
+            <Button variant="ghost" size="icon" className="h-9 w-9 text-sidebar-primary hover:bg-sidebar-accent">
+                <Leaf className="h-6 w-6" />
+            </Button>
+            <div className="flex flex-col">
+                <span className="font-semibold tracking-tight font-headline text-sidebar-foreground">
+                NutriAR
+                </span>
+            </div>
+            </div>
+        </Link>
       </SidebarHeader>
       <SidebarContent className="p-2">
         <SidebarMenu>

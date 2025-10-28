@@ -21,4 +21,5 @@ export type Meal = {
   protein: number;
   carbs: number;
   fat: number;
+  imageHint?: string;
 };

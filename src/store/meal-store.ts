@@ -11,6 +11,7 @@ const initialMeals: Meal[] = [
     protein: 10,
     carbs: 60,
     fat: 8,
+    imageHint: 'oatmeal bowl',
   },
   {
     id: 2,
@@ -19,6 +20,7 @@ const initialMeals: Meal[] = [
     protein: 40,
     carbs: 30,
     fat: 25,
+    imageHint: 'salad',
   },
   {
     id: 3,
@@ -27,6 +29,7 @@ const initialMeals: Meal[] = [
     protein: 5,
     carbs: 30,
     fat: 15,
+    imageHint: 'fruit',
   },
 ];
 
