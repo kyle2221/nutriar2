@@ -4,13 +4,13 @@
  *
  * - generateRecipeFromIngredients - A function that takes ingredients and creates a recipe.
  * - GenerateRecipeFromIngredientsInput - The input type, a list of ingredients.
- * - GenerateRecipeFromIngredientsOutput - The output type, a full recipe structure.
+ * - GenerateRecipeFrom-ingredients-output - The output type, a full recipe structure.
  */
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-export const PantryRecipeSchema = z.object({
+const PantryRecipeSchema = z.object({
   recipeName: z.string().describe('The name of the recipe.'),
   ingredients: z.array(z.string()).describe('The ingredients for the recipe.'),
   instructions: z.array(z.string()).describe('The cooking instructions.'),
