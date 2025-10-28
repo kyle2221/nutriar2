@@ -3,7 +3,6 @@
 import { Button } from '@/components/ui/button';
 import { Leaf, Zap, BrainCircuit, ChefHat } from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image';
 
 const FeatureCard = ({ icon: Icon, title, description }: { icon: React.ElementType, title: string, description: string }) => (
     <div className="flex flex-col items-center p-6 text-center">
@@ -17,7 +16,7 @@ const FeatureCard = ({ icon: Icon, title, description }: { icon: React.ElementTy
 
 export default function GetStartedPage() {
     return (
-        <div className="flex-1 w-full">
+        <div className="flex-1 w-full bg-background">
             <section className="relative w-full py-24 text-center md:py-32 lg:py-40">
                 <div 
                     className="absolute inset-0 w-full h-full bg-cover bg-center" 
