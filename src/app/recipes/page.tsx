@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { Loader2 } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { Loader2, Wand2, Heart } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -14,29 +14,47 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { suggestRecipesBasedOnGoals } from '@/ai/flows/suggest-recipes-based-on-goals';
-import type { RecipeSuggestion } from '@/lib/types';
+import { suggestRecipesBasedOnGoals, SuggestRecipesOutput } from '@/ai/flows/suggest-recipes-based-on-goals';
+import type { Recipe } from '@/lib/types';
+import { useRecipeStore } from '@/store/recipe-store';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
-function RecipeCard({ recipe, index }: { recipe: RecipeSuggestion; index: number }) {
-  const placeholder = PlaceHolderImages[index % PlaceHolderImages.length];
+const categories = ['All', 'Breakfast', 'Lunch', 'Dinner', 'Snack', 'Dessert', 'Favorites'] as const;
+type Category = (typeof categories)[number];
+
+function RecipeCard({ recipe }: { recipe: Recipe }) {
+  const { toggleFavorite } = useRecipeStore();
+  const placeholder = PlaceHolderImages.find(p => p.imageHint === recipe.imageHint) || PlaceHolderImages[0];
 
   return (
     <Card className="flex flex-col">
       <CardHeader className="pb-4">
         <div className="relative w-full h-40">
-          <Image
-            src={placeholder.imageUrl}
-            alt={recipe.recipeName}
-            fill
-            className="object-cover rounded-md"
-            data-ai-hint={placeholder.imageHint}
-          />
+          <Link href={`/recipes/${recipe.id}`} passHref>
+            <Image
+              src={placeholder.imageUrl}
+              alt={recipe.recipeName}
+              fill
+              className="object-cover rounded-md cursor-pointer"
+              data-ai-hint={placeholder.imageHint}
+            />
+          </Link>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="absolute top-2 right-2 bg-white/70 hover:bg-white rounded-full h-8 w-8"
+            onClick={() => toggleFavorite(recipe.id)}
+          >
+            <Heart className={recipe.isFavorited ? "text-red-500 fill-current" : "text-gray-500"} size={16} />
+            <span className="sr-only">Favorite</span>
+          </Button>
         </div>
         <CardTitle className="pt-4 font-headline">{recipe.recipeName}</CardTitle>
-        <CardDescription className="text-xs">
-          Suitability Score: {recipe.suitabilityScore}/100
-        </CardDescription>
+        {recipe.suitabilityScore && (
+          <CardDescription className="text-xs">
+            Suitability Score: {recipe.suitabilityScore}/100
+          </CardDescription>
+        )}
       </CardHeader>
       <CardContent className="flex-grow">
         <p className="text-sm text-muted-foreground line-clamp-3">
@@ -44,7 +62,7 @@ function RecipeCard({ recipe, index }: { recipe: RecipeSuggestion; index: number
         </p>
       </CardContent>
       <CardFooter>
-        <Link href={`/recipes/${index + 1}`} passHref className="w-full">
+        <Link href={`/recipes/${recipe.id}`} passHref className="w-full">
           <Button className="w-full">View Recipe</Button>
         </Link>
       </CardFooter>
@@ -53,15 +71,22 @@ function RecipeCard({ recipe, index }: { recipe: RecipeSuggestion; index: number
 }
 
 export default function RecipesPage() {
-  const [suggestions, setSuggestions] = useState<RecipeSuggestion[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [activeFilter, setActiveFilter] = useState<Category>('All');
+  
+  const { recipes, addAiRecipes } = useRecipeStore();
+
+  const filteredRecipes = useMemo(() => {
+    if (activeFilter === 'All') return recipes;
+    if (activeFilter === 'Favorites') return recipes.filter(r => r.isFavorited);
+    return recipes.filter(recipe => recipe.category === activeFilter);
+  }, [recipes, activeFilter]);
 
   const handleSuggestRecipes = async () => {
     setLoading(true);
     setError(null);
     try {
-      // Mock data for the AI flow
       const input = {
         loggedMeals: JSON.stringify({
           breakfast: 'Oatmeal with berries',
@@ -81,8 +106,8 @@ export default function RecipesPage() {
           dietary_restrictions: ['gluten-free'],
         }),
       };
-      const result = await suggestRecipesBasedOnGoals(input);
-      setSuggestions(result.suggestedRecipes);
+      const result: SuggestRecipesOutput = await suggestRecipesBasedOnGoals(input);
+      addAiRecipes(result.suggestedRecipes);
     } catch (e) {
       setError('Failed to generate recipe suggestions. Please try again.');
       console.error(e);
@@ -92,13 +117,13 @@ export default function RecipesPage() {
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-      <div className="flex items-center justify-between space-y-2">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight font-headline">
-            Recipe Suggestions
+            Recipes
           </h1>
           <p className="text-muted-foreground">
-            Let AI find the perfect recipes for your goals.
+            Discover recipes tailored to your goals or browse our collection.
           </p>
         </div>
         <Button onClick={handleSuggestRecipes} disabled={loading}>
@@ -108,9 +133,24 @@ export default function RecipesPage() {
               Generating...
             </>
           ) : (
-            'Suggest New Recipes'
+            <>
+              <Wand2 className="mr-2 h-4 w-4" />
+              Generate with AI
+            </>
           )}
         </Button>
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        {categories.map((category) => (
+          <Button
+            key={category}
+            variant={activeFilter === category ? 'default' : 'outline'}
+            onClick={() => setActiveFilter(category)}
+          >
+            {category}
+          </Button>
+        ))}
       </div>
 
       {error && (
@@ -120,23 +160,20 @@ export default function RecipesPage() {
         </Alert>
       )}
 
-      {suggestions.length > 0 && (
+      {filteredRecipes.length > 0 ? (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {suggestions.map((recipe, index) => (
-            <RecipeCard key={index} recipe={recipe} index={index} />
+          {filteredRecipes.map((recipe) => (
+            <RecipeCard key={recipe.id} recipe={recipe} />
           ))}
         </div>
-      )}
-
-      {!loading && suggestions.length === 0 && !error && (
-         <div className="flex items-center justify-center h-96">
+      ) : (
+        <div className="flex items-center justify-center h-96">
             <div className="text-center">
-                <p className="text-lg font-semibold">Ready for some inspiration?</p>
-                <p className="text-muted-foreground">Click "Suggest New Recipes" to get started.</p>
+                <p className="text-lg font-semibold">No recipes found</p>
+                <p className="text-muted-foreground">Try a different filter or generate new recipes with AI.</p>
             </div>
          </div>
       )}
-
     </div>
   );
 }

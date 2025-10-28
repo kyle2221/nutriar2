@@ -20,7 +20,7 @@ export type SuggestRecipesInput = z.infer<typeof SuggestRecipesInputSchema>;
 const RecipeSuggestionSchema = z.object({
   recipeName: z.string().describe('The name of the suggested recipe.'),
   ingredients: z.array(z.string()).describe('The ingredients required for the recipe.'),
-  instructions: z.string().describe('The cooking instructions for the recipe.'),
+  instructions: z.array(z.string()).describe('The step-by-step cooking instructions for the recipe.'),
   nutritionalInformation: z.string().describe('Nutritional information for the recipe, as a JSON string.'),
   suitabilityScore: z.number().describe('A score indicating how well the recipe fits the user\u0027s goals.'),
   reasoning: z.string().describe('Explanation for why the recipe was chosen based on the user goals')
@@ -47,7 +47,7 @@ const prompt = ai.definePrompt({
 
   Based on this information, suggest recipes that meet the user\u0027s goals and preferences. For each recipe, explain why you chose it.
   Ensure the recipes are diverse and appealing to the user.
-  Recipes should contain recipeName, ingredients, instructions, nutritionalInformation and suitabilityScore.
+  Recipes should contain recipeName, ingredients, step-by-step instructions, nutritionalInformation and suitabilityScore.
   Return the recipes as a JSON array.
   `,
 });

@@ -10,14 +10,12 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-export const RecipeSchema = z.object({
+export const PantryRecipeSchema = z.object({
   recipeName: z.string().describe('The name of the recipe.'),
   ingredients: z.array(z.string()).describe('The ingredients for the recipe.'),
   instructions: z.array(z.string()).describe('The cooking instructions.'),
   reasoning: z.string().describe('Why this recipe is a good choice based on the ingredients provided.'),
 });
-
-export type Recipe = z.infer<typeof RecipeSchema>;
 
 const GenerateRecipeFromIngredientsInputSchema = z.object({
   ingredients: z
@@ -26,7 +24,7 @@ const GenerateRecipeFromIngredientsInputSchema = z.object({
 });
 
 const GenerateRecipeFromIngredientsOutputSchema = z.object({
-  recipes: z.array(RecipeSchema).describe('An array of suggested recipes.'),
+  recipes: z.array(PantryRecipeSchema).describe('An array of suggested recipes.'),
 });
 
 export type GenerateRecipeFromIngredientsInput = z.infer<
@@ -57,7 +55,7 @@ const generateRecipeFlow = ai.defineFlow(
   {
     name: 'generateRecipeFromIngredientsFlow',
     inputSchema: GenerateRecipeFromIngredientsInputSchema,
-    outputSchema: GenerateRecipeFrom_IngredientsOutputSchema,
+    outputSchema: GenerateRecipeFromIngredientsOutputSchema,
   },
   async input => {
     const {output} = await prompt(input);

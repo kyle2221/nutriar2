@@ -11,56 +11,38 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { CheckCircle2, AlertTriangle } from 'lucide-react';
-import { useSearchParams } from 'next/navigation';
-import { Recipe } from '@/ai/flows/generate-recipe-from-ingredients';
-
-const sampleRecipe = {
-  recipeName: 'Spicy Quinoa Bowl with Roasted Chickpeas',
-  ingredients: [
-    '1 cup quinoa',
-    '2 cups vegetable broth',
-    '1 can (15 ounces) chickpeas, rinsed and drained',
-    '1 tablespoon olive oil',
-    '1 teaspoon smoked paprika',
-    '1/2 teaspoon cayenne pepper',
-    '1 avocado, sliced',
-    '1/2 cup cherry tomatoes, halved',
-    '1/4 cup red onion, thinly sliced',
-    'Lime wedges, for serving',
-  ],
-  instructions: [
-    'Preheat oven to 400°F (200°C).',
-    'Rinse quinoa under cold water. In a medium saucepan, combine quinoa and vegetable broth. Bring to a boil, then reduce heat, cover, and simmer for 15-20 minutes.',
-    'On a baking sheet, toss chickpeas with olive oil, paprika, and cayenne pepper. Roast for 20-25 minutes, until crispy.',
-    'Fluff the cooked quinoa with a fork.',
-    'Assemble the bowls: Divide quinoa among bowls. Top with roasted chickpeas, avocado, tomatoes, and red onion.',
-    'Serve with lime wedges on the side.',
-  ],
-  reasoning:
-    'This recipe is chosen for its high protein content from quinoa and chickpeas, supporting muscle gain. It is gluten-free and aligns with the preference for spicy, Mediterranean-style flavors, while being low in oil.',
-};
+import { CheckCircle2, AlertTriangle, Heart } from 'lucide-react';
+import { useRecipeStore } from '@/store/recipe-store';
+import { Button } from '@/components/ui/button';
+import { useMemo } from 'react';
 
 export default function SingleRecipePage({ params }: { params: { id: string } }) {
-  const searchParams = useSearchParams();
-  const recipeQuery = searchParams.get('recipe');
+  const { getRecipeById, toggleFavorite } = useRecipeStore((state) => ({
+    getRecipeById: state.getRecipeById,
+    toggleFavorite: state.toggleFavorite,
+  }));
 
-  let recipe: Recipe;
-  let isGenerated = false;
+  const recipe = useMemo(() => getRecipeById(params.id), [params.id, getRecipeById]);
 
-  if (params.id === 'generated' && recipeQuery) {
-    try {
-      recipe = JSON.parse(recipeQuery);
-      isGenerated = true;
-    } catch (e) {
-      console.error('Failed to parse recipe query param:', e);
-      recipe = sampleRecipe; // Fallback to sample
-    }
-  } else {
-    recipe = sampleRecipe;
+  const placeholderImage = useMemo(() => {
+    return PlaceHolderImages.find(p => p.imageHint === recipe?.imageHint) || PlaceHolderImages.find(p => p.imageHint.includes('ai')) || PlaceHolderImages[0];
+  }, [recipe]);
+
+  if (!recipe) {
+    return (
+      <div className="flex-1 flex items-center justify-center h-full">
+        <div className="text-center">
+          <AlertTriangle className="mx-auto h-12 w-12 text-muted-foreground" />
+          <h1 className="mt-4 text-3xl font-bold tracking-tight font-headline">
+            Recipe Not Found
+          </h1>
+          <p className="mt-2 text-lg text-muted-foreground">
+            Sorry, we couldn't find the recipe you're looking for.
+          </p>
+        </div>
+      </div>
+    );
   }
-
-  const placeholderImage = PlaceHolderImages[(parseInt(params.id, 10) - 1) % PlaceHolderImages.length] || PlaceHolderImages[0];
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
@@ -68,28 +50,25 @@ export default function SingleRecipePage({ params }: { params: { id: string } })
         <CardHeader>
           <div className="flex flex-col md:flex-row gap-8">
             <div className="md:w-1/3">
-              {!isGenerated ? (
-                 <Image
-                    src={placeholderImage.imageUrl}
-                    alt={recipe.recipeName}
-                    width={600}
-                    height={400}
-                    className="rounded-lg object-cover w-full h-auto shadow-lg"
-                    data-ai-hint={placeholderImage.imageHint}
-                />
-              ) : (
-                <div className="w-full aspect-[3/2] bg-muted rounded-lg flex items-center justify-center">
-                    <div className="text-center text-muted-foreground p-4">
-                        <AlertTriangle className="mx-auto h-8 w-8 mb-2" />
-                        <p className="text-sm">Recipe image is not available for AI-generated recipes.</p>
-                    </div>
-                </div>
-              )}
+              <Image
+                src={placeholderImage.imageUrl}
+                alt={recipe.recipeName}
+                width={600}
+                height={400}
+                className="rounded-lg object-cover w-full h-auto shadow-lg"
+                data-ai-hint={placeholderImage.imageHint}
+              />
             </div>
             <div className="md:w-2/3">
-              <CardTitle className="text-4xl font-bold font-headline mb-4">
-                {recipe.recipeName}
-              </CardTitle>
+              <div className="flex justify-between items-start">
+                <CardTitle className="text-4xl font-bold font-headline mb-4">
+                  {recipe.recipeName}
+                </CardTitle>
+                <Button variant="ghost" size="icon" onClick={() => toggleFavorite(recipe.id)}>
+                  <Heart className={recipe.isFavorited ? "text-red-500 fill-current" : "text-muted-foreground"} />
+                  <span className="sr-only">Favorite</span>
+                </Button>
+              </div>
               <CardDescription className="text-lg">{recipe.reasoning}</CardDescription>
               <Separator className="my-6" />
               <h3 className="font-semibold text-xl font-headline mb-4">Ingredients</h3>

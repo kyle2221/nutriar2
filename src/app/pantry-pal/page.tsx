@@ -6,14 +6,17 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Loader2, Camera, Wand2, ChefHat } from 'lucide-react';
-import { generateRecipeFromIngredients, Recipe } from '@/ai/flows/generate-recipe-from-ingredients';
+import { generateRecipeFromIngredients, GenerateRecipeFromIngredientsOutput } from '@/ai/flows/generate-recipe-from-ingredients';
 import Link from 'next/link';
+import { useRecipeStore } from '@/store/recipe-store';
+import { Recipe } from '@/lib/types';
 
 export default function PantryPalPage() {
   const { toast } = useToast();
@@ -22,7 +25,8 @@ export default function PantryPalPage() {
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [generatedRecipes, setGeneratedRecipes] = useState<Recipe[]>([]);
+  const addPantryRecipes = useRecipeStore((state) => state.addPantryRecipes);
 
   useEffect(() => {
     if (isCameraOpen) {
@@ -56,26 +60,21 @@ export default function PantryPalPage() {
   }, [isCameraOpen, toast]);
 
   const handleScanPantry = async () => {
-    if (!videoRef.current || !canvasRef.current) return;
+    if (!videoRef.current) return;
     setLoading(true);
     
-    const video = videoRef.current;
-    const canvas = canvasRef.current;
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    canvas.getContext('2d')?.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-    
-    const imageDataUri = canvas.toDataURL('image/jpeg');
-
-    // This is a mock implementation. In a real app, you would use an AI model
-    // to detect ingredients from the image.
-    const detectedIngredients = ['quinoa', 'chickpeas', 'avocado', 'tomatoes', 'red onion'];
+    // In a real app, an AI model would detect ingredients from the camera stream.
+    // For this demo, we'll use a mock list of ingredients.
+    const detectedIngredients = ['quinoa', 'chickpeas', 'avocado', 'tomatoes', 'red onion', 'garlic', 'olive oil'];
 
     try {
-      const result = await generateRecipeFromIngredients({
+      const result: GenerateRecipeFromIngredientsOutput = await generateRecipeFromIngredients({
         ingredients: detectedIngredients,
       });
-      setRecipes(result.recipes);
+
+      const newRecipes = addPantryRecipes(result.recipes);
+      setGeneratedRecipes(newRecipes);
+
     } catch (e) {
       console.error(e);
       toast({
@@ -102,7 +101,7 @@ export default function PantryPalPage() {
         </div>
       </div>
       
-      {!isCameraOpen && recipes.length === 0 && (
+      {!isCameraOpen && generatedRecipes.length === 0 && (
         <Card className="text-center p-8 border-2 border-dashed rounded-lg">
           <CardHeader>
             <ChefHat className="mx-auto h-12 w-12 text-muted-foreground" />
@@ -124,7 +123,7 @@ export default function PantryPalPage() {
         <Card>
           <CardHeader>
             <CardTitle>Scan Your Pantry</CardTitle>
-            <CardDescription>Point your camera at your ingredients.</CardDescription>
+            <CardDescription>Point your camera at your ingredients. (This is a demo, it will use pre-defined ingredients)</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="relative w-full aspect-video rounded-md border bg-muted overflow-hidden">
@@ -152,15 +151,15 @@ export default function PantryPalPage() {
         </Card>
       )}
 
-      {recipes.length > 0 && (
+      {generatedRecipes.length > 0 && (
          <div className="space-y-4">
             <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold font-headline">Suggested Recipes</h2>
-                <Button variant="outline" onClick={() => { setRecipes([]); setIsCameraOpen(true); }}>Scan Again</Button>
+                <h2 className="text-2xl font-bold font-headline">Recipes from Your Pantry</h2>
+                <Button variant="outline" onClick={() => { setGeneratedRecipes([]); setIsCameraOpen(true); }}>Scan Again</Button>
             </div>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {recipes.map((recipe, index) => (
-                <Card key={index} className="flex flex-col">
+                {generatedRecipes.map((recipe) => (
+                <Card key={recipe.id} className="flex flex-col">
                     <CardHeader>
                         <CardTitle>{recipe.recipeName}</CardTitle>
                     </CardHeader>
@@ -170,7 +169,7 @@ export default function PantryPalPage() {
                         </p>
                     </CardContent>
                     <CardFooter>
-                       <Link href={{ pathname: `/recipes/generated`, query: { recipe: JSON.stringify(recipe) } }} passHref className="w-full">
+                       <Link href={`/recipes/${recipe.id}`} passHref className="w-full">
                             <Button className="w-full">View Recipe</Button>
                         </Link>
                     </CardFooter>

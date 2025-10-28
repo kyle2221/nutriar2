@@ -1,10 +1,14 @@
-export type RecipeSuggestion = {
+export type Recipe = {
+  id: string;
   recipeName: string;
   ingredients: string[];
-  instructions: string[] | string; // Can be array or single string
+  instructions: string[];
+  reasoning: string;
+  category: 'Breakfast' | 'Lunch' | 'Dinner' | 'Snack' | 'Dessert' | 'AI-Generated' | 'Pantry';
+  imageHint: string;
+  isFavorited: boolean;
   nutritionalInformation?: string; // This is a JSON string, made optional
   suitabilityScore?: number;
-  reasoning: string;
 };
 
 export type Meal = {

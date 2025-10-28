@@ -35,6 +35,96 @@
       "description": "Pan-seared salmon with a lemon wedge.",
       "imageUrl": "https://images.unsplash.com/photo-1668786837877-df83e3d35f3f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxzYWxtb24lMjBmaXNofGVufDB8fHx8MTc2MTU3MDU3MXww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "salmon fish"
+    },
+    {
+      "id": "pancakes-1",
+      "description": "Fluffy pancakes with syrup and berries.",
+      "imageUrl": "https://images.unsplash.com/photo-1620280641611-1b444bf9f9b6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwYW5jYWtlcyUyMGJyZWFrZmFzdHxlbnwwfHx8fDE3NjE1MzE2MzR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "pancakes breakfast"
+    },
+    {
+      "id": "oatmeal-1",
+      "description": "A warm bowl of oatmeal with fruits and nuts.",
+      "imageUrl": "https://images.unsplash.com/photo-1583577012041-b9fe16bf9345?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxvYXRtZWFsJTIwYm93bHxlbnwwfHx8fDE3NjE1NzQxNzV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "oatmeal bowl"
+    },
+    {
+      "id": "smoothie-1",
+      "description": "A vibrant green smoothie in a glass.",
+      "imageUrl": "https://images.unsplash.com/photo-1584587727565-a486d45d58b4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxncmVlbiUyMHNtb290aGllfGVufDB8fHx8MTc2MTY0OTY1NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "green smoothie"
+    },
+    {
+      "id": "sandwich-1",
+      "description": "A hearty turkey sandwich on whole wheat bread.",
+      "imageUrl": "https://images.unsplash.com/photo-1705537459006-f4acbd93c5a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx0dXJrZXklMjBzYW5kd2ljaHxlbnwwfHx8fDE3NjE2NDk2NTV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "turkey sandwich"
+    },
+    {
+      "id": "stir-fry-1",
+      "description": "A colorful vegetable stir-fry with tofu.",
+      "imageUrl": "https://images.unsplash.com/photo-1564947310108-cdfbe8834f0b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8dmVnZXRhYmxlJTIwc3Rpci1mcnl8ZW58MHx8fHwxNzYxNTg3NDc1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "vegetable stir-fry"
+    },
+    {
+      "id": "tacos-1",
+      "description": "Three delicious beef tacos with fresh toppings.",
+      "imageUrl": "https://images.unsplash.com/photo-1645083031812-d4a06a48b4d4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8YmVlZiUyMHRhY29zfGVufDB8fHx8MTc2MTU0MTM5Mnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "beef tacos"
+    },
+    {
+      "id": "steak-1",
+      "description": "A perfectly cooked steak with asparagus.",
+      "imageUrl": "https://images.unsplash.com/photo-1583953623787-ada99d338235?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxzdGVhayUyMGRpbm5lcnxlbnwwfHx8fDE3NjE1NzQ4MTF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "steak dinner"
+    },
+    {
+      "id": "pizza-1",
+      "description": "A homemade pizza with various toppings.",
+      "imageUrl": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxob21lbWFkZSUyMHBpenphfGVufDB8fHx8MTc2MTY0OTY1NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "homemade pizza"
+    },
+    {
+      "id": "brownie-1",
+      "description": "A rich chocolate brownie with a scoop of ice cream.",
+      "imageUrl": "https://images.unsplash.com/photo-1617996884841-3949eaec3448?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y2hvY29sYXRlJTIwYnJvd25pZXxlbnwwfHx8fDE3NjE1MjgwNTR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "chocolate brownie"
+    },
+    {
+      "id": "cake-1",
+      "description": "A slice of delicious chocolate cake.",
+      "imageUrl": "https://images.unsplash.com/photo-1605807646983-377bc5a76493?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxjaG9jb2xhdGUlMjBjYWtlfGVufDB8fHx8MTc2MTU3ODIyNnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "chocolate cake"
+    },
+    {
+      "id": "cookies-1",
+      "description": "A stack of freshly baked chocolate chip cookies.",
+      "imageUrl": "https://images.unsplash.com/photo-1651140479520-3be8f7d2d2b8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjaGlwJTIwY29va2llc3xlbnwwfHx8fDE3NjE2NDk2NTV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "chip cookies"
+    },
+    {
+      "id": "nuts-1",
+      "description": "A bowl of mixed nuts.",
+      "imageUrl": "https://images.unsplash.com/photo-1543158181-1274e5362710?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtaXhlZCUyMG51dHN8ZW58MHx8fHwxNzYxNjQ5NjU1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "mixed nuts"
+    },
+    {
+      "id": "yogurt-1",
+      "description": "A cup of Greek yogurt with honey.",
+      "imageUrl": "https://images.unsplash.com/photo-1542691457-cbe4df041eb2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxncmVlayUyMHlvZ3VydHxlbnwwfHx8fDE3NjE1NDM5MTF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "greek yogurt"
+    },
+    {
+      "id": "fruit-1",
+      "description": "A bowl of fresh mixed fruits.",
+      "imageUrl": "https://images.unsplash.com/photo-1529082790703-f8a22cd2c208?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxmcmVzaCUyMGZydWl0fGVufDB8fHx8MTc2MTU0OTM1OXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fresh fruit"
+    },
+    {
+      "id": "generated-1",
+      "description": "A placeholder for an AI-generated recipe.",
+      "imageUrl": "https://picsum.photos/seed/ai-recipe/600/400",
+      "imageHint": "ai recipe"
     }
   ]
 }
