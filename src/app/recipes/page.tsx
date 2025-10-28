@@ -28,44 +28,46 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
 
   return (
     <Card className="flex flex-col">
-      <CardHeader className="pb-4">
-        <div className="relative w-full h-40">
+      <CardHeader className="p-0">
+        <div className="relative w-full h-48">
           <Link href={`/recipes/${recipe.id}`} passHref>
             <Image
               src={placeholder.imageUrl}
               alt={recipe.recipeName}
               fill
-              className="object-cover rounded-md cursor-pointer"
+              className="object-cover rounded-t-lg cursor-pointer"
               data-ai-hint={placeholder.imageHint}
             />
           </Link>
           <Button 
             variant="ghost" 
             size="icon" 
-            className="absolute top-2 right-2 bg-white/70 hover:bg-white rounded-full h-8 w-8"
+            className="absolute top-2 right-2 bg-white/80 hover:bg-white rounded-full h-9 w-9 backdrop-blur-sm"
             onClick={() => toggleFavorite(recipe.id)}
           >
-            <Heart className={recipe.isFavorited ? "text-red-500 fill-current" : "text-gray-500"} size={16} />
+            <Heart className={recipe.isFavorited ? "text-red-500 fill-current" : "text-gray-500"} size={18} />
             <span className="sr-only">Favorite</span>
           </Button>
         </div>
-        <CardTitle className="pt-4 font-headline">{recipe.recipeName}</CardTitle>
+      </CardHeader>
+      <div className="p-6 flex flex-col flex-grow">
+        <CardTitle className="font-headline mb-2">{recipe.recipeName}</CardTitle>
         {recipe.suitabilityScore && (
-          <CardDescription className="text-xs">
+          <CardDescription className="text-xs mb-4">
             Suitability Score: {recipe.suitabilityScore}/100
           </CardDescription>
         )}
-      </CardHeader>
-      <CardContent className="flex-grow">
-        <p className="text-sm text-muted-foreground line-clamp-3">
-          {recipe.reasoning}
-        </p>
-      </CardContent>
-      <CardFooter>
-        <Link href={`/recipes/${recipe.id}`} passHref className="w-full">
-          <Button className="w-full">View Recipe</Button>
-        </Link>
-      </CardFooter>
+        <CardContent className="p-0 flex-grow">
+          <p className="text-sm text-muted-foreground line-clamp-3">
+            {recipe.reasoning}
+          </p>
+        </CardContent>
+        <CardFooter className="p-0 pt-6">
+            <Link href={`/recipes/${recipe.id}`} passHref className="w-full">
+            <Button className="w-full">View Recipe</Button>
+            </Link>
+        </CardFooter>
+      </div>
     </Card>
   );
 }
@@ -116,17 +118,17 @@ export default function RecipesPage() {
   };
 
   return (
-    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+    <div className="flex-1 space-y-8 p-4 md:p-8 pt-6">
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight font-headline">
             Recipes
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground mt-2">
             Discover recipes tailored to your goals or browse our collection.
           </p>
         </div>
-        <Button onClick={handleSuggestRecipes} disabled={loading}>
+        <Button onClick={handleSuggestRecipes} disabled={loading} size="lg">
           {loading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -147,6 +149,7 @@ export default function RecipesPage() {
             key={category}
             variant={activeFilter === category ? 'default' : 'outline'}
             onClick={() => setActiveFilter(category)}
+            className="capitalize"
           >
             {category}
           </Button>
@@ -161,16 +164,16 @@ export default function RecipesPage() {
       )}
 
       {filteredRecipes.length > 0 ? (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filteredRecipes.map((recipe) => (
             <RecipeCard key={recipe.id} recipe={recipe} />
           ))}
         </div>
       ) : (
-        <div className="flex items-center justify-center h-96">
+        <div className="flex items-center justify-center h-96 border-2 border-dashed rounded-lg">
             <div className="text-center">
                 <p className="text-lg font-semibold">No recipes found</p>
-                <p className="text-muted-foreground">Try a different filter or generate new recipes with AI.</p>
+                <p className="text-muted-foreground mt-2">Try a different filter or generate new recipes with AI.</p>
             </div>
          </div>
       )}

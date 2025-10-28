@@ -17,23 +17,19 @@ import {
 } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Loader2, Wand2, Sparkles, Bot, User } from 'lucide-react';
+import { Loader2, Wand2, Sparkles, Bot, User, ChevronsRight } from 'lucide-react';
 import { highlightIngredients } from '@/ai/flows/highlight-ingredients';
 import { provideAdaptiveGuidance } from '@/ai/flows/provide-adaptive-guidance';
 import { provideRealTimeAssistance } from '@/ai/flows/provide-real-time-assistance';
 import { ScrollArea } from './ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { cn } from '@/lib/utils';
+import type { Recipe } from '@/lib/types';
 
 type ArCookingViewProps = {
-  recipe: {
-    recipeName: string;
-    instructions: string[];
-    ingredients: string[];
-  };
+  recipe: Recipe;
 };
 
-// Helper to format JSON strings nicely
 const JsonDisplay = ({ data }: { data: string }) => {
   try {
     const parsed = JSON.parse(data);
@@ -66,26 +62,26 @@ const IngredientHighlighter = ({ recipe }: ArCookingViewProps) => {
       <CardHeader>
         <CardTitle>AR Ingredient Highlighting</CardTitle>
         <CardDescription>
-          Use AI to identify and highlight ingredients in your kitchen.
+          Use AI to identify and highlight ingredients in your kitchen for the current step.
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-6">
         <Button onClick={handleHighlight} disabled={loading}>
           {loading ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (
             <Wand2 className="mr-2 h-4 w-4" />
           )}
-          Highlight Ingredients for Next Step
+          Highlight Ingredients
         </Button>
         {result && (
           <div className="mt-4 space-y-4">
             <div>
-              <h4 className="font-semibold">AR Instructions:</h4>
-              <p className="text-muted-foreground">{result.instructions}</p>
+              <h4 className="font-semibold text-lg">AR Instructions:</h4>
+              <p className="text-muted-foreground mt-2">{result.instructions}</p>
             </div>
             <div>
-              <h4 className="font-semibold">Nutritional Info:</h4>
+              <h4 className="font-semibold text-lg">Nutritional Info:</h4>
               <JsonDisplay data={result.nutritionalInfo} />
             </div>
           </div>
@@ -103,6 +99,7 @@ const AdaptiveGuidance = ({ recipe }: ArCookingViewProps) => {
 
     const handleGuidance = async () => {
         setLoading(true);
+        setResult(null);
         const res = await provideAdaptiveGuidance({
             currentStepDescription: recipe.instructions[stepIndex],
             userActionDescription: userAction,
@@ -117,32 +114,33 @@ const AdaptiveGuidance = ({ recipe }: ArCookingViewProps) => {
                 <CardTitle>AI-Enhanced AR Cooking Guidance</CardTitle>
                 <CardDescription>Get adaptive feedback on your cooking techniques.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-6">
                 <div>
-                    <h4 className="font-semibold">Current Step ({stepIndex + 1}/{recipe.instructions.length}):</h4>
-                    <p className="text-muted-foreground p-2 bg-secondary rounded-md">{recipe.instructions[stepIndex]}</p>
+                    <h4 className="font-semibold text-lg">Current Step ({stepIndex + 1}/{recipe.instructions.length}):</h4>
+                    <p className="text-muted-foreground p-4 bg-secondary rounded-md mt-2 text-base">{recipe.instructions[stepIndex]}</p>
                 </div>
                  <Textarea
                     placeholder="Describe your action (e.g., 'I just chopped the onions into fine pieces.')"
                     value={userAction}
                     onChange={(e) => setUserAction(e.target.value)}
+                    rows={3}
                 />
-                <div className="flex gap-2">
+                <div className="flex gap-4">
                     <Button onClick={handleGuidance} disabled={loading || !userAction}>
                         {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
                         Get Feedback
                     </Button>
-                     <Button variant="outline" onClick={() => setStepIndex(prev => (prev + 1) % recipe.instructions.length)} >Next Step</Button>
+                     <Button variant="outline" onClick={() => setStepIndex(prev => (prev + 1) % recipe.instructions.length)} >Next Step <ChevronsRight className="ml-2 h-4 w-4" /></Button>
                 </div>
                 {result && (
                     <div className="mt-4 space-y-4">
                         <div>
-                            <h4 className="font-semibold">AI Feedback:</h4>
-                            <p className="text-muted-foreground">{result.feedback}</p>
+                            <h4 className="font-semibold text-lg">AI Feedback:</h4>
+                            <p className="text-muted-foreground mt-2">{result.feedback}</p>
                         </div>
                         <div>
-                            <h4 className="font-semibold">Next Suggestion:</h4>
-                            <p className="text-muted-foreground">{result.nextStepSuggestion}</p>
+                            <h4 className="font-semibold text-lg">Next Suggestion:</h4>
+                            <p className="text-muted-foreground mt-2">{result.nextStepSuggestion}</p>
                         </div>
                     </div>
                 )}
@@ -188,7 +186,7 @@ const AiAssistant = ({ recipe }: ArCookingViewProps) => {
             </CardHeader>
             <CardContent className="flex-grow flex flex-col">
                 <ScrollArea className="flex-grow pr-4 -mr-4 mb-4">
-                    <div className="space-y-4">
+                    <div className="space-y-6">
                         {conversation.map((msg, i) => (
                            <div key={i} className={cn("flex items-start gap-3", msg.role === 'user' ? "justify-end" : "")}>
                                 {msg.role === 'assistant' && <Avatar className="w-8 h-8"><AvatarFallback><Bot size={20}/></AvatarFallback></Avatar>}
@@ -198,10 +196,10 @@ const AiAssistant = ({ recipe }: ArCookingViewProps) => {
                                 {msg.role === 'user' && <Avatar className="w-8 h-8"><AvatarFallback><User size={20}/></AvatarFallback></Avatar>}
                            </div>
                         ))}
-                         {loading &&  <div className="flex items-start gap-3"><Avatar className="w-8 h-8"><AvatarFallback><Bot size={20}/></AvatarFallback></Avatar><div className="p-3 rounded-lg bg-secondary"><Loader2 className="h-5 w-5 animate-spin" /></div></div>}
+                         {loading &&  <div className="flex items-start gap-3"><Avatar className="w-8 h-8"><AvatarFallback><Bot size={20}/></AvatarFallback></Avatar><div className="p-3 rounded-lg bg-secondary"><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></div></div>}
                     </div>
                 </ScrollArea>
-                <form onSubmit={handleAsk} className="flex gap-2">
+                <form onSubmit={handleAsk} className="flex gap-2 pt-4 border-t">
                     <Input
                         placeholder="e.g., How can I substitute quinoa?"
                         value={question}
@@ -222,12 +220,12 @@ export function ArCookingView({ recipe }: ArCookingViewProps) {
 
   if (!isOpen) {
     return (
-      <div className="text-center p-8 border-2 border-dashed rounded-lg">
+      <div className="text-center p-12 border-2 border-dashed rounded-lg">
         <h2 className="text-2xl font-bold font-headline">Ready to Cook?</h2>
-        <p className="text-muted-foreground mt-2">
+        <p className="text-muted-foreground mt-2 max-w-md mx-auto">
           Enhance your cooking with our AI-powered augmented reality assistant.
         </p>
-        <Button onClick={() => setIsOpen(true)} className="mt-4">
+        <Button onClick={() => setIsOpen(true)} className="mt-6" size="lg">
           Start AR Cooking Session
         </Button>
       </div>
@@ -256,13 +254,13 @@ export function ArCookingView({ recipe }: ArCookingViewProps) {
             <TabsTrigger value="ingredients">Ingredient Highlighter</TabsTrigger>
             <TabsTrigger value="assistant">AI Assistant</TabsTrigger>
           </TabsList>
-          <TabsContent value="guidance">
+          <TabsContent value="guidance" className="pt-6">
             <AdaptiveGuidance recipe={recipe} />
           </TabsContent>
-          <TabsContent value="ingredients">
+          <TabsContent value="ingredients" className="pt-6">
             <IngredientHighlighter recipe={recipe} />
           </TabsContent>
-          <TabsContent value="assistant">
+          <TabsContent value="assistant" className="pt-6">
             <AiAssistant recipe={recipe} />
           </TabsContent>
         </Tabs>

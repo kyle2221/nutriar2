@@ -27,7 +27,7 @@ type MealLogProps = {
 
 
 const MealLog: React.FC<MealLogProps> = ({ meals }) => (
-  <Card className="col-span-1 md:col-span-3">
+  <Card className="col-span-1 lg:col-span-3">
     <CardHeader>
       <div className="flex items-center justify-between">
         <div>
@@ -37,7 +37,7 @@ const MealLog: React.FC<MealLogProps> = ({ meals }) => (
         <div className="flex gap-2">
             <LogMealCameraDialog>
                 <Button>
-                    <Camera className="mr-2 h-4 w-4" /> Log Meal
+                    <Camera className="mr-2 h-4 w-4" /> Log with AI
                 </Button>
             </LogMealCameraDialog>
         </div>

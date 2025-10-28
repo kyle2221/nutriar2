@@ -6,6 +6,7 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from '@/components/ui/card';
 import {
   PolarGrid,
@@ -41,13 +42,17 @@ const CalorieGoalChart: React.FC<CalorieGoalChartProps> = ({ nutritionData }) =>
           fill: 'hsl(var(--primary))',
         },
       ];
+    
+    const percentage = Math.min(100, (nutritionData.calories.value / nutritionData.calories.goal) * 100);
+
 
   return (
-    <Card className="flex flex-col items-center justify-center p-4">
-      <CardHeader className="items-center p-2">
+    <Card className="h-full flex flex-col">
+      <CardHeader className="items-center pb-0">
         <CardTitle className="font-headline">Calories</CardTitle>
+        <CardDescription>Today's consumption</CardDescription>
       </CardHeader>
-      <CardContent className="flex-1 pb-0">
+      <CardContent className="flex-1 pb-0 flex items-center justify-center">
         <ChartContainer
           config={chartConfig}
           className="mx-auto aspect-square w-full max-w-[250px]"
@@ -66,6 +71,7 @@ const CalorieGoalChart: React.FC<CalorieGoalChartProps> = ({ nutritionData }) =>
               radialLines={false}
               stroke="none"
               className="first:fill-muted last:fill-background"
+              polarRadius={[100, 100]}
             />
             <PolarRadiusAxis tick={false} tickLine={false} axisLine={false} />
             <RadialBar
@@ -76,19 +82,30 @@ const CalorieGoalChart: React.FC<CalorieGoalChartProps> = ({ nutritionData }) =>
             />
             <ChartTooltip
               cursor={false}
-              content={<ChartTooltipContent hideLabel />}
+              content={<ChartTooltipContent hideLabel nameKey="name" />}
             />
+             <text
+                x="50%"
+                y="50%"
+                textAnchor="middle"
+                dominantBaseline="middle"
+                className="fill-foreground text-5xl font-bold font-headline"
+            >
+                {Math.round(percentage)}%
+            </text>
+            <text
+                x="50%"
+                y="50%"
+                textAnchor="middle"
+                dominantBaseline="middle"
+                dy="2.5rem"
+                className="fill-muted-foreground text-lg"
+            >
+                {nutritionData.calories.value} / {nutritionData.calories.goal}
+            </text>
           </RadialBarChart>
         </ChartContainer>
       </CardContent>
-      <div className="flex flex-col items-center gap-1 text-center -mt-12 mb-4">
-        <span className="text-4xl font-bold tracking-tighter">
-          {nutritionData.calories.value}
-        </span>
-        <span className="text-sm text-muted-foreground">
-          / {nutritionData.calories.goal} kcal
-        </span>
-      </div>
     </Card>
   );
 };

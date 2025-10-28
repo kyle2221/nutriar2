@@ -45,54 +45,61 @@ export default function SingleRecipePage({ params }: { params: { id: string } })
   }
 
   return (
-    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+    <div className="flex-1 space-y-8 p-4 md:p-8 pt-6">
+      <Card>
+        <div className="grid md:grid-cols-5 gap-8">
+            <div className="md:col-span-2">
+                <Image
+                    src={placeholderImage.imageUrl}
+                    alt={recipe.recipeName}
+                    width={600}
+                    height={400}
+                    className="rounded-t-lg md:rounded-l-lg md:rounded-t-none object-cover w-full h-full shadow-lg"
+                    data-ai-hint={placeholderImage.imageHint}
+                />
+            </div>
+
+            <div className="md:col-span-3 p-6">
+                <CardHeader className="p-0">
+                    <div className="flex justify-between items-start mb-4">
+                        <CardTitle className="text-4xl font-bold font-headline">
+                        {recipe.recipeName}
+                        </CardTitle>
+                        <Button variant="ghost" size="icon" onClick={() => toggleFavorite(recipe.id)}>
+                        <Heart className={recipe.isFavorited ? "text-red-500 fill-current" : "text-muted-foreground"} />
+                        <span className="sr-only">Favorite</span>
+                        </Button>
+                    </div>
+                    <CardDescription className="text-lg">{recipe.reasoning}</CardDescription>
+                </CardHeader>
+                <Separator className="my-6" />
+                <CardContent className="p-0">
+                    <h3 className="font-semibold text-xl font-headline mb-4">Ingredients</h3>
+                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-base">
+                        {recipe.ingredients.map((ing, i) => (
+                        <li key={i} className="flex items-center gap-3">
+                            <CheckCircle2 className="h-5 w-5 text-primary" />
+                            <span>{ing}</span>
+                        </li>
+                        ))}
+                    </ul>
+                </CardContent>
+            </div>
+        </div>
+      </Card>
+      
       <Card>
         <CardHeader>
-          <div className="flex flex-col md:flex-row gap-8">
-            <div className="md:w-1/3">
-              <Image
-                src={placeholderImage.imageUrl}
-                alt={recipe.recipeName}
-                width={600}
-                height={400}
-                className="rounded-lg object-cover w-full h-auto shadow-lg"
-                data-ai-hint={placeholderImage.imageHint}
-              />
-            </div>
-            <div className="md:w-2/3">
-              <div className="flex justify-between items-start">
-                <CardTitle className="text-4xl font-bold font-headline mb-4">
-                  {recipe.recipeName}
-                </CardTitle>
-                <Button variant="ghost" size="icon" onClick={() => toggleFavorite(recipe.id)}>
-                  <Heart className={recipe.isFavorited ? "text-red-500 fill-current" : "text-muted-foreground"} />
-                  <span className="sr-only">Favorite</span>
-                </Button>
-              </div>
-              <CardDescription className="text-lg">{recipe.reasoning}</CardDescription>
-              <Separator className="my-6" />
-              <h3 className="font-semibold text-xl font-headline mb-4">Ingredients</h3>
-              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-base">
-                {recipe.ingredients.map((ing, i) => (
-                  <li key={i} className="flex items-center gap-3">
-                    <CheckCircle2 className="h-5 w-5 text-primary" />
-                    <span>{ing}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+            <h3 className="font-semibold text-xl font-headline">Instructions</h3>
         </CardHeader>
         <CardContent>
-          <Separator className="my-6" />
-          <h3 className="font-semibold text-xl font-headline mb-6">Instructions</h3>
-          <div className="space-y-6">
+          <div className="space-y-8">
             {recipe.instructions.map((step, i) => (
-              <div key={i} className="flex items-start gap-4">
-                <div className="flex-shrink-0 h-8 w-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-base">
+              <div key={i} className="flex items-start gap-6">
+                <div className="flex-shrink-0 h-10 w-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-lg">
                   {i + 1}
                 </div>
-                <p className="flex-1 pt-0.5 text-base">{step}</p>
+                <p className="flex-1 pt-1 text-base leading-relaxed">{step}</p>
               </div>
             ))}
           </div>

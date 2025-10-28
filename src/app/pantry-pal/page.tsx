@@ -89,7 +89,7 @@ export default function PantryPalPage() {
   };
   
   return (
-    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+    <div className="flex-1 space-y-8 p-4 md:p-8 pt-6">
       <div className="flex items-center justify-between space-y-2">
         <div>
           <h1 className="text-3xl font-bold tracking-tight font-headline">
@@ -104,15 +104,15 @@ export default function PantryPalPage() {
       {!isCameraOpen && generatedRecipes.length === 0 && (
         <Card className="text-center p-8 border-2 border-dashed rounded-lg">
           <CardHeader>
-            <ChefHat className="mx-auto h-12 w-12 text-muted-foreground" />
-            <CardTitle>Ready to cook something new?</CardTitle>
+            <ChefHat className="mx-auto h-16 w-16 text-muted-foreground mb-4" />
+            <CardTitle className="text-2xl">Ready to cook something new?</CardTitle>
             <CardDescription>
               Use your camera to scan the ingredients in your pantry or fridge.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={() => setIsCameraOpen(true)}>
-              <Camera className="mr-2 h-4 w-4" />
+            <Button size="lg" onClick={() => setIsCameraOpen(true)}>
+              <Camera className="mr-2 h-5 w-5" />
               Scan My Pantry
             </Button>
           </CardContent>
@@ -140,7 +140,7 @@ export default function PantryPalPage() {
               )}
             </div>
             <canvas ref={canvasRef} className="hidden" />
-            <div className="flex gap-2">
+            <div className="flex gap-4">
               <Button onClick={handleScanPantry} disabled={loading || !hasCameraPermission}>
                 {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
                 Generate Recipes
@@ -152,18 +152,18 @@ export default function PantryPalPage() {
       )}
 
       {generatedRecipes.length > 0 && (
-         <div className="space-y-4">
+         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold font-headline">Recipes from Your Pantry</h2>
                 <Button variant="outline" onClick={() => { setGeneratedRecipes([]); setIsCameraOpen(true); }}>Scan Again</Button>
             </div>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {generatedRecipes.map((recipe) => (
                 <Card key={recipe.id} className="flex flex-col">
                     <CardHeader>
                         <CardTitle>{recipe.recipeName}</CardTitle>
                     </CardHeader>
-                    <CardContent className="flex-grow">
+                    <CardContent className="flex-grow space-y-4">
                         <p className="text-sm text-muted-foreground line-clamp-3">
                             {recipe.reasoning}
                         </p>
