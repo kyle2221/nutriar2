@@ -1,3 +1,40 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "salad-1",
+      "description": "A vibrant and healthy salad in a white bowl.",
+      "imageUrl": "https://images.unsplash.com/photo-1547496502-affa22d38842?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxzYWxhZHxlbnwwfHx8fDE3NjE2MzE0MjN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "salad"
+    },
+    {
+      "id": "pasta-1",
+      "description": "A delicious plate of pasta with tomato sauce and basil.",
+      "imageUrl": "https://images.unsplash.com/photo-1551462147-ff29053bfc14?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8cGFzdGF8ZW58MHx8fHwxNzYxNTY0NzgxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "pasta"
+    },
+    {
+      "id": "chicken-1",
+      "description": "Perfectly grilled chicken breast with a side of vegetables.",
+      "imageUrl": "https://images.unsplash.com/photo-1633436375795-12b3b339712f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxjaGlja2VuJTIwZGlzaHxlbnwwfHx8fDE3NjE2NDQ1NDF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "chicken dish"
+    },
+    {
+      "id": "soup-1",
+      "description": "A warm bowl of vegetable soup.",
+      "imageUrl": "https://images.unsplash.com/photo-1604152135912-04a022e23696?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxzb3VwfGVufDB8fHx8MTc2MTY0ODMzNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "soup"
+    },
+    {
+      "id": "breakfast-1",
+      "description": "A healthy breakfast setup with avocado toast and eggs.",
+      "imageUrl": "https://images.unsplash.com/photo-1557218392-0119519ce637?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxoZWFsdGh5JTIwYnJlYWtmYXN0fGVufDB8fHx8MTc2MTYwODk3MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "healthy breakfast"
+    },
+    {
+      "id": "salmon-1",
+      "description": "Pan-seared salmon with a lemon wedge.",
+      "imageUrl": "https://images.unsplash.com/photo-1668786837877-df83e3d35f3f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxzYWxtb24lMjBmaXNofGVufDB8fHx8MTc2MTU3MDU3MXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "salmon fish"
+    }
+  ]
 }
