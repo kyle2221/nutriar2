@@ -1,6 +1,6 @@
 'use client';
 
-import create from 'zustand';
+import { create } from 'zustand';
 import { Meal } from '@/lib/types';
 
 const initialMeals: Meal[] = [
