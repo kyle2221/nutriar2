@@ -37,11 +37,11 @@ export function AppSidebar() {
     <>
       <SidebarHeader>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="h-9 w-9">
-            <Leaf className="h-6 w-6 text-primary" />
+          <Button variant="ghost" size="icon" className="h-9 w-9 text-sidebar-primary hover:bg-sidebar-accent">
+            <Leaf className="h-6 w-6" />
           </Button>
           <div className="flex flex-col">
-            <span className="font-semibold tracking-tight font-headline">
+            <span className="font-semibold tracking-tight font-headline text-sidebar-foreground">
               NutriAR
             </span>
           </div>
@@ -56,6 +56,7 @@ export function AppSidebar() {
                   asChild
                   isActive={pathname === item.href}
                   tooltip={item.label}
+                  className="text-sidebar-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                 >
                   <a>
                     <item.icon />
@@ -70,7 +71,7 @@ export function AppSidebar() {
       <SidebarFooter className="p-2">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Settings">
+            <SidebarMenuButton tooltip="Settings" className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
               <Settings />
               <span>Settings</span>
             </SidebarMenuButton>
@@ -82,8 +83,8 @@ export function AppSidebar() {
                 <AvatarFallback>U</AvatarFallback>
               </Avatar>
               <div className="flex flex-col text-sm">
-                <span className="font-semibold">User</span>
-                <span className="text-muted-foreground">user@email.com</span>
+                <span className="font-semibold text-sidebar-foreground">User</span>
+                <span className="text-sidebar-foreground/70">user@email.com</span>
               </div>
             </div>
           </SidebarMenuItem>
