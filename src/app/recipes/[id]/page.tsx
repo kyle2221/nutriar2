@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import { ArCookingView } from '@/components/ar-cooking-view';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -9,7 +11,9 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, AlertTriangle } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
+import { Recipe } from '@/ai/flows/generate-recipe-from-ingredients';
 
 const sampleRecipe = {
   recipeName: 'Spicy Quinoa Bowl with Roasted Chickpeas',
@@ -38,7 +42,25 @@ const sampleRecipe = {
 };
 
 export default function SingleRecipePage({ params }: { params: { id: string } }) {
-  const placeholderImage = PlaceHolderImages[(parseInt(params.id, 10) - 1) % PlaceHolderImages.length];
+  const searchParams = useSearchParams();
+  const recipeQuery = searchParams.get('recipe');
+
+  let recipe: Recipe;
+  let isGenerated = false;
+
+  if (params.id === 'generated' && recipeQuery) {
+    try {
+      recipe = JSON.parse(recipeQuery);
+      isGenerated = true;
+    } catch (e) {
+      console.error('Failed to parse recipe query param:', e);
+      recipe = sampleRecipe; // Fallback to sample
+    }
+  } else {
+    recipe = sampleRecipe;
+  }
+
+  const placeholderImage = PlaceHolderImages[(parseInt(params.id, 10) - 1) % PlaceHolderImages.length] || PlaceHolderImages[0];
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
@@ -46,24 +68,33 @@ export default function SingleRecipePage({ params }: { params: { id: string } })
         <CardHeader>
           <div className="flex flex-col md:flex-row gap-8">
             <div className="md:w-1/3">
-              <Image
-                src={placeholderImage.imageUrl}
-                alt={sampleRecipe.recipeName}
-                width={600}
-                height={400}
-                className="rounded-lg object-cover w-full h-auto shadow-lg"
-                data-ai-hint={placeholderImage.imageHint}
-              />
+              {!isGenerated ? (
+                 <Image
+                    src={placeholderImage.imageUrl}
+                    alt={recipe.recipeName}
+                    width={600}
+                    height={400}
+                    className="rounded-lg object-cover w-full h-auto shadow-lg"
+                    data-ai-hint={placeholderImage.imageHint}
+                />
+              ) : (
+                <div className="w-full aspect-[3/2] bg-muted rounded-lg flex items-center justify-center">
+                    <div className="text-center text-muted-foreground p-4">
+                        <AlertTriangle className="mx-auto h-8 w-8 mb-2" />
+                        <p className="text-sm">Recipe image is not available for AI-generated recipes.</p>
+                    </div>
+                </div>
+              )}
             </div>
             <div className="md:w-2/3">
               <CardTitle className="text-4xl font-bold font-headline mb-4">
-                {sampleRecipe.recipeName}
+                {recipe.recipeName}
               </CardTitle>
-              <CardDescription className="text-lg">{sampleRecipe.reasoning}</CardDescription>
+              <CardDescription className="text-lg">{recipe.reasoning}</CardDescription>
               <Separator className="my-6" />
               <h3 className="font-semibold text-xl font-headline mb-4">Ingredients</h3>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-base">
-                {sampleRecipe.ingredients.map((ing, i) => (
+                {recipe.ingredients.map((ing, i) => (
                   <li key={i} className="flex items-center gap-3">
                     <CheckCircle2 className="h-5 w-5 text-primary" />
                     <span>{ing}</span>
@@ -77,7 +108,7 @@ export default function SingleRecipePage({ params }: { params: { id: string } })
           <Separator className="my-6" />
           <h3 className="font-semibold text-xl font-headline mb-6">Instructions</h3>
           <div className="space-y-6">
-            {sampleRecipe.instructions.map((step, i) => (
+            {recipe.instructions.map((step, i) => (
               <div key={i} className="flex items-start gap-4">
                 <div className="flex-shrink-0 h-8 w-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-base">
                   {i + 1}
@@ -89,7 +120,7 @@ export default function SingleRecipePage({ params }: { params: { id: string } })
         </CardContent>
       </Card>
 
-      <ArCookingView recipe={sampleRecipe} />
+      <ArCookingView recipe={recipe} />
     </div>
   );
 }

@@ -17,6 +17,7 @@ import {
   Users,
   Settings,
   Leaf,
+  Scan,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from './ui/button';
@@ -25,6 +26,7 @@ const menuItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/recipes', label: 'Recipes', icon: BookOpen },
   { href: '/meal-plan', label: 'Meal Plan', icon: CalendarCheck },
+  { href: '/pantry-pal', label: 'Pantry Pal', icon: Scan },
   { href: '/community', label: 'Community', icon: Users },
 ];
 

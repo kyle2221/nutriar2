@@ -17,9 +17,10 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { PlusCircle, MoreVertical } from 'lucide-react';
+import { PlusCircle, MoreVertical, Camera } from 'lucide-react';
 import type { Meal } from '@/lib/types';
 import LogMealDialog from './log-meal-dialog';
+import LogMealCameraDialog from './log-meal-camera-dialog';
 
 type MealLogProps = {
     meals: Meal[];
@@ -34,11 +35,18 @@ const MealLog: React.FC<MealLogProps> = ({ meals }) => (
           <CardTitle>Today's Meal Log</CardTitle>
           <CardDescription>A summary of your meals for today.</CardDescription>
         </div>
-        <LogMealDialog>
-            <Button>
-                <PlusCircle className="mr-2 h-4 w-4" /> Log Meal
-            </Button>
-        </LogMealDialog>
+        <div className="flex gap-2">
+            <LogMealCameraDialog>
+                <Button variant="outline">
+                    <Camera className="mr-2 h-4 w-4" /> Log with AI
+                </Button>
+            </LogMealCameraDialog>
+            <LogMealDialog>
+                <Button>
+                    <PlusCircle className="mr-2 h-4 w-4" /> Log Manually
+                </Button>
+            </LogMealDialog>
+        </div>
       </div>
     </CardHeader>
     <CardContent>
@@ -54,20 +62,28 @@ const MealLog: React.FC<MealLogProps> = ({ meals }) => (
           </TableRow>
         </TableHeader>
         <TableBody>
-          {meals.map((meal) => (
-            <TableRow key={meal.id}>
-              <TableCell className="font-medium">{meal.name}</TableCell>
-              <TableCell className="text-right">{meal.calories}</TableCell>
-              <TableCell className="text-right">{meal.protein}</TableCell>
-              <TableCell className="text-right">{meal.carbs}</TableCell>
-              <TableCell className="text-right">{meal.fat}</TableCell>
-              <TableCell>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <MoreVertical className="h-4 w-4" />
-                </Button>
+          {meals.length > 0 ? (
+            meals.map((meal) => (
+              <TableRow key={meal.id}>
+                <TableCell className="font-medium">{meal.name}</TableCell>
+                <TableCell className="text-right">{meal.calories}</TableCell>
+                <TableCell className="text-right">{meal.protein}</TableCell>
+                <TableCell className="text-right">{meal.carbs}</TableCell>
+                <TableCell className="text-right">{meal.fat}</TableCell>
+                <TableCell>
+                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <MoreVertical className="h-4 w-4" />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={6} className="h-24 text-center">
+                No meals logged yet.
               </TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
     </CardContent>
