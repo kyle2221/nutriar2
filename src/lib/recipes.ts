@@ -1,149 +1,212 @@
+
 import { Recipe } from './types';
 
 export const STATIC_RECIPES: Recipe[] = [
   // Breakfast
   {
     id: '1',
-    recipeName: 'Protein-Packed Oatmeal',
-    ingredients: ['1/2 cup rolled oats', '1 cup water or unsweetened almond milk', '1 scoop vanilla protein powder', '1 tbsp chia seeds', '1/2 cup mixed berries (fresh or frozen)', '1 tbsp chopped almonds'],
-    instructions: [
-      'In a small saucepan, bring water or almond milk to a gentle boil.',
-      'Stir in the rolled oats and chia seeds. Reduce heat to low and simmer for 5-7 minutes, stirring occasionally, until the oats are tender and have absorbed most of the liquid.',
-      'Remove from heat and let it cool for a minute.',
-      'Stir in the protein powder until fully combined and smooth.',
-      'Transfer to a bowl and top with mixed berries and chopped almonds before serving.'
+    recipeName: 'High-Performance Protein Oatmeal',
+    ingredients: [
+        '1/2 cup rolled oats (old-fashioned, not instant)', 
+        '1 cup unsweetened almond milk or water', 
+        '1 scoop (30g) high-quality vanilla or unflavored protein powder', 
+        '1 tbsp chia seeds', 
+        '1 tbsp ground flaxseed',
+        '1/2 cup mixed berries (fresh or frozen)', 
+        '1 tbsp chopped walnuts or almonds',
+        'Pinch of cinnamon'
     ],
-    reasoning: 'A fantastic way to start your day with a balance of complex carbs, fiber, and a significant protein boost to keep you full and energized.',
+    instructions: [
+      'Combine almond milk (or water), oats, chia seeds, and flaxseed in a small saucepan. Bring to a simmer over medium heat, then reduce heat to low.',
+      'Cook for 5-7 minutes, stirring occasionally, until the oats are creamy and have absorbed most of the liquid. Stir in the cinnamon.',
+      'Remove the saucepan from the heat and let it cool for 1-2 minutes. This is crucial to prevent the protein powder from clumping.',
+      'Gradually stir in the protein powder until it is completely dissolved and the oatmeal is smooth.',
+      'Pour the oatmeal into a bowl and top with mixed berries and chopped nuts for added antioxidants and healthy fats.'
+    ],
+    reasoning: 'A powerhouse breakfast designed to fuel muscle recovery and provide sustained energy. It\'s packed with complex carbs, fiber, complete protein, and healthy omega-3 fatty acids.',
     category: 'Breakfast',
     imageHint: 'oatmeal bowl',
     isFavorited: false,
-    calories: 420,
-    protein: 30,
-    carbs: 55,
-    fat: 12
+    calories: 450,
+    protein: 35,
+    carbs: 50,
+    fat: 15
   },
   {
     id: '2',
-    recipeName: 'Scrambled Eggs & Avocado on Whole Wheat',
-    ingredients: ['2 slices of whole-wheat bread, toasted', '1/2 ripe avocado', '3 large eggs', '1 tbsp milk (optional, for fluffier eggs)', '1 tsp olive oil or butter', 'Salt and freshly ground black pepper to taste', 'A pinch of red pepper flakes'],
-    instructions: [
-      'Lightly mash the avocado with a fork and spread it evenly over the toasted bread slices.',
-      'In a small bowl, whisk together the eggs, milk (if using), salt, and pepper.',
-      'Heat olive oil or butter in a non-stick skillet over medium-low heat. Pour in the egg mixture.',
-      'Cook, stirring gently with a spatula, until the eggs are cooked to your desired consistency (about 2-3 minutes).',
-      'Spoon the scrambled eggs over the avocado toast. Garnish with red pepper flakes for a little kick.'
+    recipeName: 'Avocado & Egg Power Toast',
+    ingredients: [
+        '2 slices of sprouted whole-grain bread, toasted', 
+        '1 whole ripe avocado', 
+        '2 large pasture-raised eggs', 
+        '1 tsp extra virgin olive oil', 
+        '1 tbsp hemp seeds',
+        'Everything bagel seasoning or red pepper flakes to taste', 
+        'Salt and freshly ground black pepper to taste'
     ],
-    reasoning: 'A classic, nutrient-dense breakfast featuring healthy fats from avocado, high-quality protein from eggs, and fiber from whole-wheat bread.',
+    instructions: [
+      'While the bread is toasting, heat olive oil in a non-stick skillet over medium heat. Crack the eggs into the skillet and cook sunny-side up, or to your preference (about 2-3 minutes for a runny yolk).',
+      'Mash the avocado in a small bowl. Season with a pinch of salt and pepper.',
+      'Spread the mashed avocado evenly over the two slices of toasted bread.',
+      'Carefully place a cooked egg on top of each slice of avocado toast.',
+      'Sprinkle with hemp seeds for extra protein and a dash of everything bagel seasoning for flavor.'
+    ],
+    reasoning: 'This meal provides a perfect balance of healthy monounsaturated fats from avocado, high-quality protein from eggs and hemp seeds, and complex carbohydrates for lasting energy.',
     category: 'Breakfast',
     imageHint: 'healthy breakfast',
     isFavorited: true,
-    calories: 380,
-    protein: 25,
-    carbs: 30,
-    fat: 18
+    calories: 410,
+    protein: 22,
+    carbs: 32,
+    fat: 21
   },
   // Lunch
   {
     id: '4',
-    recipeName: 'Mediterranean Quinoa Salad',
-    ingredients: ['1 cup cooked quinoa, cooled', '1 can (15 oz) chickpeas, rinsed and drained', '1 large cucumber, diced', '1 cup cherry tomatoes, halved', '1/2 red onion, thinly sliced', '1/4 cup chopped parsley', '1/4 cup crumbled feta cheese', 'Dressing: 3 tbsp extra virgin olive oil, 1 large lemon (juiced), 1 tsp dried oregano, salt, and pepper'],
-    instructions: [
-      'In a large salad bowl, combine the cooled quinoa, chickpeas, cucumber, cherry tomatoes, red onion, and parsley.',
-      'In a separate small jar or bowl, whisk together the olive oil, lemon juice, oregano, salt, and pepper to create the dressing.',
-      'Pour the dressing over the salad and toss gently to coat everything evenly.',
-      'Sprinkle the crumbled feta cheese on top just before serving.'
+    recipeName: 'Mediterranean Athlete\'s Quinoa Bowl',
+    ingredients: [
+        '1 cup cooked quinoa, cooled', 
+        '4 oz grilled chicken breast, diced',
+        '1 can (15 oz) chickpeas, rinsed and drained', 
+        '1 large cucumber, diced', 
+        '1 cup cherry tomatoes, halved', 
+        '1/2 red onion, finely diced', 
+        '1/4 cup chopped fresh parsley', 
+        '2 tbsp Kalamata olives, halved',
+        'Dressing: 3 tbsp extra virgin olive oil, 1 large lemon (juiced), 1 clove garlic (minced), 1 tsp dried oregano, salt, and pepper'
     ],
-    reasoning: 'A vibrant, light, and refreshing salad that is packed with plant-based protein, fiber, and vitamins. Perfect for a healthy and satisfying lunch.',
+    instructions: [
+      'First, prepare the dressing. In a small jar with a lid, combine the olive oil, lemon juice, minced garlic, oregano, salt, and pepper. Shake well until emulsified.',
+      'In a large mixing bowl, combine the cooled quinoa, grilled chicken, chickpeas, cucumber, cherry tomatoes, red onion, parsley, and Kalamata olives.',
+      'Pour the dressing over the quinoa mixture. Toss gently until all ingredients are well-coated and the flavors have melded.',
+      'For best results, let the salad sit for at least 10 minutes before serving to allow the flavors to marinate. Serve chilled or at room temperature.'
+    ],
+    reasoning: 'An ideal lunch for recovery and fuel, this bowl is loaded with lean protein from chicken, plant-based protein and fiber from chickpeas and quinoa, and anti-inflammatory healthy fats.',
     category: 'Lunch',
     imageHint: 'salad',
     isFavorited: true,
-    calories: 450,
-    protein: 15,
-    carbs: 50,
-    fat: 22
+    calories: 550,
+    protein: 40,
+    carbs: 55,
+    fat: 20
   },
   {
     id: '9',
-    recipeName: 'Spicy Chicken & Veggie Stir-Fry',
-    ingredients: ['1 lb boneless, skinless chicken breast, cut into 1-inch cubes', '1 tbsp soy sauce', '1 head of broccoli, cut into florets', '1 red bell pepper, thinly sliced', '1 carrot, julienned', '4 oz shiitake mushrooms, sliced', 'Stir-fry Sauce: 3 tbsp low-sodium soy sauce, 1 tbsp sriracha or chili garlic sauce, 1 tbsp honey or maple syrup, 1 tsp sesame oil, 2 cloves garlic (minced), 1 tsp grated fresh ginger'],
-    instructions: [
-      'In a medium bowl, toss the chicken pieces with 1 tbsp of soy sauce. Set aside to marinate for at least 10 minutes.',
-      'While the chicken marinates, whisk together all the stir-fry sauce ingredients in a small bowl.',
-      'Heat 1 tbsp of a high-heat oil (like avocado or canola) in a large skillet or wok over high heat. Add the chicken and cook until browned and cooked through. Remove the chicken from the skillet.',
-      'Add the broccoli, bell pepper, carrot, and mushrooms to the hot skillet. Stir-fry for 4-6 minutes, until vegetables are tender-crisp.',
-      'Return the chicken to the skillet and pour the sauce over everything. Cook for 1-2 minutes, stirring constantly, until the sauce thickens and coats the chicken and vegetables.',
-      'Serve immediately over brown rice or quinoa.'
+    recipeName: 'Lean Body Chicken & Broccoli Stir-Fry',
+    ingredients: [
+        '1 lb boneless, skinless chicken breast, cut into 1-inch cubes', 
+        '1 large head of broccoli, cut into florets', 
+        '1 red bell pepper, sliced', 
+        '1 cup sliced mushrooms (cremini or shiitake)',
+        'Stir-fry Sauce: 1/4 cup low-sodium soy sauce or tamari, 1 tbsp honey or maple syrup, 1 tbsp rice vinegar, 2 cloves garlic (minced), 1 tsp fresh ginger (grated), 1 tsp sesame oil',
+        '1 tbsp avocado oil for cooking',
+        '1/4 cup chopped cashews (optional)'
     ],
-    reasoning: 'A quick, versatile, and delicious way to get a lean protein and a variety of colorful vegetables in one flavorful meal.',
+    instructions: [
+      'In a small bowl, whisk together all the ingredients for the stir-fry sauce. Set aside.',
+      'Heat the avocado oil in a large skillet or wok over medium-high heat. Add the chicken cubes and season with a pinch of salt and pepper. Cook until golden brown and cooked through, about 5-7 minutes. Remove chicken from the skillet and set aside.',
+      'Add the broccoli florets and bell pepper to the same skillet. Stir-fry for 3-4 minutes until they begin to get tender-crisp. Add a splash of water and cover for 2 minutes to steam the broccoli.',
+      'Add the mushrooms and cook for another 2 minutes until softened.',
+      'Return the cooked chicken to the skillet. Pour the prepared sauce over everything and stir to coat. Let it simmer for 1-2 minutes until the sauce has slightly thickened.',
+      'Garnish with chopped cashews if desired and serve immediately with brown rice or quinoa.'
+    ],
+    reasoning: 'A high-protein, low-carb meal perfect for a post-workout dinner. It\'s packed with lean muscle-building protein and nutrient-dense vegetables to support recovery.',
     category: 'Dinner',
     imageHint: 'vegetable stir-fry',
     isFavorited: false,
-    calories: 520,
-    protein: 45,
-    carbs: 35,
+    calories: 480,
+    protein: 50,
+    carbs: 25,
     fat: 20
   },
   // Dinner
   {
     id: '7',
-    recipeName: 'Garlic Herb Baked Salmon with Asparagus',
-    ingredients: ['2 (6 oz) salmon fillets', '1 lb asparagus, trimmed', '2 tbsp extra virgin olive oil, divided', '3 cloves garlic, minced', '1 tsp mixed dried herbs (e.g., rosemary, thyme)', '1 lemon, half sliced, half for juice', 'Salt and freshly ground black pepper'],
-    instructions: [
-      'Preheat your oven to 400°F (200°C). Line a large baking sheet with parchment paper.',
-      'Place the asparagus on one side of the baking sheet. Drizzle with 1 tbsp of olive oil, season with salt and pepper, and toss to coat.',
-      'Pat the salmon fillets dry and place them on the other side of the baking sheet.',
-      'In a small bowl, mix together the remaining 1 tbsp of olive oil, minced garlic, and dried herbs. Brush this mixture evenly over the top of each salmon fillet.',
-      'Squeeze the juice from half the lemon over both the salmon and asparagus. Top the salmon fillets with the lemon slices.',
-      'Bake for 12-15 minutes, or until the salmon is opaque and flakes easily with a fork, and the asparagus is tender.',
+    recipeName: 'Omega-3 Rich Salmon & Asparagus',
+    ingredients: [
+        '2 (6 oz) wild-caught salmon fillets, skin on or off', 
+        '1 bunch of asparagus, trimmed', 
+        '1 tbsp extra virgin olive oil', 
+        '2 cloves garlic, minced', 
+        '1 tsp dried dill or 1 tbsp fresh dill, chopped', 
+        '1 whole lemon, half sliced, half for juice', 
+        'Sea salt and freshly ground black pepper'
     ],
-    reasoning: 'An elegant and incredibly healthy one-pan dinner that is quick to prepare and rich in omega-3 fatty acids and nutrients.',
+    instructions: [
+      'Preheat your oven to 400°F (200°C). Line a baking sheet with parchment paper for easy cleanup.',
+      'Place the asparagus on the baking sheet. Drizzle with half of the olive oil, season with salt and pepper, and toss to coat. Arrange in a single layer.',
+      'Pat the salmon fillets completely dry with a paper towel. This is key for a crispy skin if leaving it on. Place the fillets on the baking sheet next to the asparagus.',
+      'In a small bowl, mix the remaining olive oil, minced garlic, and dill. Brush this mixture evenly over the top of each salmon fillet.',
+      'Squeeze the juice from half the lemon over both the salmon and asparagus. Top each salmon fillet with 2-3 thin lemon slices.',
+      'Bake for 12-15 minutes. The salmon is done when it is opaque and flakes easily with a fork. The asparagus should be tender-crisp.'
+    ],
+    reasoning: 'This dish is a nutritional powerhouse, rich in anti-inflammatory omega-3 fatty acids, lean protein, and essential vitamins from the asparagus. It\'s a simple, clean meal that supports brain and heart health.',
     category: 'Dinner',
     imageHint: 'salmon fish',
     isFavorited: true,
-    calories: 480,
-    protein: 40,
-    carbs: 10,
-    fat: 30
+    calories: 490,
+    protein: 42,
+    carbs: 8,
+    fat: 32
   },
   // Snacks
   {
     id: '11',
-    recipeName: 'No-Bake Protein Energy Bites',
-    ingredients: ['1 cup old-fashioned rolled oats', '1/2 cup natural peanut or almond butter', '1/3 cup honey or pure maple syrup', '1/4 cup ground flaxseed', '2 tbsp chia seeds', '1/2 cup dark chocolate chips (optional)', '1 tsp vanilla extract'],
-    instructions: [
-      'In a medium bowl, thoroughly combine all ingredients. The mixture should be sticky.',
-      'Cover the bowl and chill in the refrigerator for at least 30 minutes. This helps the bites hold their shape.',
-      'Once chilled, roll the mixture into small, 1-inch balls.',
-      'Store in an airtight container in the fridge for up to a week. They are perfect for a quick pre-workout snack or a healthy treat.'
+    recipeName: 'Athlete\'s Fuel Protein Bites',
+    ingredients: [
+        '1 cup old-fashioned rolled oats', 
+        '1/2 cup natural, sugar-free peanut butter or almond butter', 
+        '1/3 cup raw honey or pure maple syrup', 
+        '1/2 cup ground flaxseed', 
+        '2 scoops (60g) chocolate or vanilla whey protein powder',
+        '2 tbsp chia seeds', 
+        '1/4 cup water or almond milk, as needed'
     ],
-    reasoning: 'A simple, no-bake snack that provides a quick and sustained boost of energy from complex carbs, healthy fats, and protein.',
+    instructions: [
+      'In a large bowl, combine the rolled oats, peanut butter, honey, ground flaxseed, protein powder, and chia seeds. Mix well until a thick, sticky dough forms.',
+      'If the mixture is too dry or crumbly, add water or almond milk, one tablespoon at a time, until it holds together well.',
+      'Cover the bowl and place it in the refrigerator to chill for at least 30 minutes. This will make the mixture easier to handle.',
+      'Once chilled, use your hands to roll the mixture into 1-inch balls. You should get about 20-24 bites.',
+      'Store the protein bites in an airtight container in the refrigerator for up to two weeks. They are an ideal on-the-go snack for pre- or post-workout fuel.'
+    ],
+    reasoning: 'These no-bake bites are the perfect grab-and-go snack, providing a quick hit of protein for muscle repair and complex carbs for sustained energy, without any refined sugar.',
     category: 'Snack',
     imageHint: 'cookies',
     isFavorited: false,
-    calories: 150, // Per bite
-    protein: 5,
-    carbs: 18,
-    fat: 7
+    calories: 130, // Per bite
+    protein: 8,
+    carbs: 12,
+    fat: 6
   },
   // Desserts
   {
     id: '12',
-    recipeName: 'Healthy Chocolate Avocado Mousse',
-    ingredients: ['2 large ripe avocados, pitted', '1/2 cup unsweetened cocoa powder', '1/2 cup pure maple syrup or honey', '1/4 cup unsweetened almond milk', '1 tsp pure vanilla extract', 'A small pinch of sea salt'],
-    instructions: [
-      'Combine all ingredients in a high-speed blender or food processor.',
-      'Blend on high for 1-2 minutes, scraping down the sides as needed, until the mixture is completely smooth, creamy, and free of any lumps.',
-      'Taste and adjust sweetness if necessary.',
-      'Divide the mousse into four small serving dishes. Chill in the refrigerator for at least 1 hour to allow it to firm up.',
-      'Serve chilled, optionally topped with fresh raspberries or a sprinkle of sea salt.'
+    recipeName: 'Greek Yogurt Protein "Cheesecake"',
+    ingredients: [
+        '2 cups plain non-fat Greek yogurt',
+        '2 scoops (60g) vanilla casein protein powder',
+        '1/4 cup erythritol or other non-caloric sweetener',
+        '1 whole egg',
+        '1 tsp vanilla extract',
+        'Juice of 1/2 lemon',
+        'Crust: 1/2 cup almond flour, 2 tbsp melted coconut oil, 1 tbsp erythritol'
     ],
-    reasoning: 'A surprisingly healthy and decadent dessert. The avocado creates a rich, creamy texture while providing healthy fats, making for a guilt-free indulgence.',
+    instructions: [
+      'Preheat oven to 325°F (160°C). In a small bowl, mix together the almond flour, melted coconut oil, and 1 tbsp erythritol for the crust. Press this mixture firmly into the bottom of a 6-inch springform pan.',
+      'Bake the crust for 10 minutes, then let it cool.',
+      'In a large bowl, whisk the Greek yogurt until smooth. Slowly whisk in the casein protein powder until no lumps remain. Casein is key for a thick, cheesecake-like texture.',
+      'Whisk in the sweetener, egg, vanilla extract, and lemon juice until the mixture is smooth and creamy.',
+      'Pour the yogurt filling over the cooled crust and spread evenly.',
+      'Bake for 30-35 minutes, or until the center is almost set (it should still have a slight jiggle). Turn off the oven and let the cheesecake cool in the oven with the door cracked for 1 hour. This prevents cracking.',
+      'Remove from the oven, let it cool to room temperature, then refrigerate for at least 4 hours, or preferably overnight. Serve chilled with fresh berries.'
+    ],
+    reasoning: 'A guilt-free dessert that tastes decadent but is packed with slow-digesting casein protein, making it a great option for a satisfying, muscle-building nighttime treat.',
     category: 'Dessert',
-    imageHint: 'chocolate brownie',
+    imageHint: 'chocolate cake',
     isFavorited: false,
-    calories: 280,
-    protein: 4,
-    carbs: 35,
-    fat: 18
+    calories: 250, // Per slice
+    protein: 25,
+    carbs: 10,
+    fat: 12
   }
 ];

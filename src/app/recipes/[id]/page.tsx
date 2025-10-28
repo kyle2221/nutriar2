@@ -20,11 +20,11 @@ import { Badge } from '@/components/ui/badge';
 function NutritionStat({ icon: Icon, label, value, unit }: { icon: React.ElementType, label: string, value?: number, unit: string }) {
     if (value === undefined) return null;
     return (
-      <div className="flex items-center gap-2">
-        <Icon className="h-5 w-5 text-primary" />
+      <div className="flex items-center gap-2 p-3 rounded-lg bg-secondary/50">
+        <Icon className="h-6 w-6 text-primary" />
         <div>
-          <p className="font-semibold">{label}</p>
-          <p className="text-sm text-muted-foreground">{value}{unit}</p>
+          <p className="font-semibold text-sm">{label}</p>
+          <p className="text-lg font-bold">{value}<span className="text-sm font-normal text-muted-foreground">{unit}</span></p>
         </div>
       </div>
     );
@@ -88,7 +88,7 @@ export default function SingleRecipePage({ params }: { params: { id: string } })
                     <CardDescription className="text-lg">{recipe.reasoning}</CardDescription>
                 </CardHeader>
                 <Separator />
-                <CardContent className="p-6 grid grid-cols-2 lg:grid-cols-4 gap-6 text-sm">
+                <CardContent className="p-6 grid grid-cols-2 lg:grid-cols-2 gap-4 text-sm">
                     <NutritionStat icon={Zap} label="Calories" value={recipe.calories} unit=" kcal" />
                     <NutritionStat icon={Drumstick} label="Protein" value={recipe.protein} unit="g" />
                     <NutritionStat icon={Wheat} label="Carbs" value={recipe.carbs} unit="g" />
@@ -117,7 +117,12 @@ export default function SingleRecipePage({ params }: { params: { id: string } })
 
         <Card className="md:col-span-2">
             <CardHeader>
-                <h3 className="font-semibold text-xl font-headline">Instructions</h3>
+                <div className="flex justify-between items-center">
+                    <h3 className="font-semibold text-xl font-headline">Instructions</h3>
+                    <span className="text-sm font-medium text-muted-foreground">
+                        {recipe.instructions.length} Steps
+                    </span>
+                </div>
             </CardHeader>
             <CardContent>
             <div className="space-y-8">
