@@ -53,17 +53,14 @@ export function AppSidebar() {
         <SidebarMenu>
           {menuItems.map((item) => (
             <SidebarMenuItem key={item.href}>
-              <Link href={item.href} legacyBehavior passHref>
+              <Link href={item.href}>
                 <SidebarMenuButton
-                  asChild
                   isActive={pathname === item.href}
                   tooltip={item.label}
                   className="text-sidebar-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                 >
-                  <a>
                     <item.icon />
                     <span>{item.label}</span>
-                  </a>
                 </SidebarMenuButton>
               </Link>
             </SidebarMenuItem>
