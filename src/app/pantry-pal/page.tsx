@@ -20,6 +20,7 @@ import { useRecipeStore } from '@/store/recipe-store';
 import { Recipe } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 type PantryPalState = 'camera' | 'review' | 'recipes';
 
