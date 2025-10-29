@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useMemo, useEffect } from 'react';
@@ -18,6 +19,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  CardFooter,
 } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
@@ -32,6 +34,8 @@ import {
 } from '@/components/ui/select';
 import { providePersonalizedPlan } from '@/ai/flows/provide-personalized-plan';
 import { useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils';
+import { marked } from 'marked';
 
 type Step =
   | 'welcome'
@@ -75,9 +79,9 @@ const StepIndicator = ({ currentStep }: { currentStep: number }) => (
     {[...Array(6)].map((_, i) => (
       <div
         key={i}
-        className={`h-2 w-2 rounded-full ${
+        className={cn('h-1.5 w-6 rounded-full transition-colors', 
           i < currentStep ? 'bg-primary' : 'bg-muted'
-        }`}
+        )}
       />
     ))}
   </div>
@@ -148,7 +152,8 @@ export default function GetStartedPage() {
     setStep('loading');
     try {
       const result = await providePersonalizedPlan(formData);
-      setPlan(result.plan);
+      const html = marked(result.plan);
+      setPlan(html as string);
       setStep('result');
     } catch (e) {
       console.error(e);
@@ -172,19 +177,18 @@ export default function GetStartedPage() {
               Welcome to NutriAR
             </h1>
             <p className="max-w-xl mx-auto mt-6 text-lg text-muted-foreground md:text-xl">
-              Let's create your personalized health plan. It only takes a
-              minute.
+              Let's build your personalized health plan. It only takes a minute. Ready to start your journey?
             </p>
-            <Button size="lg" onClick={handleNext} className="mt-8">
+            <Button size="lg" onClick={handleNext} className="mt-8 shadow-md">
               Get Started <MoveRight className="ml-2 h-5 w-5" />
             </Button>
           </div>
         );
       case 'gender':
         return (
-          <Card className="w-full max-w-md">
-            <CardHeader>
-              <CardTitle>What is your biological sex?</CardTitle>
+          <Card className="w-full max-w-md shadow-lg">
+            <CardHeader className="text-center">
+              <CardTitle className="text-2xl font-bold font-headline">What is your biological sex?</CardTitle>
               <CardDescription>
                 This helps us calculate your baseline metabolic rate.
               </CardDescription>
@@ -200,23 +204,23 @@ export default function GetStartedPage() {
               >
                 <Label
                   htmlFor="male"
-                  className="flex flex-col items-center justify-center gap-4 rounded-md border-2 p-4 hover:border-primary cursor-pointer [&:has([data-state=checked])]:border-primary"
+                  className="flex flex-col items-center justify-center gap-4 rounded-md border-2 p-4 hover:border-primary cursor-pointer transition-all [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:shadow-md"
                 >
                   <RadioGroupItem value="male" id="male" className="sr-only" />
-                  <span className="text-4xl">👨</span>
-                  Male
+                  <span className="text-5xl drop-shadow-sm">👨</span>
+                  <span className="font-semibold">Male</span>
                 </Label>
                 <Label
                   htmlFor="female"
-                  className="flex flex-col items-center justify-center gap-4 rounded-md border-2 p-4 hover:border-primary cursor-pointer [&:has([data-state=checked])]:border-primary"
+                  className="flex flex-col items-center justify-center gap-4 rounded-md border-2 p-4 hover:border-primary cursor-pointer transition-all [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:shadow-md"
                 >
                   <RadioGroupItem
                     value="female"
                     id="female"
                     className="sr-only"
                   />
-                   <span className="text-4xl">👩</span>
-                  Female
+                   <span className="text-5xl drop-shadow-sm">👩</span>
+                  <span className="font-semibold">Female</span>
                 </Label>
               </RadioGroup>
             </CardContent>
@@ -224,16 +228,16 @@ export default function GetStartedPage() {
         );
       case 'measurements':
         return (
-          <Card className="w-full max-w-md">
-            <CardHeader>
-              <CardTitle>Your Measurements</CardTitle>
+          <Card className="w-full max-w-md shadow-lg">
+            <CardHeader className="text-center">
+              <CardTitle className="text-2xl font-bold font-headline">Your Measurements</CardTitle>
               <CardDescription>
                 Help us understand your body composition.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="height">Height (cm)</Label>
+                <Label htmlFor="height" className="font-semibold">Height (cm)</Label>
                 <Input
                   id="height"
                   type="number"
@@ -242,10 +246,11 @@ export default function GetStartedPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, height: e.target.value })
                   }
+                  className="text-lg"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="weight">Weight (kg)</Label>
+                <Label htmlFor="weight" className="font-semibold">Weight (kg)</Label>
                 <Input
                   id="weight"
                   type="number"
@@ -254,6 +259,7 @@ export default function GetStartedPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, weight: e.target.value })
                   }
+                  className="text-lg"
                 />
               </div>
             </CardContent>
@@ -261,9 +267,9 @@ export default function GetStartedPage() {
         );
       case 'goals':
         return (
-          <Card className="w-full max-w-md">
-            <CardHeader>
-              <CardTitle>What's your primary goal?</CardTitle>
+          <Card className="w-full max-w-md shadow-lg">
+            <CardHeader className="text-center">
+              <CardTitle className="text-2xl font-bold font-headline">What's your primary goal?</CardTitle>
               <CardDescription>
                 Select the one that matters most to you right now.
               </CardDescription>
@@ -275,7 +281,7 @@ export default function GetStartedPage() {
                   setFormData({ ...formData, goal: value });
                    setTimeout(handleNext, 200);
                 }}
-                className="grid grid-cols-1 gap-4"
+                className="grid grid-cols-1 gap-3"
               >
                 {[
                   'Lose Weight',
@@ -286,10 +292,10 @@ export default function GetStartedPage() {
                   <Label
                     key={goal}
                     htmlFor={goal}
-                    className="flex items-center gap-4 rounded-md border-2 p-4 hover:border-primary cursor-pointer [&:has([data-state=checked])]:border-primary"
+                    className="flex items-center gap-4 rounded-md border-2 p-4 hover:border-primary cursor-pointer transition-all [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5"
                   >
                     <RadioGroupItem value={goal} id={goal} />
-                    {goal}
+                    <span className="font-semibold">{goal}</span>
                   </Label>
                 ))}
               </RadioGroup>
@@ -298,9 +304,9 @@ export default function GetStartedPage() {
         );
       case 'activity':
         return (
-          <Card className="w-full max-w-md">
-            <CardHeader>
-              <CardTitle>How active are you?</CardTitle>
+          <Card className="w-full max-w-md shadow-lg">
+            <CardHeader className="text-center">
+              <CardTitle className="text-2xl font-bold font-headline">How active are you?</CardTitle>
               <CardDescription>
                 Be honest! This helps estimate your daily calorie needs.
               </CardDescription>
@@ -312,7 +318,7 @@ export default function GetStartedPage() {
                   setFormData({ ...formData, activityLevel: value })
                 }
               >
-                <SelectTrigger>
+                <SelectTrigger className="text-base">
                   <SelectValue placeholder="Select your activity level" />
                 </SelectTrigger>
                 <SelectContent>
@@ -338,11 +344,11 @@ export default function GetStartedPage() {
         );
       case 'diet':
         return (
-          <Card className="w-full max-w-md">
-            <CardHeader>
-              <CardTitle>Dietary Preferences</CardTitle>
+          <Card className="w-full max-w-md shadow-lg">
+            <CardHeader className="text-center">
+              <CardTitle className="text-2xl font-bold font-headline">Dietary Preferences</CardTitle>
               <CardDescription>
-                Let us know about any foods you like, dislike, or can't eat.
+                Likes, dislikes, allergies? Let us know.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -355,63 +361,67 @@ export default function GetStartedPage() {
                     dietaryPreferences: e.target.value,
                   })
                 }
-                rows={4}
+                rows={5}
+                className="text-base"
               />
             </CardContent>
           </Card>
         );
       case 'loading':
         return (
-          <div className="text-center flex flex-col items-center gap-4">
-            <Loader2 className="h-12 w-12 animate-spin text-primary" />
-            <h2 className="text-2xl font-semibold">
-              Crafting your plan...
+          <div className="text-center flex flex-col items-center gap-6">
+            <Loader2 className="h-16 w-16 animate-spin text-primary" />
+            <h2 className="text-3xl font-bold font-headline">
+              Crafting Your Plan...
             </h2>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground max-w-sm">
               Our AI is analyzing your inputs to create a personalized plan just
-              for you.
+              for you. This won't take long.
             </p>
           </div>
         );
       case 'result':
         return (
-          <Card className="w-full max-w-lg animate-in fade-in-50">
-            <CardHeader className="text-center">
+          <Card className="w-full max-w-lg animate-in fade-in-50 shadow-lg">
+            <CardHeader className="text-center pb-4">
               <Sparkles className="mx-auto h-12 w-12 text-primary" />
-              <CardTitle className="text-2xl mt-4">Your Personalized Plan</CardTitle>
+              <CardTitle className="text-3xl mt-4 font-bold font-headline">Your Personalized Plan</CardTitle>
               <CardDescription>
-                Based on your inputs, here is a starting point for your health
-                journey.
+                Based on your inputs, here's a starting point for your health journey.
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="prose prose-sm dark:prose-invert rounded-md border bg-muted/50 p-4 max-h-60 overflow-y-auto">
-                 <pre className="text-sm whitespace-pre-wrap font-sans">{plan}</pre>
-              </div>
+              <div 
+                className="prose prose-sm dark:prose-invert rounded-md border bg-muted/30 p-6 max-h-72 overflow-y-auto"
+                dangerouslySetInnerHTML={{ __html: plan }}
+              />
             </CardContent>
           </Card>
         );
       case 'signup':
         return (
-          <Card className="w-full max-w-sm text-center">
+          <Card className="w-full max-w-sm text-center shadow-lg">
             <CardHeader>
-              <CardTitle>You're all set!</CardTitle>
+              <CardTitle className="text-2xl font-bold font-headline">You're All Set!</CardTitle>
               <CardDescription>
-                Create an account to save your plan and start your journey.
+                Create an account to save your plan and unlock all features.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Button className="w-full" variant="outline" onClick={handleSignUp}>
+              <Button className="w-full shadow-sm" variant="outline" onClick={handleSignUp}>
                 <GoogleIcon />
                 <span className="ml-2">Sign up with Google</span>
               </Button>
-              <Button className="w-full bg-black hover:bg-black/80 text-white" onClick={handleSignUp}>
+              <Button className="w-full bg-black hover:bg-black/80 text-white shadow-sm" onClick={handleSignUp}>
                 <Apple className="mr-2 h-5 w-5" style={{ color: 'hsl(var(--primary-foreground))' }}/> Sign up with Apple
               </Button>
-              <Button className="w-full" onClick={handleSignUp}>
+              <Button className="w-full shadow-sm" onClick={handleSignUp}>
                 <Mail className="mr-2 h-5 w-5" /> Sign up with Email
               </Button>
             </CardContent>
+            <CardFooter>
+                 <p className="text-xs text-muted-foreground text-center w-full">By signing up, you agree to our Terms of Service.</p>
+            </CardFooter>
           </Card>
         );
       default:
@@ -435,22 +445,22 @@ export default function GetStartedPage() {
         style={{
           backgroundImage:
             "url('https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')",
-          opacity: 0.1,
+          opacity: 0.05,
         }}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
       <div className="container relative z-10 flex min-h-screen flex-col items-center justify-center px-4 md:px-6">
         <div className="absolute top-6 left-6 flex items-center gap-2">
           <Leaf className="h-8 w-8 text-primary" />
-          <span className="font-bold text-xl">NutriAR</span>
+          <span className="font-bold text-xl tracking-tight">NutriAR</span>
         </div>
 
-        <div className="flex flex-col items-center w-full min-h-[400px]">
+        <div className="flex flex-col items-center justify-center w-full min-h-[500px]">
           {renderStep()}
         </div>
 
-        <div className="absolute bottom-6 w-full max-w-md px-4">
-          {showProgress && <Progress value={progress} className="mb-4" />}
+        <div className="absolute bottom-6 w-full max-w-2xl px-4">
+          {showProgress && <Progress value={progress} className="mb-4 h-2" />}
           {showNav && (
             <div className="flex justify-between items-center">
               <Button variant="ghost" onClick={handleBack}>
@@ -461,6 +471,7 @@ export default function GetStartedPage() {
                 onClick={
                   step === 'diet' ? generatePlan : handleNext
                 }
+                className="shadow-md"
               >
                 {step === 'diet' ? 'Generate Plan' : 'Next'}
                 <MoveRight className="ml-2 h-5 w-5" />
@@ -469,7 +480,7 @@ export default function GetStartedPage() {
           )}
           {step === 'result' && (
              <div className="flex justify-center">
-                <Button size="lg" onClick={() => setStep('signup')}>
+                <Button size="lg" onClick={() => setStep('signup')} className="shadow-lg">
                     Save Plan & Sign Up <MoveRight className="ml-2 h-5 w-5" />
                 </Button>
              </div>
@@ -479,3 +490,5 @@ export default function GetStartedPage() {
     </div>
   );
 }
+
+    

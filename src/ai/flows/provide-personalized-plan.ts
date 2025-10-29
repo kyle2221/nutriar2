@@ -8,7 +8,7 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { z } from 'genkit';
+import { z } from 'zod';
 
 const PersonalizedPlanInputSchema = z.object({
   gender: z.string().describe('The user\'s biological sex (e.g., "male", "female").'),
@@ -59,7 +59,7 @@ Generate a plan with the following sections in markdown format:
 ### Sample Meal Suggestions
 - Suggest one simple example for breakfast, lunch, and dinner that aligns with their dietary preferences and goals.
 
-Keep the entire plan brief, under 200 words.
+Keep the entire plan well-structured but concise. Use headings and bullet points.
 `,
 });
 
@@ -74,3 +74,5 @@ const personalizedPlanFlow = ai.defineFlow(
     return output!;
   }
 );
+
+    
