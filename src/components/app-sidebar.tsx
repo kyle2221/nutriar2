@@ -18,6 +18,7 @@ import {
   Settings,
   Leaf,
   Scan,
+  DollarSign,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from './ui/button';
@@ -28,6 +29,7 @@ const menuItems = [
   { href: '/meal-plan', label: 'Meal Plan', icon: CalendarCheck },
   { href: '/pantry-pal', label: 'Pantry Pal', icon: Scan },
   { href: '/community', label: 'Community', icon: Users },
+  { href: '/pricing', label: 'Pricing', icon: DollarSign },
 ];
 
 export function AppSidebar() {
