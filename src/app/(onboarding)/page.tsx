@@ -239,7 +239,7 @@ export default function GetStartedPage() {
         );
       case 'gender':
         return (
-          <Card className="w-full max-w-md shadow-lg">
+          <Card className="w-full max-w-lg shadow-lg">
             <CardHeader className="text-center">
               <CardTitle className="text-2xl font-bold font-headline">What is your biological sex?</CardTitle>
               <CardDescription>
@@ -248,12 +248,16 @@ export default function GetStartedPage() {
             </CardHeader>
             <CardContent>
               <RadioGroup
-                value={formData.gender}
+                value={formData.gender.startsWith('other:') ? 'other' : formData.gender}
                 onValueChange={(value) => {
-                  setFormData({ ...formData, gender: value });
-                  setTimeout(handleNext, 200);
+                  if (value !== 'other') {
+                    setFormData({ ...formData, gender: value });
+                    setTimeout(handleNext, 200);
+                  } else {
+                     setFormData({ ...formData, gender: 'other:' });
+                  }
                 }}
-                className="grid grid-cols-2 gap-4"
+                className="grid grid-cols-1 md:grid-cols-3 gap-4"
               >
                 <Label
                   htmlFor="male"
@@ -275,7 +279,27 @@ export default function GetStartedPage() {
                   <User className="h-10 w-10 text-muted-foreground transition-colors group-hover:text-primary" />
                   <span className="font-semibold text-lg">Female</span>
                 </Label>
+                <Label
+                  htmlFor="other"
+                  className="flex flex-col items-center justify-center gap-2 rounded-md border-2 p-6 hover:border-primary cursor-pointer transition-all [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:shadow-md"
+                >
+                  <RadioGroupItem value="other" id="other" className="sr-only" />
+                  <Sparkles className="h-10 w-10 text-muted-foreground transition-colors group-hover:text-primary" />
+                  <span className="font-semibold text-lg">Other</span>
+                </Label>
               </RadioGroup>
+              {formData.gender.startsWith('other:') && (
+                <div className="mt-4 space-y-2 animate-in fade-in-0 duration-500">
+                  <Label htmlFor="other_gender">Please specify</Label>
+                  <Input
+                    id="other_gender"
+                    placeholder="Your identity"
+                    value={formData.gender.substring(6)}
+                    onChange={(e) => setFormData({...formData, gender: `other:${e.target.value}`})}
+                    autoFocus
+                  />
+                </div>
+              )}
             </CardContent>
           </Card>
         );
@@ -637,5 +661,3 @@ export default function GetStartedPage() {
     </div>
   );
 }
-
-    
