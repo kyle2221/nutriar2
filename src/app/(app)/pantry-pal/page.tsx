@@ -36,32 +36,36 @@ export default function PantryPalPage() {
   const [loading, setLoading] = useState(false);
   const [pageState, setPageState] = useState<PantryPalState>('camera');
   const [craving, setCraving] = useState('');
+  const [isClient, setIsClient] = useState(false);
 
   const [generatedRecipes, setGeneratedRecipes] = useState<Recipe[]>([]);
   const addPantryRecipes = useRecipeStore((state) => state.addPantryRecipes);
 
   useEffect(() => {
-    const getCameraPermission = async () => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({video: true});
-        setHasCameraPermission(true);
+    setIsClient(true);
+  }, []);
 
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
+  useEffect(() => {
+    if (pageState === 'camera' && isClient) {
+        const getCameraPermission = async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({video: true});
+            setHasCameraPermission(true);
+
+            if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+            }
+        } catch (error) {
+            console.error('Error accessing camera:', error);
+            setHasCameraPermission(false);
+            toast({
+            variant: 'destructive',
+            title: 'Camera Access Denied',
+            description: 'Please enable camera permissions in your browser settings to use this app.',
+            });
         }
-      } catch (error) {
-        console.error('Error accessing camera:', error);
-        setHasCameraPermission(false);
-        toast({
-          variant: 'destructive',
-          title: 'Camera Access Denied',
-          description: 'Please enable camera permissions in your browser settings to use this app.',
-        });
-      }
-    };
-
-    if (pageState === 'camera') {
-      getCameraPermission();
+        };
+        getCameraPermission();
     }
     
     return () => {
@@ -71,7 +75,7 @@ export default function PantryPalPage() {
       }
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageState]);
+  }, [pageState, isClient]);
   
   const handleIdentifyIngredients = async (imageDataUri: string) => {
     setLoading(true);
@@ -168,6 +172,10 @@ export default function PantryPalPage() {
     setCraving('');
   };
   
+  if (!isClient) {
+    return null;
+  }
+
   return (
     <div className="flex-1 space-y-8 p-4 md:p-8 pt-6">
       <div className="flex items-center justify-between space-y-2">
