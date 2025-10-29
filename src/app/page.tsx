@@ -35,7 +35,7 @@ export default function GetStartedPage() {
                             Your personal AI-powered AR cooking and nutrition assistant. Achieve your health goals with intelligent meal planning and interactive cooking experiences.
                         </p>
                         <div className="mt-8">
-                            <Link href="/dashboard" passHref>
+                            <Link href="/dashboard">
                                 <Button size="lg">
                                     Get Started
                                 </Button>
