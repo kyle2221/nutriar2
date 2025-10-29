@@ -23,7 +23,7 @@ type ProgressChartProps = {
 };
 
 const metricConfig: Record<Metric, { label: string; color: string; unit: string }> = {
-    calories: { label: "Calories", color: "hsl(var(--primary))", unit: "kcal" },
+    calories: { label: "Calories", color: "hsl(25, 95%, 53%)", unit: "kcal" },
     protein: { label: "Protein", color: "hsl(200 80% 50%)", unit: "g" },
     carbs: { label: "Carbs", color: "hsl(40 80% 50%)", unit: "g" },
     fat: { label: "Fat", color: "hsl(0 70% 50%)", unit: "g" },
@@ -36,7 +36,7 @@ const ProgressChart: React.FC<ProgressChartProps> = ({ data, metric }) => {
   const chartConfig = {
     [metric]: {
       label: config.label,
-      color: 'hsl(25, 95%, 53%)', // Orange color
+      color: config.color,
     },
   } satisfies ChartConfig;
 
@@ -87,13 +87,13 @@ const ProgressChart: React.FC<ProgressChartProps> = ({ data, metric }) => {
           <linearGradient id={`fill${metric}`} x1="0" y1="0" x2="0" y2="1">
             <stop
               offset="5%"
-              stopColor="var(--color-orange)"
-              stopOpacity={0.4}
+              stopColor="var(--color-fill)"
+              stopOpacity={0.2}
             />
             <stop
               offset="95%"
-              stopColor="var(--color-orange)"
-              stopOpacity={0.05}
+              stopColor="var(--color-fill)"
+              stopOpacity={0.01}
             />
           </linearGradient>
         </defs>
@@ -101,10 +101,13 @@ const ProgressChart: React.FC<ProgressChartProps> = ({ data, metric }) => {
           dataKey={metric}
           type="natural"
           fill={`url(#fill${metric})`}
-          stroke="hsl(25, 95%, 53%)"
+          stroke={`var(--color-${metric})`}
           strokeWidth={2}
           stackId="a"
           dot={false}
+          style={{
+            '--color-fill': 'hsl(var(--muted))'
+          } as React.CSSProperties}
         />
       </AreaChart>
     </ChartContainer>
