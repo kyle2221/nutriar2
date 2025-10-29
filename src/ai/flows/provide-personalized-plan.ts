@@ -20,8 +20,29 @@ const PersonalizedPlanInputSchema = z.object({
 });
 export type PersonalizedPlanInput = z.infer<typeof PersonalizedPlanInputSchema>;
 
+const DailyMealSchema = z.object({
+  breakfast: z.string().describe("A specific meal suggestion for breakfast."),
+  lunch: z.string().describe("A specific meal suggestion for lunch."),
+  dinner: z.string().describe("A specific meal suggestion for dinner."),
+  snack: z.string().describe("A specific healthy snack suggestion."),
+});
+
+const DailyTotalsSchema = z.object({
+    calories: z.number().describe("Estimated total calories for the day."),
+    protein: z.number().describe("Estimated total protein in grams for the day."),
+    carbs: z.number().describe("Estimated total carbohydrates in grams for the day."),
+    fat: z.number().describe("Estimated total fat in grams for the day."),
+});
+
+const DailyPlanSchema = z.object({
+  day: z.string().describe('The day of the week (e.g., "Monday").'),
+  meals: DailyMealSchema,
+  dailyTotals: DailyTotalsSchema,
+  workoutSuggestion: z.string().describe('A brief workout suggestion for the day that aligns with the user\'s main goal.'),
+});
+
 const PersonalizedPlanOutputSchema = z.object({
-  plan: z.string().describe('A comprehensive, personalized health and nutrition plan in markdown format. It should include sections for: Calorie & Macro Targets, Workout Recommendations, and Meal Suggestions.'),
+  weeklyPlan: z.array(DailyPlanSchema).describe('A comprehensive, 7-day personalized health and nutrition plan.'),
 });
 export type PersonalizedPlanOutput = z.infer<typeof PersonalizedPlanOutputSchema>;
 
@@ -36,7 +57,7 @@ const prompt = ai.definePrompt({
   name: 'personalizedPlanPrompt',
   input: { schema: PersonalizedPlanInputSchema },
   output: { schema: PersonalizedPlanOutputSchema },
-  prompt: `You are an expert nutritionist and personal trainer. Based on the user's data, create a concise, actionable, and personalized health plan. The plan should be encouraging and easy to understand.
+  prompt: `You are an expert nutritionist and personal trainer. Based on the user's data, create a detailed and actionable 7-day health plan.
 
 User Data:
 - Gender: {{{gender}}}
@@ -46,20 +67,12 @@ User Data:
 - Activity Level: {{{activityLevel}}}
 - Dietary Preferences: {{{dietaryPreferences}}}
 
-Generate a plan with the following sections in markdown format:
+Generate a structured 7-day plan. For each day of the week (Monday to Sunday):
+1.  Provide specific, simple meal suggestions for Breakfast, Lunch, Dinner, and a healthy Snack. The meals must align with the user's dietary preferences.
+2.  Provide a brief, actionable workout suggestion for the day that aligns with their main goal (e.g., for 'Build Muscle', suggest specific exercises; for 'Lose Weight', suggest a type of cardio). Vary the suggestions throughout the week.
+3.  Calculate and provide the estimated total daily calories, protein (g), carbs (g), and fat (g) for the suggested meals.
 
-### Daily Calorie & Macro Targets
-- Provide an estimated daily calorie target.
-- Provide a protein, carbohydrate, and fat target in grams.
-
-### Workout Recommendations
-- Suggest a weekly workout frequency (e.g., 3-5 times per week).
-- Recommend types of workouts that align with their goal (e.g., for 'Build Muscle', suggest strength training; for 'Lose Weight', suggest a mix of cardio and resistance).
-
-### Sample Meal Suggestions
-- Suggest one simple example for breakfast, lunch, and dinner that aligns with their dietary preferences and goals.
-
-Keep the entire plan well-structured but concise. Use headings and bullet points.
+The entire response must be a JSON object that strictly follows the output schema.
 `,
 });
 
@@ -74,5 +87,3 @@ const personalizedPlanFlow = ai.defineFlow(
     return output!;
   }
 );
-
-    

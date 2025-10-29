@@ -17,6 +17,10 @@ import {
   Weight,
   Target,
   Bike,
+  Zap,
+  Wheat,
+  Brain,
+  Drumstick
 } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import {
@@ -38,10 +42,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { providePersonalizedPlan } from '@/ai/flows/provide-personalized-plan';
+import { providePersonalizedPlan, PersonalizedPlanOutput } from '@/ai/flows/provide-personalized-plan';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { marked } from 'marked';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 type Step =
   | 'welcome'
@@ -104,7 +108,7 @@ export default function GetStartedPage() {
     activityLevel: '',
     dietaryPreferences: '',
   });
-  const [plan, setPlan] = useState('');
+  const [plan, setPlan] = useState<PersonalizedPlanOutput | null>(null);
 
   const stepNumber = useMemo(() => {
     const order: Step[] = [
@@ -158,8 +162,7 @@ export default function GetStartedPage() {
     setStep('loading');
     try {
       const result = await providePersonalizedPlan(formData);
-      const html = marked(result.plan);
-      setPlan(html as string);
+      setPlan(result);
       setStep('result');
     } catch (e) {
       console.error(e);
@@ -213,7 +216,7 @@ export default function GetStartedPage() {
                   className="flex flex-col items-center justify-center gap-2 rounded-md border-2 p-6 hover:border-primary cursor-pointer transition-all [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:shadow-md"
                 >
                   <RadioGroupItem value="male" id="male" className="sr-only" />
-                  <User className="h-10 w-10 text-muted-foreground transition-colors [&:has([data-state=checked])]:text-primary" />
+                  <User className="h-10 w-10 text-muted-foreground transition-colors group-hover:text-primary" />
                   <span className="font-semibold text-lg">Male</span>
                 </Label>
                 <Label
@@ -225,7 +228,7 @@ export default function GetStartedPage() {
                     id="female"
                     className="sr-only"
                   />
-                  <User className="h-10 w-10 text-muted-foreground transition-colors [&:has([data-state=checked])]:text-primary" />
+                  <User className="h-10 w-10 text-muted-foreground transition-colors group-hover:text-primary" />
                   <span className="font-semibold text-lg">Female</span>
                 </Label>
               </RadioGroup>
@@ -396,19 +399,50 @@ export default function GetStartedPage() {
         );
       case 'result':
         return (
-          <Card className="w-full max-w-2xl animate-in fade-in-50 shadow-lg">
+          <Card className="w-full max-w-3xl animate-in fade-in-50 shadow-lg">
             <CardHeader className="text-center pb-4">
               <Sparkles className="mx-auto h-12 w-12 text-primary" />
-              <CardTitle className="text-3xl mt-4 font-bold font-headline">Your Personalized Plan</CardTitle>
+              <CardTitle className="text-3xl mt-4 font-bold font-headline">Your 7-Day Action Plan</CardTitle>
               <CardDescription>
-                Based on your inputs, here's a starting point for your health journey.
+                Here's your personalized starting guide to a healthier week.
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div 
-                className="prose prose-sm dark:prose-invert rounded-md border bg-muted/30 p-6 max-h-[40vh] overflow-y-auto"
-                dangerouslySetInnerHTML={{ __html: plan }}
-              />
+               <Accordion type="single" collapsible className="w-full" defaultValue="item-0">
+                {plan?.weeklyPlan.map((dayPlan, index) => (
+                  <AccordionItem value={`item-${index}`} key={index}>
+                    <AccordionTrigger className="text-lg font-semibold font-headline">
+                      {dayPlan.day}
+                    </AccordionTrigger>
+                    <AccordionContent className="space-y-4 pt-2">
+                       <div className='p-4 border rounded-lg bg-muted/30'>
+                          <h4 className="font-semibold mb-2">Daily Nutrition Summary</h4>
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                            <div className="flex items-center gap-2"><Zap className="h-5 w-5 text-primary" /> <div><span className="font-bold">{dayPlan.dailyTotals.calories}</span> <span className="text-xs">kcal</span></div></div>
+                            <div className="flex items-center gap-2"><Drumstick className="h-5 w-5 text-primary" /> <div><span className="font-bold">{dayPlan.dailyTotals.protein}</span><span className="text-xs">g Protein</span></div></div>
+                            <div className="flex items-center gap-2"><Wheat className="h-5 w-5 text-primary" /> <div><span className="font-bold">{dayPlan.dailyTotals.carbs}</span><span className="text-xs">g Carbs</span></div></div>
+                            <div className="flex items-center gap-2"><Brain className="h-5 w-5 text-primary" /> <div><span className="font-bold">{dayPlan.dailyTotals.fat}</span><span className="text-xs">g Fat</span></div></div>
+                          </div>
+                       </div>
+                       <div className="grid md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                           <h4 className="font-semibold">Meals</h4>
+                           <ul className="space-y-1 text-muted-foreground list-disc list-inside">
+                             <li><b>Breakfast:</b> {dayPlan.meals.breakfast}</li>
+                             <li><b>Lunch:</b> {dayPlan.meals.lunch}</li>
+                             <li><b>Dinner:</b> {dayPlan.meals.dinner}</li>
+                             <li><b>Snack:</b> {dayPlan.meals.snack}</li>
+                           </ul>
+                        </div>
+                         <div className="space-y-2">
+                          <h4 className="font-semibold">Workout</h4>
+                          <p className="text-muted-foreground">{dayPlan.workoutSuggestion}</p>
+                        </div>
+                       </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
             </CardContent>
           </Card>
         );
@@ -483,7 +517,7 @@ export default function GetStartedPage() {
           <span className="font-bold text-xl tracking-tight">NutriAR</span>
         </div>
 
-        <div className="flex flex-col items-center justify-center w-full min-h-[500px]">
+        <div className="flex flex-col items-center justify-center w-full min-h-[500px] py-20">
           {renderStep()}
         </div>
 
@@ -491,7 +525,7 @@ export default function GetStartedPage() {
           {showProgress && <Progress value={progress} className="mb-4 h-2" />}
           {showNav && (
             <div className="flex justify-between items-center">
-              <Button variant="ghost" onClick={handleBack}>
+              <Button variant="ghost" onClick={handleBack} disabled={step === 'gender'}>
                 <MoveLeft className="mr-2 h-5 w-5" /> Back
               </Button>
               <StepIndicator currentStep={stepNumber} />
@@ -519,5 +553,3 @@ export default function GetStartedPage() {
     </div>
   );
 }
-
-    
