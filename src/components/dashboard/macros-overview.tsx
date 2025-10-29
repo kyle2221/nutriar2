@@ -9,7 +9,7 @@ import {
   CardDescription,
 } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { Drumstick, Wheat, Zap } from 'lucide-react';
+import { Drumstick, Wheat, Flame } from 'lucide-react';
 
 type MacrosOverviewProps = {
     nutritionData: {
@@ -48,7 +48,7 @@ const MacroCard = ({
                 {value}
                 <span className="text-base text-muted-foreground">/{goal}{unit}</span>
             </p>
-            <Progress value={(value / goal) * 100} className="mt-2 h-2" style={{ '--tw-bg-primary': color } as React.CSSProperties} />
+            <Progress value={(value / goal) * 100} className="mt-2 h-2" indicatorClassName={color} />
         </CardContent>
     </Card>
 );
@@ -68,7 +68,7 @@ const MacrosOverview: React.FC<MacrosOverviewProps> = ({ nutritionData }) => (
                 goal={nutritionData.macros.protein.goal}
                 unit="g"
                 icon={Drumstick}
-                color="hsl(var(--primary))"
+                color="bg-sky-500"
             />
             <MacroCard
                 title="Carbs"
@@ -76,15 +76,15 @@ const MacrosOverview: React.FC<MacrosOverviewProps> = ({ nutritionData }) => (
                 goal={nutritionData.macros.carbs.goal}
                 unit="g"
                 icon={Wheat}
-                color="hsl(var(--accent))"
+                color="bg-amber-500"
             />
             <MacroCard
                 title="Fat"
                 value={nutritionData.macros.fat.value}
                 goal={nutritionData.macros.fat.goal}
                 unit="g"
-                icon={Zap}
-                color="#f59e0b" // Example: a gold/yellow color
+                icon={Flame}
+                color="bg-rose-500"
             />
         </div>
     </div>
