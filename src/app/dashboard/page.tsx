@@ -19,13 +19,13 @@ const generateMockData = (days: number) => {
   for (let i = days - 1; i >= 0; i--) {
     const date = new Date(today);
     date.setDate(today.getDate() - i);
-    data.push({ 
-        date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }), 
-        calories: 2400 + Math.floor(Math.random() * 401) - 200,
-        protein: 140 + Math.floor(Math.random() * 41) - 20,
-        carbs: 280 + Math.floor(Math.random() * 61) - 30,
-        fat: 70 + Math.floor(Math.random() * 21) - 10,
-        steps: 8000 + Math.floor(Math.random() * 4001) - 2000,
+    data.push({
+      date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      calories: 2400 + Math.floor(Math.random() * 401) - 200,
+      protein: 140 + Math.floor(Math.random() * 41) - 20,
+      carbs: 280 + Math.floor(Math.random() * 61) - 30,
+      fat: 70 + Math.floor(Math.random() * 21) - 10,
+      steps: 8000 + Math.floor(Math.random() * 4001) - 2000,
     });
   }
   return data;
@@ -62,38 +62,53 @@ export default function DashboardPage() {
 
   const progressData = useMemo(() => {
     const todayData = {
-        date: 'Today',
-        calories: todayTotals.calories,
-        protein: todayTotals.protein,
-        carbs: todayTotals.carbs,
-        fat: todayTotals.fat,
-        steps: 10520 // Mocked for today's steps
+      date: 'Today',
+      calories: todayTotals.calories,
+      protein: todayTotals.protein,
+      carbs: todayTotals.carbs,
+      fat: todayTotals.fat,
+      steps: 10520, // Mocked for today's steps
     };
-    
+
     let data;
     switch (timeRange) {
-      case '1D': data = [todayData]; break;
-      case '5D': data = generateMockData(5); break;
-      case '1M': data = generateMockData(30); break;
-      case '6M': data = generateMockData(180); break;
-      case '1Y': data = generateMockData(365); break;
-      case '5Y': data = generateMockData(365 * 5); break;
-      case 'MAX': data = generateMockData(365 * 5); break; // Max is same as 5Y for demo
-      default: data = generateMockData(5);
+      case '1D':
+        data = [todayData];
+        break;
+      case '5D':
+        data = generateMockData(5);
+        break;
+      case '1M':
+        data = generateMockData(30);
+        break;
+      case '6M':
+        data = generateMockData(180);
+        break;
+      case '1Y':
+        data = generateMockData(365);
+        break;
+      case '5Y':
+        data = generateMockData(365 * 5);
+        break;
+      case 'MAX':
+        data = generateMockData(365 * 5);
+        break; // Max is same as 5Y for demo
+      default:
+        data = generateMockData(5);
     }
     // Ensure today's data is accurate for ranges including today
     if (timeRange !== '1D' && data.length > 0) {
-        data[data.length - 1] = {
-            ...data[data.length - 1],
-            ...todayData,
-            date: data[data.length - 1].date
-        };
+      data[data.length - 1] = {
+        ...data[data.length - 1],
+        ...todayData,
+        date: data[data.length - 1].date,
+      };
     }
     return data;
   }, [timeRange, todayTotals]);
 
   const timeRanges: TimeRange[] = ['1D', '5D', '1M', '6M', '1Y', '5Y', 'MAX'];
-  const metrics: { key: Metric, label: string }[] = [
+  const metrics: { key: Metric; label: string }[] = [
     { key: 'calories', label: 'Calories' },
     { key: 'protein', label: 'Protein' },
     { key: 'carbs', label: 'Carbs' },
@@ -110,45 +125,45 @@ export default function DashboardPage() {
       </div>
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
         <div className="lg:col-span-1">
-            <CalorieGoalChart nutritionData={nutritionData} />
+          <CalorieGoalChart nutritionData={nutritionData} />
         </div>
-         <div className="lg:col-span-3">
-             <MacrosOverview nutritionData={nutritionData} />
+        <div className="lg:col-span-3">
+          <MacrosOverview nutritionData={nutritionData} />
         </div>
       </div>
-       <Card className="col-span-1 lg:col-span-4">
+      <Card className="col-span-1 lg:col-span-4">
         <CardHeader>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                    <CardTitle className="font-headline">Progress</CardTitle>
-                    <CardDescription>Your metric intake over time.</CardDescription>
-                </div>
-                 <div className="flex items-center gap-1 p-1 bg-muted rounded-md w-full sm:w-auto overflow-x-auto">
-                    {timeRanges.map((range) => (
-                        <Button 
-                            key={range}
-                            size="sm"
-                            variant={timeRange === range ? 'default' : 'ghost'}
-                            onClick={() => setTimeRange(range)}
-                            className="px-3 py-1 h-8 flex-shrink-0"
-                        >
-                            {range}
-                        </Button>
-                    ))}
-                </div>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <CardTitle className="font-headline">Progress</CardTitle>
+              <CardDescription>Your metric intake over time.</CardDescription>
             </div>
-            <div className="flex flex-wrap gap-2 mt-4">
-                {metrics.map(({ key, label }) => (
-                    <Button
-                        key={key}
-                        variant={activeMetric === key ? "secondary" : "ghost"}
-                        size="sm"
-                        onClick={() => setActiveMetric(key)}
-                    >
-                        {label}
-                    </Button>
-                ))}
+            <div className="flex items-center gap-1 p-1 bg-muted rounded-md w-full sm:w-auto overflow-x-auto">
+              {timeRanges.map((range) => (
+                <Button
+                  key={range}
+                  size="sm"
+                  variant={timeRange === range ? 'default' : 'ghost'}
+                  onClick={() => setTimeRange(range)}
+                  className="px-3 py-1 h-8 flex-shrink-0"
+                >
+                  {range}
+                </Button>
+              ))}
             </div>
+          </div>
+          <div className="flex flex-wrap gap-2 mt-4">
+            {metrics.map(({ key, label }) => (
+              <Button
+                key={key}
+                variant={activeMetric === key ? 'secondary' : 'ghost'}
+                size="sm"
+                onClick={() => setActiveMetric(key)}
+              >
+                {label}
+              </Button>
+            ))}
+          </div>
         </CardHeader>
         <CardContent>
           <ProgressChart data={progressData} metric={activeMetric} />

@@ -17,59 +17,33 @@ import { generateRecipeFromIngredients, GenerateRecipeFromIngredientsOutput } fr
 import Link from 'next/link';
 import { useRecipeStore } from '@/store/recipe-store';
 import { Recipe } from '@/lib/types';
+import { Textarea } from '@/components/ui/textarea';
 
 export default function PantryPalPage() {
   const { toast } = useToast();
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
-  const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [generatedRecipes, setGeneratedRecipes] = useState<Recipe[]>([]);
   const addPantryRecipes = useRecipeStore((state) => state.addPantryRecipes);
+  const [ingredients, setIngredients] = useState('');
 
-  useEffect(() => {
-    if (isCameraOpen) {
-      const getCameraPermission = async () => {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-          setHasCameraPermission(true);
-
-          if (videoRef.current) {
-            videoRef.current.srcObject = stream;
-          }
-        } catch (error) {
-          console.error('Error accessing camera:', error);
-          setHasCameraPermission(false);
-          toast({
-            variant: 'destructive',
-            title: 'Camera Access Denied',
-            description: 'Please enable camera permissions in your browser settings to use this feature.',
-          });
-        }
-      };
-
-      getCameraPermission();
-    } else {
-      if (videoRef.current?.srcObject) {
-        const stream = videoRef.current.srcObject as MediaStream;
-        stream.getTracks().forEach(track => track.stop());
-        videoRef.current.srcObject = null;
-      }
+  const handleGenerateRecipes = async () => {
+    if (!ingredients.trim()) {
+      toast({
+        variant: 'destructive',
+        title: 'No Ingredients',
+        description: 'Please enter the ingredients you have.',
+      });
+      return;
     }
-  }, [isCameraOpen, toast]);
 
-  const handleScanPantry = async () => {
-    if (!videoRef.current) return;
     setLoading(true);
-    
-    // In a real app, an AI model would detect ingredients from the camera stream.
-    // For this demo, we'll use a mock list of ingredients.
-    const detectedIngredients = ['quinoa', 'chickpeas', 'avocado', 'tomatoes', 'red onion', 'garlic', 'olive oil'];
+    setGeneratedRecipes([]);
+
+    const ingredientsList = ingredients.split(',').map(item => item.trim());
 
     try {
       const result: GenerateRecipeFromIngredientsOutput = await generateRecipeFromIngredients({
-        ingredients: detectedIngredients,
+        ingredients: ingredientsList,
       });
 
       const newRecipes = addPantryRecipes(result.recipes);
@@ -85,7 +59,6 @@ export default function PantryPalPage() {
     }
 
     setLoading(false);
-    setIsCameraOpen(false);
   };
   
   return (
@@ -96,66 +69,42 @@ export default function PantryPalPage() {
             Pantry Pal
           </h1>
           <p className="text-muted-foreground">
-            Scan your pantry and get instant recipe ideas from AI.
+            Enter your ingredients and get instant recipe ideas from AI.
           </p>
         </div>
       </div>
       
-      {!isCameraOpen && generatedRecipes.length === 0 && (
-        <Card className="text-center p-8 border-2 border-dashed rounded-lg">
+      <Card>
           <CardHeader>
-            <ChefHat className="mx-auto h-16 w-16 text-muted-foreground mb-4" />
-            <CardTitle className="text-2xl">Ready to cook something new?</CardTitle>
-            <CardDescription>
-              Use your camera to scan the ingredients in your pantry or fridge.
-            </CardDescription>
+            <CardTitle>What's in Your Pantry?</CardTitle>
+            <CardDescription>Enter the ingredients you have available, separated by commas.</CardDescription>
           </CardHeader>
-          <CardContent>
-            <Button size="lg" onClick={() => setIsCameraOpen(true)}>
-              <Camera className="mr-2 h-5 w-5" />
-              Scan My Pantry
+          <CardContent className="space-y-4">
+            <Textarea
+              placeholder="e.g., chicken breast, broccoli, quinoa, olive oil, garlic"
+              value={ingredients}
+              onChange={(e) => setIngredients(e.target.value)}
+              rows={4}
+              disabled={loading}
+            />
+            <Button onClick={handleGenerateRecipes} disabled={loading}>
+              {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
+              Generate Recipes
             </Button>
           </CardContent>
         </Card>
-      )}
 
-      {isCameraOpen && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Scan Your Pantry</CardTitle>
-            <CardDescription>Point your camera at your ingredients. (This is a demo, it will use pre-defined ingredients)</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="relative w-full aspect-video rounded-md border bg-muted overflow-hidden">
-              <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
-              {hasCameraPermission === false && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-                  <Alert variant="destructive" className="w-auto">
-                    <AlertTitle>Camera Access Required</AlertTitle>
-                    <AlertDescription>
-                      Please allow camera access to use this feature.
-                    </AlertDescription>
-                  </Alert>
-                </div>
-              )}
-            </div>
-            <canvas ref={canvasRef} className="hidden" />
-            <div className="flex gap-4">
-              <Button onClick={handleScanPantry} disabled={loading || !hasCameraPermission}>
-                {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
-                Generate Recipes
-              </Button>
-              <Button variant="outline" onClick={() => setIsCameraOpen(false)}>Cancel</Button>
-            </div>
-          </CardContent>
-        </Card>
+      {loading && (
+        <div className="flex justify-center items-center h-64">
+            <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        </div>
       )}
 
       {generatedRecipes.length > 0 && (
          <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold font-headline">Recipes from Your Pantry</h2>
-                <Button variant="outline" onClick={() => { setGeneratedRecipes([]); setIsCameraOpen(true); }}>Scan Again</Button>
+                <Button variant="outline" onClick={() => { setGeneratedRecipes([]); setIngredients(''); }}>Start Over</Button>
             </div>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {generatedRecipes.map((recipe) => (

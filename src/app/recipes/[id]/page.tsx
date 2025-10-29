@@ -16,10 +16,10 @@ import { useRecipeStore } from '@/store/recipe-store';
 import { Button } from '@/components/ui/button';
 import { useMemo } from 'react';
 import { Badge } from '@/components/ui/badge';
-import type { Recipe, Review } from '@/lib/types';
+import type { Review } from '@/lib/types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
-
+import { useToast } from '@/hooks/use-toast';
 
 function NutritionStat({ icon: Icon, label, value, unit }: { icon: React.ElementType, label: string, value?: number, unit: string }) {
     if (value === undefined) return null;
@@ -99,12 +99,23 @@ export default function SingleRecipePage({ params }: { params: { id: string } })
     getRecipeById: state.getRecipeById,
     toggleFavorite: state.toggleFavorite,
   }));
+  const { toast } = useToast();
 
   const recipe = useMemo(() => getRecipeById(params.id), [params.id, getRecipeById]);
 
   const placeholderImage = useMemo(() => {
     return PlaceHolderImages.find(p => p.imageHint === recipe?.imageHint) || PlaceHolderImages.find(p => p.imageHint.includes('ai')) || PlaceHolderImages[0];
   }, [recipe]);
+
+  const handleToggleFavorite = () => {
+    if (recipe) {
+      toggleFavorite(recipe.id);
+      toast({
+        title: recipe.isFavorited ? 'Removed from Favorites' : 'Added to Favorites',
+        description: `${recipe.recipeName} has been ${recipe.isFavorited ? 'removed from' : 'added to'} your favorites.`,
+      });
+    }
+  };
 
   if (!recipe) {
     return (
@@ -143,7 +154,7 @@ export default function SingleRecipePage({ params }: { params: { id: string } })
                         <CardTitle className="text-4xl font-bold font-headline">
                         {recipe.recipeName}
                         </CardTitle>
-                        <Button variant="ghost" size="icon" onClick={() => toggleFavorite(recipe.id)}>
+                        <Button variant="ghost" size="icon" onClick={handleToggleFavorite}>
                         <Heart className={recipe.isFavorited ? "text-red-500 fill-current" : "text-muted-foreground"} />
                         <span className="sr-only">Favorite</span>
                         </Button>
