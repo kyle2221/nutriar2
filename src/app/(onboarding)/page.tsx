@@ -20,7 +20,11 @@ import {
   Zap,
   Wheat,
   Brain,
-  Drumstick
+  Drumstick,
+  Sofa,
+  Footprints,
+  PersonStanding,
+  Flame,
 } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import {
@@ -89,7 +93,7 @@ const GoogleIcon = () => (
 
 const StepIndicator = ({ currentStep }: { currentStep: number }) => (
   <div className="flex items-center justify-center gap-2">
-    {[...Array(6)].map((_, i) => (
+    {[...Array(5)].map((_, i) => (
       <div
         key={i}
         className={cn('h-1.5 w-6 rounded-full transition-colors', 
@@ -439,44 +443,43 @@ export default function GetStartedPage() {
         );
       case 'activity':
         return (
-          <Card className="w-full max-w-md shadow-lg">
+          <Card className="w-full max-w-lg shadow-lg">
             <CardHeader className="text-center">
               <CardTitle className="text-2xl font-bold font-headline">How active are you?</CardTitle>
               <CardDescription>
                 Be honest! This helps estimate your daily calorie needs.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-                 <Label htmlFor="activity-level" className="font-semibold flex items-center gap-2">
-                    <Bike className="h-4 w-4" /> Weekly Activity Level
-                </Label>
-              <Select
+            <CardContent>
+               <RadioGroup
                 value={formData.activityLevel}
-                onValueChange={(value) =>
-                  setFormData({ ...formData, activityLevel: value })
-                }
+                onValueChange={(value) => {
+                  setFormData({ ...formData, activityLevel: value });
+                  setTimeout(handleNext, 300);
+                }}
+                className="grid grid-cols-1 gap-3"
               >
-                <SelectTrigger id="activity-level" className="text-base h-12">
-                  <SelectValue placeholder="Select your activity level" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="sedentary">
-                    Sedentary (little or no exercise)
-                  </SelectItem>
-                  <SelectItem value="lightly_active">
-                    Lightly Active (light exercise/sports 1-3 days/week)
-                  </SelectItem>
-                  <SelectItem value="moderately_active">
-                    Moderately Active (moderate exercise/sports 3-5 days/week)
-                  </SelectItem>
-                  <SelectItem value="very_active">
-                    Very Active (hard exercise/sports 6-7 days a week)
-                  </SelectItem>
-                  <SelectItem value="extra_active">
-                    Extra Active (very hard exercise & physical job)
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+                {[
+                  { value: 'sedentary', icon: Sofa, label: 'Sedentary', description: 'Little or no exercise' },
+                  { value: 'lightly_active', icon: Footprints, label: 'Lightly Active', description: 'Exercise 1-3 days/week' },
+                  { value: 'moderately_active', icon: PersonStanding, label: 'Moderately Active', description: 'Exercise 3-5 days/week' },
+                  { value: 'very_active', icon: Bike, label: 'Very Active', description: 'Hard exercise 6-7 days/week' },
+                  { value: 'extra_active', icon: Flame, label: 'Extra Active', description: 'Physical job or training' },
+                ].map(({ value, icon: Icon, label, description }) => (
+                  <Label
+                    key={value}
+                    htmlFor={value}
+                    className="flex items-center gap-4 rounded-md border-2 p-4 hover:border-primary cursor-pointer transition-all [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5"
+                  >
+                    <RadioGroupItem value={value} id={value} className="sr-only" />
+                     <Icon className="h-8 w-8 text-primary" />
+                     <div>
+                        <span className="font-semibold text-base">{label}</span>
+                        <p className="text-sm text-muted-foreground">{description}</p>
+                     </div>
+                  </Label>
+                ))}
+              </RadioGroup>
             </CardContent>
           </Card>
         );
