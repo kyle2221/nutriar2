@@ -31,6 +31,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { providePersonalizedPlan } from '@/ai/flows/provide-personalized-plan';
+import { useRouter } from 'next/navigation';
 
 type Step =
   | 'welcome'
@@ -83,6 +84,7 @@ const StepIndicator = ({ currentStep }: { currentStep: number }) => (
 );
 
 export default function GetStartedPage() {
+  const router = useRouter();
   const [step, setStep] = useState<Step>('welcome');
   const [formData, setFormData] = useState({
     gender: '',
@@ -154,6 +156,12 @@ export default function GetStartedPage() {
       setStep('diet');
     }
   };
+  
+  const handleSignUp = () => {
+    // In a real app, this would handle the sign-up logic.
+    // For now, it will just redirect to the dashboard.
+    router.push('/dashboard');
+  }
 
   const renderStep = () => {
     switch (step) {
@@ -393,14 +401,14 @@ export default function GetStartedPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Button className="w-full" variant="outline">
+              <Button className="w-full" variant="outline" onClick={handleSignUp}>
                 <GoogleIcon />
                 <span className="ml-2">Sign up with Google</span>
               </Button>
-              <Button className="w-full bg-black hover:bg-black/80 text-white">
+              <Button className="w-full bg-black hover:bg-black/80 text-white" onClick={handleSignUp}>
                 <Apple className="mr-2 h-5 w-5" style={{ color: 'hsl(var(--primary-foreground))' }}/> Sign up with Apple
               </Button>
-              <Button className="w-full">
+              <Button className="w-full" onClick={handleSignUp}>
                 <Mail className="mr-2 h-5 w-5" /> Sign up with Email
               </Button>
             </CardContent>

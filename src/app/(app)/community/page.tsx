@@ -88,7 +88,7 @@ const CommunityPost = ({ post }: { post: (typeof communityPosts)[0] }) => {
                 <Image
                   src={recipeImage.imageUrl}
                   alt={post.recipeName}
-                  layout="fill"
+                  fill
                   className="object-cover"
                 />
               </div>

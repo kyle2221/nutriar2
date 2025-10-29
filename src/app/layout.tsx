@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { ClientSidebarProvider } from '@/components/client-sidebar-provider';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
@@ -28,9 +27,7 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
-        <ClientSidebarProvider>
-          {children}
-        </ClientSidebarProvider>
+        {children}
         <Toaster />
       </body>
     </html>
