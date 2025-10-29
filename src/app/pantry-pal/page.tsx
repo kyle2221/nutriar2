@@ -169,7 +169,7 @@ export default function PantryPalPage() {
                         </p>
                     </CardContent>
                     <CardFooter>
-                       <Link href={`/recipes/${recipe.id}`} passHref className="w-full">
+                       <Link href={`/recipes/${recipe.id}`} className="w-full">
                             <Button className="w-full">View Recipe</Button>
                         </Link>
                     </CardFooter>

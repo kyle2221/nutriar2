@@ -123,8 +123,44 @@
     {
       "id": "generated-1",
       "description": "A placeholder for an AI-generated recipe.",
-      "imageUrl": "https://picsum.photos/seed/ai-recipe/600/400",
+      "imageUrl": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmb29kfGVufDB8fHx8MTc2MTY5MzA3MHww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "ai recipe"
+    },
+    {
+      "id": "avocado-1",
+      "description": "Avocado dish.",
+      "imageUrl": "https://images.unsplash.com/photo-1529564619333-3a3c10364973?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhdm9jYWRvJTIwZGlzaHxlbnwwfHx8fDE3NjE3MDQwNDR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "avocado dish"
+    },
+    {
+      "id": "wrap-1",
+      "description": "A healthy wrap sandwich.",
+      "imageUrl": "https://images.unsplash.com/photo-1629732223706-9a293998319e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx3cmFwJTIwc2FuZHdpY2h8ZW58MHx8fHwxNzYxNzA0MDQ0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "wrap sandwich"
+    },
+    {
+      "id": "burger-1",
+      "description": "A juicy burger.",
+      "imageUrl": "https://images.unsplash.com/photo-1571091718767-18b5b1457add?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxidXJnZXJ8ZW58MHx8fHwxNzYxNzA0MDQ0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "burger"
+    },
+    {
+      "id": "chickpeas-1",
+      "description": "Roasted chickpeas.",
+      "imageUrl": "https://images.unsplash.com/photo-1582531593598-a83a8f94f9b8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjaGlja3BlYXN8ZW58MHx8fHwxNzYxNzA0MDQ0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "chickpeas"
+    },
+    {
+      "id": "mousse-1",
+      "description": "Chocolate mousse.",
+      "imageUrl": "https://images.unsplash.com/photo-1610441616428-982f23348d44?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjaG9jb2xhdGUlMjBtb3Vzc2V8ZW58MHx8fHwxNzYxNzA0MDQ0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "chocolate mousse"
+    },
+    {
+      "id": "ice-cream-1",
+      "description": "Banana ice cream.",
+      "imageUrl": "https://images.unsplash.com/photo-1570197913531-95234839f400?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxiYW5hbmElMjBpY2UlMjBjcmVhbXxlbnwwfHx8fDE3NjE3MDQwNDR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "ice cream"
     }
   ]
 }

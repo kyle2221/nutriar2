@@ -48,7 +48,7 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
     <Card className="flex flex-col overflow-hidden transition-all hover:shadow-lg">
       <CardHeader className="p-0">
         <div className="relative w-full h-48">
-          <Link href={`/recipes/${recipe.id}`} passHref>
+          <Link href={`/recipes/${recipe.id}`}>
               <Image
                 src={placeholder.imageUrl}
                 alt={recipe.recipeName}
@@ -89,8 +89,8 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
           </p>
         </CardContent>
         <CardFooter className="p-0 pt-6">
-            <Link href={`/recipes/${recipe.id}`} passHref className="w-full">
-            <Button className="w-full">View Recipe</Button>
+            <Link href={`/recipes/${recipe.id}`} className="w-full">
+              <Button className="w-full">View Recipe</Button>
             </Link>
         </CardFooter>
       </div>
