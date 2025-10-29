@@ -9,6 +9,7 @@ import {
   Tooltip,
   XAxis,
   YAxis,
+  Dot,
 } from 'recharts';
 import {
   ChartConfig,
@@ -99,12 +100,18 @@ const ProgressChart: React.FC<ProgressChartProps> = ({ data, metric }) => {
         </defs>
         <Area
           dataKey={metric}
-          type="natural"
+          type="monotone"
           fill={`url(#fill${metric})`}
           stroke={`var(--color-${metric})`}
           strokeWidth={2}
           stackId="a"
-          dot={false}
+          dot={(props) => {
+            if (props.index === data.length - 1) {
+              return <Dot {...props} r={4} fill={config.color} strokeWidth={2} />;
+            }
+            return null;
+          }}
+          activeDot={(props) => <Dot {...props} r={5} fill={config.color} strokeWidth={1} />}
           style={{
             '--color-fill': 'hsl(var(--muted))'
           } as React.CSSProperties}
