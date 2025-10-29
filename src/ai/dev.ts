@@ -8,3 +8,4 @@ import '@/ai/flows/suggest-recipes-based-on-goals.ts';
 import '@/ai/flows/highlight-ingredients.ts';
 import '@/ai/flows/log-meal-from-image.ts';
 import '@/ai/flows/generate-recipe-from-ingredients.ts';
+import '@/ai/flows/identify-ingredients-from-image.ts';
