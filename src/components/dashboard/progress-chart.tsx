@@ -92,11 +92,10 @@ const ProgressChart: React.FC<ProgressChartProps> = ({ data, metric }) => {
           content={
             <ChartTooltipContent
               indicator="line"
-              labelFormatter={(value) =>
-                value
-              }
-              formatter={(value, name) => (
-                <div className="flex flex-col">
+              labelFormatter={(value) => value}
+              formatter={(value, name, item) => (
+                <div className="flex flex-col gap-1">
+                  <span className="font-semibold text-foreground">{item.payload.date}</span>
                   <span>{`${config.label}: ${value}${config.unit}`}</span>
                 </div>
               )}
