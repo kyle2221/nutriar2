@@ -19,6 +19,7 @@ import Link from 'next/link';
 import { useRecipeStore } from '@/store/recipe-store';
 import { Recipe } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
 
 type PantryPalState = 'camera' | 'review' | 'recipes';
 
@@ -26,15 +27,36 @@ export default function PantryPalPage() {
   const { toast } = useToast();
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const scanTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
-  const [capturedImage, setCapturedImage] = useState<string | null>(null);
+  const [isScanning, setIsScanning] = useState(false);
   const [identifiedIngredients, setIdentifiedIngredients] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [pageState, setPageState] = useState<PantryPalState>('camera');
+  const [craving, setCraving] = useState('');
 
   const [generatedRecipes, setGeneratedRecipes] = useState<Recipe[]>([]);
   const addPantryRecipes = useRecipeStore((state) => state.addPantryRecipes);
+
+  const startScan = () => {
+    if (!videoRef.current || !canvasRef.current) return;
+    setIsScanning(true);
+    
+    // Capture and analyze after a delay
+    scanTimeoutRef.current = setTimeout(() => {
+        const video = videoRef.current;
+        const canvas = canvasRef.current;
+        if (!video || !canvas) return;
+
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d')?.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+        const imageDataUri = canvas.toDataURL('image/jpeg');
+        
+        handleIdentifyIngredients(imageDataUri);
+    }, 1500); // 1.5 second delay to stabilize camera
+  };
 
   useEffect(() => {
     const getCameraPermission = async () => {
@@ -44,6 +66,9 @@ export default function PantryPalPage() {
 
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
+          videoRef.current.addEventListener('loadeddata', () => {
+            startScan();
+          });
         }
       } catch (error) {
         console.error('Error accessing camera:', error);
@@ -56,30 +81,25 @@ export default function PantryPalPage() {
       }
     };
 
-    getCameraPermission();
+    if (pageState === 'camera') {
+        getCameraPermission();
+    }
 
     return () => {
       if (videoRef.current?.srcObject) {
         const stream = videoRef.current.srcObject as MediaStream;
         stream.getTracks().forEach(track => track.stop());
       }
+      if (scanTimeoutRef.current) {
+        clearTimeout(scanTimeoutRef.current);
+      }
     };
-  }, [toast]);
+  }, [pageState, toast]);
 
-  const handleCapture = () => {
-    if (!videoRef.current || !canvasRef.current) return;
-    const video = videoRef.current;
-    const canvas = canvasRef.current;
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    canvas.getContext('2d')?.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-    const imageDataUri = canvas.toDataURL('image/jpeg');
-    setCapturedImage(imageDataUri);
-    handleIdentifyIngredients(imageDataUri);
-  };
   
   const handleIdentifyIngredients = async (imageDataUri: string) => {
     setLoading(true);
+    setIsScanning(false);
     try {
       const result = await identifyIngredientsFromImage({ imageDataUri });
       if (result.ingredients && result.ingredients.length > 0) {
@@ -89,18 +109,18 @@ export default function PantryPalPage() {
         toast({
           variant: 'destructive',
           title: 'No Ingredients Found',
-          description: 'The AI could not identify any ingredients. Please try again with a clearer picture.',
+          description: 'The AI could not identify any ingredients. Please try again.',
         });
-        setCapturedImage(null);
+        startScan(); // Restart scan
       }
     } catch (e) {
       console.error(e);
       toast({
         variant: 'destructive',
         title: 'Error Identifying Ingredients',
-        description: 'Could not identify ingredients from your pantry. Please try again.',
+        description: 'Could not identify ingredients. Please try again.',
       });
-      setCapturedImage(null);
+       startScan(); // Restart scan
     }
     setLoading(false);
   };
@@ -120,8 +140,12 @@ export default function PantryPalPage() {
     setGeneratedRecipes([]);
 
     try {
+      const ingredientsWithCraving = craving 
+        ? [...identifiedIngredients, `user is craving ${craving}`]
+        : identifiedIngredients;
+
       const result: GenerateRecipeFromIngredientsOutput = await generateRecipeFromIngredients({
-        ingredients: identifiedIngredients,
+        ingredients: ingredientsWithCraving,
       });
 
       const newRecipes = addPantryRecipes(result.recipes);
@@ -142,10 +166,11 @@ export default function PantryPalPage() {
 
   const handleStartOver = () => {
     setPageState('camera');
-    setCapturedImage(null);
     setIdentifiedIngredients([]);
     setGeneratedRecipes([]);
     setLoading(false);
+    setIsScanning(false);
+    setCraving('');
   };
   
   return (
@@ -157,7 +182,7 @@ export default function PantryPalPage() {
           </h1>
           <p className="text-muted-foreground">
             {
-              pageState === 'camera' && 'Scan your pantry with AI to get instant recipe ideas.'
+              pageState === 'camera' && 'Scanning your pantry with AI...'
             }
              {
               pageState === 'review' && 'Review the ingredients and generate recipes.'
@@ -181,6 +206,18 @@ export default function PantryPalPage() {
              <div className="relative w-full aspect-video rounded-md border bg-muted overflow-hidden">
                 <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
                 <div className="absolute inset-0 bg-black/20" />
+
+                <div className="absolute inset-0 flex items-center justify-center">
+                    {(isScanning || loading) && (
+                        <div className="flex flex-col items-center gap-4 text-white">
+                            <Loader2 className="h-12 w-12 animate-spin" />
+                            <p className="text-lg font-semibold">
+                                {loading ? 'Analyzing...' : 'Scanning... Hold still!'}
+                            </p>
+                        </div>
+                    )}
+                </div>
+
                 {hasCameraPermission === false && (
                     <div className="absolute inset-0 flex items-center justify-center bg-black/50">
                         <Alert variant="destructive" className="w-auto">
@@ -191,29 +228,20 @@ export default function PantryPalPage() {
                         </Alert>
                     </div>
                 )}
-                {loading && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-                        <Loader2 className="h-12 w-12 animate-spin text-white" />
-                    </div>
-                )}
+                
             </div>
             <canvas ref={canvasRef} className="hidden" />
           </CardContent>
-          <CardFooter className="flex justify-center">
-             <Button size="lg" onClick={handleCapture} disabled={!hasCameraPermission || loading}>
-              <ScanLine className="mr-2 h-5 w-5" /> Scan Pantry
-            </Button>
-          </CardFooter>
         </Card>
       )}
 
       {pageState === 'review' && (
         <Card>
             <CardHeader>
-                <CardTitle>Identified Ingredients</CardTitle>
-                <CardDescription>We found these ingredients. Remove any that are incorrect, then generate recipes.</CardDescription>
+                <CardTitle>Review Your Ingredients</CardTitle>
+                <CardDescription>We found these items. Feel free to add or remove any before we generate recipes.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-6">
                <div className="flex flex-wrap gap-2">
                  {identifiedIngredients.map((ingredient, index) => (
                     <Badge key={index} variant="secondary" className="text-base py-1 px-3">
@@ -221,9 +249,19 @@ export default function PantryPalPage() {
                     </Badge>
                   ))}
                </div>
+               <div>
+                  <Label htmlFor="craving" className="text-base font-medium">In the mood for anything specific?</Label>
+                  <Input 
+                    id="craving"
+                    placeholder="e.g., something spicy, a quick salad, pasta..."
+                    value={craving}
+                    onChange={(e) => setCraving(e.target.value)}
+                    className="mt-2"
+                  />
+               </div>
             </CardContent>
             <CardFooter>
-                <Button onClick={handleGenerateRecipes} disabled={loading}>
+                <Button onClick={handleGenerateRecipes} disabled={loading} size="lg">
                     {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
                     Generate Recipes
                 </Button>
