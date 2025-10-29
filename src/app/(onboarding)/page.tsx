@@ -51,6 +51,9 @@ import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Switch } from '@/components/ui/switch';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
+import Image from 'next/image';
 
 type Step =
   | 'welcome'
@@ -103,6 +106,30 @@ const StepIndicator = ({ currentStep }: { currentStep: number }) => (
     ))}
   </div>
 );
+
+const getMealImage = (mealName: string) => {
+    const nameLower = mealName.toLowerCase();
+    const hints = ['salad', 'chicken', 'oatmeal', 'pancake', 'smoothie', 'salmon', 'egg', 'toast', 'yogurt', 'fruit', 'soup', 'pasta', 'steak', 'burger', 'wrap', 'tuna', 'avocado'];
+    
+    for (const hint of hints) {
+        if (nameLower.includes(hint)) {
+            const image = PlaceHolderImages.find(p => p.imageHint.includes(hint));
+            if (image) return image;
+        }
+    }
+    return PlaceHolderImages.find(p => p.imageHint.includes('ai')) || PlaceHolderImages[0];
+};
+
+const CustomTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="rounded-lg border bg-background/90 p-2 text-sm shadow-md">
+          <p className="font-bold">{`${payload[0].name}: ${payload[0].value}g`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
 
 export default function GetStartedPage() {
   const router = useRouter();
@@ -523,52 +550,78 @@ export default function GetStartedPage() {
         );
       case 'result':
         return (
-          <Card className="w-full max-w-3xl animate-in fade-in-50 shadow-lg">
-            <CardHeader className="text-center pb-4">
-              <Sparkles className="mx-auto h-12 w-12 text-primary" />
-              <CardTitle className="text-3xl mt-4 font-bold font-headline">Your 7-Day Action Plan</CardTitle>
-              <CardDescription>
-                Here's your personalized starting guide to a healthier week.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-               <Accordion type="single" collapsible className="w-full" defaultValue="item-0">
-                {plan?.weeklyPlan.map((dayPlan, index) => (
-                  <AccordionItem value={`item-${index}`} key={index}>
-                    <AccordionTrigger className="text-lg font-semibold font-headline">
-                      {dayPlan.day}
-                    </AccordionTrigger>
-                    <AccordionContent className="space-y-4 pt-2">
-                       <div className='p-4 border rounded-lg bg-muted/30'>
-                          <h4 className="font-semibold mb-2">Daily Nutrition Summary</h4>
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                            <div className="flex items-center gap-2"><Zap className="h-5 w-5 text-primary" /> <div><span className="font-bold">{dayPlan.dailyTotals.calories}</span> <span className="text-xs">kcal</span></div></div>
-                            <div className="flex items-center gap-2"><Drumstick className="h-5 w-5 text-primary" /> <div><span className="font-bold">{dayPlan.dailyTotals.protein}</span><span className="text-xs">g Protein</span></div></div>
-                            <div className="flex items-center gap-2"><Wheat className="h-5 w-5 text-primary" /> <div><span className="font-bold">{dayPlan.dailyTotals.carbs}</span><span className="text-xs">g Carbs</span></div></div>
-                            <div className="flex items-center gap-2"><Brain className="h-5 w-5 text-primary" /> <div><span className="font-bold">{dayPlan.dailyTotals.fat}</span><span className="text-xs">g Fat</span></div></div>
-                          </div>
-                       </div>
-                       <div className="grid md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                           <h4 className="font-semibold">Meals</h4>
-                           <ul className="space-y-1 text-muted-foreground list-disc list-inside">
-                             <li><b>Breakfast:</b> {dayPlan.meals.breakfast}</li>
-                             <li><b>Lunch:</b> {dayPlan.meals.lunch}</li>
-                             <li><b>Dinner:</b> {dayPlan.meals.dinner}</li>
-                             <li><b>Snack:</b> {dayPlan.meals.snack}</li>
-                           </ul>
-                        </div>
-                         <div className="space-y-2">
-                          <h4 className="font-semibold">Workout</h4>
-                          <p className="text-muted-foreground">{dayPlan.workoutSuggestion}</p>
-                        </div>
-                       </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            </CardContent>
-          </Card>
+            <Card className="w-full max-w-4xl animate-in fade-in-50 shadow-lg">
+                <CardHeader className="text-center pb-4">
+                <Sparkles className="mx-auto h-12 w-12 text-primary" />
+                <CardTitle className="text-3xl mt-4 font-bold font-headline">Your 7-Day Action Plan</CardTitle>
+                <CardDescription>
+                    Here's your personalized starting guide to a healthier week.
+                </CardDescription>
+                </CardHeader>
+                <CardContent>
+                <Accordion type="single" collapsible className="w-full" defaultValue="item-0">
+                    {plan?.weeklyPlan.map((dayPlan, index) => {
+                    const macroData = [
+                        { name: 'Protein', value: dayPlan.dailyTotals.protein, color: '#38bdf8' }, // sky-400
+                        { name: 'Carbs', value: dayPlan.dailyTotals.carbs, color: '#f59e0b' },   // amber-500
+                        { name: 'Fat', value: dayPlan.dailyTotals.fat, color: '#f43f5e' },      // rose-500
+                    ];
+                    return (
+                        <AccordionItem value={`item-${index}`} key={index}>
+                        <AccordionTrigger className="text-lg font-semibold font-headline">
+                            <div className="flex justify-between items-center w-full pr-2">
+                                <span>{dayPlan.day}</span>
+                                <span className="text-sm font-normal text-muted-foreground">{dayPlan.dailyTotals.calories} kcal</span>
+                            </div>
+                        </AccordionTrigger>
+                        <AccordionContent className="space-y-6 pt-2">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                                <div className="md:col-span-1 h-48 w-full relative">
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <PieChart>
+                                        <Pie data={macroData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={60} label>
+                                            {macroData.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={entry.color} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip content={<CustomTooltip />} />
+                                        </PieChart>
+                                    </ResponsiveContainer>
+                                    <div className="flex justify-center gap-4 text-xs mt-2">
+                                        <div className="flex items-center gap-1"><div className="h-2 w-2 rounded-full bg-sky-400" /> Protein</div>
+                                        <div className="flex items-center gap-1"><div className="h-2 w-2 rounded-full bg-amber-500" /> Carbs</div>
+                                        <div className="flex items-center gap-1"><div className="h-2 w-2 rounded-full bg-rose-500" /> Fat</div>
+                                    </div>
+                                </div>
+                                <div className="md:col-span-2 space-y-4">
+                                     <h4 className="font-semibold">Meals</h4>
+                                    <ul className="space-y-3 text-muted-foreground">
+                                    {Object.entries(dayPlan.meals).map(([mealType, mealName]) => {
+                                        const image = getMealImage(mealName);
+                                        return (
+                                        <li key={mealType} className="flex items-center gap-3">
+                                            {image && <Image src={image.imageUrl} alt={mealName} width={48} height={48} className="rounded-md h-12 w-12 object-cover" data-ai-hint={image.imageHint} />}
+                                            <div>
+                                                <b className="capitalize text-foreground">{mealType}:</b> {mealName}
+                                            </div>
+                                        </li>
+                                        );
+                                    })}
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div className="p-4 border rounded-lg bg-muted/30">
+                                <h4 className="font-semibold mb-2">Workout Suggestion</h4>
+                                <p className="text-muted-foreground">{dayPlan.workoutSuggestion}</p>
+                            </div>
+                        </AccordionContent>
+                        </AccordionItem>
+                    );
+                    })}
+                </Accordion>
+                </CardContent>
+            </Card>
         );
       case 'signup':
         return (
@@ -632,7 +685,7 @@ export default function GetStartedPage() {
           {renderStep()}
         </div>
 
-        <div className="absolute bottom-6 w-full max-w-2xl px-4">
+        <div className="absolute bottom-6 w-full max-w-4xl px-4">
           {showProgress && <Progress value={progress} className="mb-4 h-2" />}
           {showNav && (
             <div className="flex justify-between items-center">
@@ -664,3 +717,5 @@ export default function GetStartedPage() {
     </div>
   );
 }
+
+    
