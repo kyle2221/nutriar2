@@ -54,14 +54,12 @@ const MacroCard = ({
 );
 
 const MacrosOverview: React.FC<MacrosOverviewProps> = ({ nutritionData }) => (
-    <div className="h-full flex flex-col gap-8">
-        <Card>
-            <CardHeader>
-                <CardTitle className="font-headline">Macronutrients</CardTitle>
-                <CardDescription>Your macronutrient breakdown for today.</CardDescription>
-            </CardHeader>
-        </Card>
-        <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-6">
+    <Card className="lg:col-span-2">
+        <CardHeader>
+            <CardTitle className="font-headline">Macronutrients</CardTitle>
+            <CardDescription>Your macronutrient breakdown for today.</CardDescription>
+        </CardHeader>
+        <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <MacroCard
                 title="Protein"
                 value={nutritionData.macros.protein.value}
@@ -86,8 +84,8 @@ const MacrosOverview: React.FC<MacrosOverviewProps> = ({ nutritionData }) => (
                 icon={Flame}
                 color="bg-rose-500"
             />
-        </div>
-    </div>
+        </CardContent>
+    </Card>
 );
 
 export default MacrosOverview;

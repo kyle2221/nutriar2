@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { CheckCircle2, AlertTriangle, Heart, Zap, Drumstick, Wheat, BrainCircuit, Star, ShieldCheck } from 'lucide-react';
+import { CheckCircle2, AlertTriangle, Heart, Zap, Drumstick, Wheat, Brain, Star, ShieldCheck } from 'lucide-react';
 import { useRecipeStore } from '@/store/recipe-store';
 import { Button } from '@/components/ui/button';
 import { useMemo } from 'react';
@@ -24,7 +24,7 @@ import { useToast } from '@/hooks/use-toast';
 function NutritionStat({ icon: Icon, label, value, unit }: { icon: React.ElementType, label: string, value?: number, unit: string }) {
     if (value === undefined) return null;
     return (
-      <div className="flex items-center gap-2 p-3 rounded-lg bg-secondary/50">
+      <div className="flex items-center gap-2 p-3 rounded-md bg-secondary/50">
         <Icon className="h-6 w-6 text-primary" />
         <div>
           <p className="font-semibold text-sm">{label}</p>
@@ -143,7 +143,7 @@ export default function SingleRecipePage({ params }: { params: { id: string } })
                     alt={recipe.recipeName}
                     width={600}
                     height={400}
-                    className="rounded-t-lg md:rounded-l-lg md:rounded-t-none object-cover w-full h-full"
+                    className="rounded-t-md md:rounded-l-md md:rounded-t-none object-cover w-full h-full"
                     data-ai-hint={placeholderImage.imageHint}
                 />
             </div>
@@ -163,11 +163,11 @@ export default function SingleRecipePage({ params }: { params: { id: string } })
                         <Badge variant="secondary" className="capitalize w-fit">{recipe.category}</Badge>
                         <StarRating rating={recipe.rating} showValue={true} />
                      </div>
-                    <CardDescription className="text-lg">{recipe.reasoning}</CardDescription>
+                    <CardDescription className="text-base">{recipe.reasoning}</CardDescription>
                 </CardHeader>
                 <Separator />
                 <CardContent className="p-6 grid grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
-                    <div className="flex items-center gap-2 p-3 rounded-lg bg-primary/10 text-primary-foreground">
+                    <div className="flex items-center gap-2 p-3 rounded-md bg-primary/10 text-primary-foreground">
                         <ShieldCheck className="h-6 w-6 text-primary" />
                         <div>
                         <p className="font-semibold text-sm text-primary">Health Score</p>
@@ -177,7 +177,7 @@ export default function SingleRecipePage({ params }: { params: { id: string } })
                     <NutritionStat icon={Zap} label="Calories" value={recipe.calories} unit=" kcal" />
                     <NutritionStat icon={Drumstick} label="Protein" value={recipe.protein} unit="g" />
                     <NutritionStat icon={Wheat} label="Carbs" value={recipe.carbs} unit="g" />
-                    <NutritionStat icon={BrainCircuit} label="Fat" value={recipe.fat} unit="g" />
+                    <NutritionStat icon={Brain} label="Fat" value={recipe.fat} unit="g" />
                 </CardContent>
             </div>
         </div>

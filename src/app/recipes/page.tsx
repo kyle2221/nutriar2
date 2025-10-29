@@ -45,7 +45,7 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
   const placeholder = PlaceHolderImages.find(p => p.imageHint === recipe.imageHint) || PlaceHolderImages[0];
 
   return (
-    <Card className="flex flex-col overflow-hidden transition-all hover:shadow-lg">
+    <Card className="flex flex-col overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 duration-200">
       <CardHeader className="p-0">
         <div className="relative w-full h-48">
           <Link href={`/recipes/${recipe.id}`}>
@@ -71,9 +71,9 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
           </Badge>
         </div>
       </CardHeader>
-      <div className="p-6 flex flex-col flex-grow">
-        <CardTitle className="font-headline mb-2">{recipe.recipeName}</CardTitle>
-        <div className="flex items-center gap-4 mb-4 text-xs text-muted-foreground">
+      <div className="p-4 flex flex-col flex-grow">
+        <CardTitle className="font-headline text-lg mb-2">{recipe.recipeName}</CardTitle>
+        <div className="flex items-center gap-4 mb-3 text-xs text-muted-foreground">
            <div className="flex items-center gap-1">
              <StarRating rating={recipe.rating} />
              <span>({recipe.rating})</span>
@@ -84,11 +84,11 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
            </div>
         </div>
         <CardContent className="p-0 flex-grow">
-          <p className="text-sm text-muted-foreground line-clamp-3">
+          <p className="text-sm text-muted-foreground line-clamp-2">
             {recipe.reasoning}
           </p>
         </CardContent>
-        <CardFooter className="p-0 pt-6">
+        <CardFooter className="p-0 pt-4">
             <Link href={`/recipes/${recipe.id}`} className="w-full">
               <Button className="w-full">View Recipe</Button>
             </Link>
@@ -190,7 +190,7 @@ export default function RecipesPage() {
       )}
 
       {filteredRecipes.length > 0 ? (
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filteredRecipes.map((recipe) => (
             <RecipeCard key={recipe.id} recipe={recipe} />
           ))}

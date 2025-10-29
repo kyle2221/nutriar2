@@ -35,7 +35,7 @@ const metricConfig: Record<
   protein: { label: 'Protein', color: 'hsl(200 80% 50%)', unit: 'g' },
   carbs: { label: 'Carbs', color: 'hsl(40 80% 50%)', unit: 'g' },
   fat: { label: 'Fat', color: 'hsl(0 70% 50%)', unit: 'g' },
-  steps: { label: 'Steps', color: 'hsl(150 70% 40%)', unit: '' },
+  steps: { label: 'Steps', color: 'hsl(25 85% 55%)', unit: '' },
 };
 
 const ProgressChart: React.FC<ProgressChartProps> = ({ data, metric }) => {
@@ -88,17 +88,18 @@ const ProgressChart: React.FC<ProgressChartProps> = ({ data, metric }) => {
           domain={['dataMin - 10', 'dataMax + 10']}
         />
         <Tooltip
-          cursor={false}
+          cursor={true}
           content={
             <ChartTooltipContent
               indicator="line"
               labelFormatter={(value) =>
-                new Date(value).toLocaleDateString('en-US', {
-                  month: 'short',
-                  day: 'numeric',
-                })
+                value
               }
-              formatter={(value) => `${value}${config.unit}`}
+              formatter={(value, name) => (
+                <div className="flex flex-col">
+                  <span>{`${config.label}: ${value}${config.unit}`}</span>
+                </div>
+              )}
             />
           }
         />
@@ -111,7 +112,7 @@ const ProgressChart: React.FC<ProgressChartProps> = ({ data, metric }) => {
             />
             <stop
               offset="95%"
-              stopColor={config.color}
+              stopColor="hsl(var(--muted))"
               stopOpacity={0.01}
             />
           </linearGradient>
@@ -121,18 +122,18 @@ const ProgressChart: React.FC<ProgressChartProps> = ({ data, metric }) => {
           type="monotone"
           fill={`url(#fill${metric})`}
           stroke={config.color}
-          strokeWidth={2}
+          strokeWidth={3}
           stackId="a"
           dot={(props) => {
             if (props.index === data.length - 1) {
               return (
-                <Dot {...props} r={4} fill={config.color} strokeWidth={2} />
+                <Dot {...props} r={5} fill={config.color} stroke="hsl(var(--background))" strokeWidth={2} />
               );
             }
             return null;
           }}
           activeDot={(props) => (
-            <Dot {...props} r={5} fill={config.color} strokeWidth={1} />
+            <Dot {...props} r={6} fill={config.color} stroke="hsl(var(--background))" strokeWidth={2} />
           )}
         />
       </AreaChart>

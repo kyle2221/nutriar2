@@ -80,21 +80,22 @@ const CommunityPost = ({ post }: { post: (typeof communityPosts)[0] }) => {
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        <p>{post.message}</p>
+        <p className="text-base">{post.message}</p>
         <Link href={`/recipes/${post.recipeId}`}>
-          <div className="border rounded-lg overflow-hidden flex cursor-pointer hover:border-primary transition-colors">
+          <div className="border rounded-md overflow-hidden flex cursor-pointer hover:border-primary transition-colors">
             {recipeImage && (
-              <Image
-                src={recipeImage.imageUrl}
-                alt={post.recipeName}
-                width={100}
-                height={100}
-                className="object-cover"
-              />
+              <div className="relative w-24 h-24 flex-shrink-0">
+                <Image
+                  src={recipeImage.imageUrl}
+                  alt={post.recipeName}
+                  layout="fill"
+                  className="object-cover"
+                />
+              </div>
             )}
-            <div className="p-4">
+            <div className="p-4 flex flex-col justify-center">
               <p className="font-semibold">{post.recipeName}</p>
-              <Badge variant="outline" className="mt-2">View Recipe</Badge>
+              <Badge variant="outline" className="mt-2 w-fit">View Recipe</Badge>
             </div>
           </div>
         </Link>

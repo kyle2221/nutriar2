@@ -123,13 +123,9 @@ export default function DashboardPage() {
           Dashboard
         </h1>
       </div>
-      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-        <div className="lg:col-span-1">
-          <CalorieGoalChart nutritionData={nutritionData} />
-        </div>
-        <div className="lg:col-span-3">
-          <MacrosOverview nutritionData={nutritionData} />
-        </div>
+      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <CalorieGoalChart nutritionData={nutritionData} />
+        <MacrosOverview nutritionData={nutritionData} />
       </div>
       <Card className="col-span-1 lg:col-span-4">
         <CardHeader>
