@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Loader2, Camera, Wand2, ScanLine, RefreshCw } from 'lucide-react';
+import { Loader2, Wand2, RefreshCw } from 'lucide-react';
 import { identifyIngredientsFromImage } from '@/ai/flows/identify-ingredients-from-image';
 import { generateRecipeFromIngredients, GenerateRecipeFromIngredientsOutput } from '@/ai/flows/generate-recipe-from-ingredients';
 import Link from 'next/link';
@@ -95,7 +95,8 @@ export default function PantryPalPage() {
         clearTimeout(scanTimeoutRef.current);
       }
     };
-  }, [pageState, toast]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pageState]);
 
   
   const handleIdentifyIngredients = async (imageDataUri: string) => {
