@@ -15,19 +15,31 @@ import {
   ChartContainer,
   ChartTooltipContent,
 } from '@/components/ui/chart';
+import type { Metric } from '@/app/dashboard/page';
 
 type ProgressChartProps = {
-  data: { date: string; calories: number }[];
+  data: { date: string; [key: string]: any }[];
+  metric: Metric;
 };
 
-const chartConfig = {
-  calories: {
-    label: 'Calories',
-    color: 'hsl(var(--primary))',
-  },
-} satisfies ChartConfig;
+const metricConfig: Record<Metric, { label: string; color: string; unit: string }> = {
+    calories: { label: "Calories", color: "hsl(var(--primary))", unit: "kcal" },
+    protein: { label: "Protein", color: "hsl(200 80% 50%)", unit: "g" },
+    carbs: { label: "Carbs", color: "hsl(40 80% 50%)", unit: "g" },
+    fat: { label: "Fat", color: "hsl(0 70% 50%)", unit: "g" },
+    steps: { label: "Steps", color: "hsl(150 70% 40%)", unit: "" },
+};
 
-const ProgressChart: React.FC<ProgressChartProps> = ({ data }) => {
+const ProgressChart: React.FC<ProgressChartProps> = ({ data, metric }) => {
+  const config = metricConfig[metric];
+
+  const chartConfig = {
+    [metric]: {
+      label: config.label,
+      color: 'hsl(25, 95%, 53%)', // Orange color
+    },
+  } satisfies ChartConfig;
+
   return (
     <ChartContainer config={chartConfig} className="h-[250px] w-full">
       <AreaChart
@@ -47,12 +59,11 @@ const ProgressChart: React.FC<ProgressChartProps> = ({ data }) => {
           axisLine={false}
           tickMargin={8}
           tickFormatter={(value, index) => {
-            // Show fewer ticks for larger data sets to prevent clutter
             if (data.length > 30 && index % Math.floor(data.length / 10) !== 0) {
               return '';
             }
             if (data.length > 7 && value.includes('/')) {
-              return value.split('/')[0] + '/' + value.split('/')[1]; // Format to M/D
+              return value.split('/')[0] + '/' + value.split('/')[1];
             }
             return value;
           }}
@@ -63,33 +74,37 @@ const ProgressChart: React.FC<ProgressChartProps> = ({ data }) => {
           axisLine={false}
           tickMargin={8}
           tickCount={4}
-          domain={['dataMin - 100', 'dataMax + 100']}
+          domain={['dataMin - 10', 'dataMax + 10']}
         />
         <Tooltip
           cursor={false}
-          content={<ChartTooltipContent indicator="line" />}
+          content={<ChartTooltipContent 
+            indicator="line" 
+            formatter={(value) => `${value}${config.unit}`}
+          />}
         />
         <defs>
-          <linearGradient id="fillCalories" x1="0" y1="0" x2="0" y2="1">
+          <linearGradient id={`fill${metric}`} x1="0" y1="0" x2="0" y2="1">
             <stop
               offset="5%"
-              stopColor="hsl(var(--primary))"
+              stopColor="var(--color-orange)"
               stopOpacity={0.4}
             />
             <stop
               offset="95%"
-              stopColor="hsl(var(--primary))"
+              stopColor="var(--color-orange)"
               stopOpacity={0.05}
             />
           </linearGradient>
         </defs>
         <Area
-          dataKey="calories"
+          dataKey={metric}
           type="natural"
-          fill="url(#fillCalories)"
-          stroke="hsl(var(--primary))"
+          fill={`url(#fill${metric})`}
+          stroke="hsl(25, 95%, 53%)"
           strokeWidth={2}
           stackId="a"
+          dot={false}
         />
       </AreaChart>
     </ChartContainer>

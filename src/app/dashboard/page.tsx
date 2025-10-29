@@ -10,16 +10,23 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 
 type TimeRange = '1D' | '5D' | '1M' | '6M' | '1Y' | '5Y' | 'MAX';
+export type Metric = 'calories' | 'protein' | 'carbs' | 'fat' | 'steps';
 
 // Helper to generate mock data
-const generateMockData = (days: number, baseCalories: number) => {
+const generateMockData = (days: number) => {
   const data = [];
   const today = new Date();
   for (let i = days - 1; i >= 0; i--) {
     const date = new Date(today);
     date.setDate(today.getDate() - i);
-    const calories = baseCalories + Math.floor(Math.random() * 401) - 200; // Fluctuate by +/- 200
-    data.push({ date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }), calories });
+    data.push({ 
+        date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }), 
+        calories: 2400 + Math.floor(Math.random() * 401) - 200,
+        protein: 140 + Math.floor(Math.random() * 41) - 20,
+        carbs: 280 + Math.floor(Math.random() * 61) - 30,
+        fat: 70 + Math.floor(Math.random() * 21) - 10,
+        steps: 8000 + Math.floor(Math.random() * 4001) - 2000,
+    });
   }
   return data;
 };
@@ -27,6 +34,7 @@ const generateMockData = (days: number, baseCalories: number) => {
 export default function DashboardPage() {
   const { meals } = useMealStore();
   const [timeRange, setTimeRange] = useState<TimeRange>('5D');
+  const [activeMetric, setActiveMetric] = useState<Metric>('calories');
 
   const todayTotals = useMemo(() => {
     return meals.reduce(
@@ -53,24 +61,45 @@ export default function DashboardPage() {
   }, [todayTotals]);
 
   const progressData = useMemo(() => {
-    const baseCals = 2400;
-    const data1D = [{ date: 'Today', calories: todayTotals.calories }];
-    const data5D = generateMockData(5, baseCals);
-    data5D[data5D.length - 1].calories = todayTotals.calories; // Ensure today's data is accurate
-
+    const todayData = {
+        date: 'Today',
+        calories: todayTotals.calories,
+        protein: todayTotals.protein,
+        carbs: todayTotals.carbs,
+        fat: todayTotals.fat,
+        steps: 10520 // Mocked for today's steps
+    };
+    
+    let data;
     switch (timeRange) {
-      case '1D': return data1D;
-      case '5D': return data5D;
-      case '1M': return generateMockData(30, baseCals);
-      case '6M': return generateMockData(180, baseCals);
-      case '1Y': return generateMockData(365, baseCals);
-      case '5Y': return generateMockData(365 * 5, baseCals);
-      case 'MAX': return generateMockData(365 * 5, baseCals); // Max is same as 5Y for demo
-      default: return data5D;
+      case '1D': data = [todayData]; break;
+      case '5D': data = generateMockData(5); break;
+      case '1M': data = generateMockData(30); break;
+      case '6M': data = generateMockData(180); break;
+      case '1Y': data = generateMockData(365); break;
+      case '5Y': data = generateMockData(365 * 5); break;
+      case 'MAX': data = generateMockData(365 * 5); break; // Max is same as 5Y for demo
+      default: data = generateMockData(5);
     }
-  }, [timeRange, todayTotals.calories]);
+    // Ensure today's data is accurate for ranges including today
+    if (timeRange !== '1D' && data.length > 0) {
+        data[data.length - 1] = {
+            ...data[data.length - 1],
+            ...todayData,
+            date: data[data.length - 1].date
+        };
+    }
+    return data;
+  }, [timeRange, todayTotals]);
 
   const timeRanges: TimeRange[] = ['1D', '5D', '1M', '6M', '1Y', '5Y', 'MAX'];
+  const metrics: { key: Metric, label: string }[] = [
+    { key: 'calories', label: 'Calories' },
+    { key: 'protein', label: 'Protein' },
+    { key: 'carbs', label: 'Carbs' },
+    { key: 'fat', label: 'Fat' },
+    { key: 'steps', label: 'Steps' },
+  ];
 
   return (
     <div className="flex-1 space-y-8 p-4 md:p-8 pt-6">
@@ -88,27 +117,41 @@ export default function DashboardPage() {
         </div>
       </div>
        <Card className="col-span-1 lg:col-span-4">
-        <CardHeader className="flex-row items-center justify-between">
-            <div>
-                <CardTitle className="font-headline">Progress</CardTitle>
-                <CardDescription>Your calorie intake over time.</CardDescription>
+        <CardHeader>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <CardTitle className="font-headline">Progress</CardTitle>
+                    <CardDescription>Your metric intake over time.</CardDescription>
+                </div>
+                 <div className="flex items-center gap-1 p-1 bg-muted rounded-md w-full sm:w-auto overflow-x-auto">
+                    {timeRanges.map((range) => (
+                        <Button 
+                            key={range}
+                            size="sm"
+                            variant={timeRange === range ? 'default' : 'ghost'}
+                            onClick={() => setTimeRange(range)}
+                            className="px-3 py-1 h-8 flex-shrink-0"
+                        >
+                            {range}
+                        </Button>
+                    ))}
+                </div>
             </div>
-            <div className="flex items-center gap-1 p-1 bg-muted rounded-md">
-                {timeRanges.map((range) => (
-                    <Button 
-                        key={range}
+            <div className="flex flex-wrap gap-2 mt-4">
+                {metrics.map(({ key, label }) => (
+                    <Button
+                        key={key}
+                        variant={activeMetric === key ? "secondary" : "ghost"}
                         size="sm"
-                        variant={timeRange === range ? 'default' : 'ghost'}
-                        onClick={() => setTimeRange(range)}
-                        className="px-3 py-1 h-8"
+                        onClick={() => setActiveMetric(key)}
                     >
-                        {range}
+                        {label}
                     </Button>
                 ))}
             </div>
         </CardHeader>
         <CardContent>
-          <ProgressChart data={progressData} />
+          <ProgressChart data={progressData} metric={activeMetric} />
         </CardContent>
       </Card>
       <MealLog meals={meals} />
