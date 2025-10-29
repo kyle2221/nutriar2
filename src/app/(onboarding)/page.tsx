@@ -46,6 +46,7 @@ import { providePersonalizedPlan, PersonalizedPlanOutput } from '@/ai/flows/prov
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Switch } from '@/components/ui/switch';
 
 type Step =
   | 'welcome'
@@ -57,6 +58,8 @@ type Step =
   | 'loading'
   | 'result'
   | 'signup';
+
+type Units = 'metric' | 'imperial';
 
 const GoogleIcon = () => (
   <svg
@@ -100,6 +103,7 @@ const StepIndicator = ({ currentStep }: { currentStep: number }) => (
 export default function GetStartedPage() {
   const router = useRouter();
   const [step, setStep] = useState<Step>('welcome');
+  const [units, setUnits] = useState<Units>('metric');
   const [formData, setFormData] = useState({
     gender: '',
     height: '',
@@ -107,6 +111,11 @@ export default function GetStartedPage() {
     goal: '',
     activityLevel: '',
     dietaryPreferences: '',
+  });
+  const [imperialData, setImperialData] = useState({
+    height_ft: '',
+    height_in: '',
+    weight_lbs: '',
   });
   const [plan, setPlan] = useState<PersonalizedPlanOutput | null>(null);
 
@@ -159,9 +168,23 @@ export default function GetStartedPage() {
   };
 
   const generatePlan = async () => {
+    let finalData = { ...formData };
+    if (units === 'imperial') {
+        const feet = parseFloat(imperialData.height_ft) || 0;
+        const inches = parseFloat(imperialData.height_in) || 0;
+        const totalInches = feet * 12 + inches;
+        const cm = totalInches * 2.54;
+
+        const lbs = parseFloat(imperialData.weight_lbs) || 0;
+        const kg = lbs * 0.453592;
+
+        finalData.height = cm > 0 ? String(Math.round(cm)) : '';
+        finalData.weight = kg > 0 ? String(Math.round(kg)) : '';
+    }
+    
     setStep('loading');
     try {
-      const result = await providePersonalizedPlan(formData);
+      const result = await providePersonalizedPlan(finalData);
       setPlan(result);
       setStep('result');
     } catch (e) {
@@ -175,6 +198,27 @@ export default function GetStartedPage() {
     // In a real app, this would handle the sign-up logic.
     // For now, it will just redirect to the dashboard.
     router.push('/dashboard');
+  }
+
+  const isNextDisabled = () => {
+    switch (step) {
+      case 'gender':
+          return !formData.gender;
+      case 'measurements':
+        if (units === 'metric') {
+          return !formData.height || !formData.weight;
+        } else {
+          return !imperialData.height_ft || !imperialData.weight_lbs;
+        }
+      case 'goals':
+          return !formData.goal;
+      case 'activity':
+        return !formData.activityLevel;
+      case 'diet':
+        return !formData.dietaryPreferences;
+      default:
+        return false;
+    }
   }
 
   const renderStep = () => {
@@ -245,36 +289,89 @@ export default function GetStartedPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="height" className="font-semibold flex items-center gap-2">
-                    <HeartPulse className="h-4 w-4" /> Height (cm)
-                </Label>
-                <Input
-                  id="height"
-                  type="number"
-                  placeholder="e.g., 180"
-                  value={formData.height}
-                  onChange={(e) =>
-                    setFormData({ ...formData, height: e.target.value })
-                  }
-                  className="text-lg"
-                />
-              </div>
-              <div className="space-y-2">
-                 <Label htmlFor="weight" className="font-semibold flex items-center gap-2">
-                    <Weight className="h-4 w-4" /> Weight (kg)
-                </Label>
-                <Input
-                  id="weight"
-                  type="number"
-                  placeholder="e.g., 75"
-                  value={formData.weight}
-                  onChange={(e) =>
-                    setFormData({ ...formData, weight: e.target.value })
-                  }
-                  className="text-lg"
-                />
-              </div>
+                <div className="flex items-center justify-center space-x-2">
+                    <Label htmlFor="units-switch" className={cn(units === 'imperial' && 'text-muted-foreground')}>Imperial</Label>
+                    <Switch
+                        id="units-switch"
+                        checked={units === 'metric'}
+                        onCheckedChange={(checked) => setUnits(checked ? 'metric' : 'imperial')}
+                    />
+                    <Label htmlFor="units-switch" className={cn(units === 'metric' && 'text-muted-foreground')}>Metric</Label>
+                </div>
+              
+                {units === 'metric' ? (
+                    <>
+                        <div className="space-y-2">
+                            <Label htmlFor="height" className="font-semibold flex items-center gap-2">
+                                <HeartPulse className="h-4 w-4" /> Height (cm)
+                            </Label>
+                            <Input
+                            id="height"
+                            type="number"
+                            placeholder="e.g., 180"
+                            value={formData.height}
+                            onChange={(e) =>
+                                setFormData({ ...formData, height: e.target.value })
+                            }
+                            className="text-lg"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="weight" className="font-semibold flex items-center gap-2">
+                                <Weight className="h-4 w-4" /> Weight (kg)
+                            </Label>
+                            <Input
+                            id="weight"
+                            type="number"
+                            placeholder="e.g., 75"
+                            value={formData.weight}
+                            onChange={(e) =>
+                                setFormData({ ...formData, weight: e.target.value })
+                            }
+                            className="text-lg"
+                            />
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <div className="space-y-2">
+                            <Label htmlFor="height_ft" className="font-semibold flex items-center gap-2">
+                                <HeartPulse className="h-4 w-4" /> Height
+                            </Label>
+                            <div className="flex gap-2">
+                                <Input
+                                    id="height_ft"
+                                    type="number"
+                                    placeholder="ft"
+                                    value={imperialData.height_ft}
+                                    onChange={(e) => setImperialData({ ...imperialData, height_ft: e.target.value })}
+                                    className="text-lg"
+                                />
+                                <Input
+                                    id="height_in"
+                                    type="number"
+                                    placeholder="in"
+                                    value={imperialData.height_in}
+                                    onChange={(e) => setImperialData({ ...imperialData, height_in: e.target.value })}
+                                    className="text-lg"
+                                />
+                            </div>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="weight_lbs" className="font-semibold flex items-center gap-2">
+                                <Weight className="h-4 w-4" /> Weight (lbs)
+                            </Label>
+                            <Input
+                                id="weight_lbs"
+                                type="number"
+                                placeholder="e.g., 165"
+                                value={imperialData.weight_lbs}
+                                onChange={(e) => setImperialData({ ...imperialData, weight_lbs: e.target.value })}
+                                className="text-lg"
+                            />
+                        </div>
+                    </>
+                )}
             </CardContent>
           </Card>
         );
@@ -487,19 +584,6 @@ export default function GetStartedPage() {
   const showNav = step !== 'welcome' && step !== 'loading' && step !== 'result' && step !== 'signup';
   const showProgress = step !== 'welcome' && step !== 'loading' && step !== 'result' && step !== 'signup';
 
-  const isNextDisabled = () => {
-    switch (step) {
-      case 'measurements':
-        return !formData.height || !formData.weight;
-      case 'activity':
-        return !formData.activityLevel;
-      case 'diet':
-        return !formData.dietaryPreferences;
-      default:
-        return false;
-    }
-  }
-
   return (
     <div className="flex-1 w-full bg-background relative overflow-hidden">
       <div
@@ -553,3 +637,5 @@ export default function GetStartedPage() {
     </div>
   );
 }
+
+    
