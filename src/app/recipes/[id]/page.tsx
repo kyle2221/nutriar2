@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { CheckCircle2, AlertTriangle, Heart, Zap, Drumstick, Wheat, BrainCircuit, Star } from 'lucide-react';
+import { CheckCircle2, AlertTriangle, Heart, Zap, Drumstick, Wheat, BrainCircuit, Star, ShieldCheck } from 'lucide-react';
 import { useRecipeStore } from '@/store/recipe-store';
 import { Button } from '@/components/ui/button';
 import { useMemo } from 'react';
@@ -34,25 +34,37 @@ function NutritionStat({ icon: Icon, label, value, unit }: { icon: React.Element
     );
 }
 
-function StarRating({ rating, className }: { rating: number; className?: string }) {
+function StarRating({ rating, className, showValue = false }: { rating: number; className?: string, showValue?: boolean }) {
     return (
-      <div className={cn("flex items-center gap-0.5", className)}>
-        {[...Array(5)].map((_, i) => (
-          <Star
-            key={i}
-            className={cn(
-              "h-5 w-5",
-              i < Math.floor(rating) ? "text-amber-400 fill-amber-400" : "text-muted-foreground/50"
-            )}
-          />
-        ))}
+      <div className={cn("flex items-center gap-1", className)}>
+        <div className="flex items-center gap-0.5">
+            {[...Array(5)].map((_, i) => (
+            <Star
+                key={i}
+                className={cn(
+                "h-5 w-5",
+                i < Math.floor(rating) ? "text-amber-400 fill-amber-400" : "text-muted-foreground/50"
+                )}
+            />
+            ))}
+        </div>
+        {showValue && <span className="text-sm font-medium text-muted-foreground">({rating.toFixed(1)})</span>}
       </div>
     );
 }
 
 function RecipeReviews({ reviews }: { reviews?: Review[] }) {
     if (!reviews || reviews.length === 0) {
-      return null;
+      return (
+        <Card>
+            <CardHeader>
+                <CardTitle className="font-headline text-xl">Reviews</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <p className="text-muted-foreground">No reviews yet for this recipe.</p>
+            </CardContent>
+        </Card>
+      );
     }
   
     return (
@@ -136,11 +148,21 @@ export default function SingleRecipePage({ params }: { params: { id: string } })
                         <span className="sr-only">Favorite</span>
                         </Button>
                     </div>
-                     <Badge variant="secondary" className="capitalize w-fit mb-4">{recipe.category}</Badge>
+                     <div className="flex items-center gap-4 mb-4">
+                        <Badge variant="secondary" className="capitalize w-fit">{recipe.category}</Badge>
+                        <StarRating rating={recipe.rating} showValue={true} />
+                     </div>
                     <CardDescription className="text-lg">{recipe.reasoning}</CardDescription>
                 </CardHeader>
                 <Separator />
-                <CardContent className="p-6 grid grid-cols-2 lg:grid-cols-2 gap-4 text-sm">
+                <CardContent className="p-6 grid grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+                    <div className="flex items-center gap-2 p-3 rounded-lg bg-primary/10 text-primary-foreground">
+                        <ShieldCheck className="h-6 w-6 text-primary" />
+                        <div>
+                        <p className="font-semibold text-sm text-primary">Health Score</p>
+                        <p className="text-lg font-bold text-primary">{recipe.healthScore}<span className="text-sm font-normal text-primary/80">/10</span></p>
+                        </div>
+                    </div>
                     <NutritionStat icon={Zap} label="Calories" value={recipe.calories} unit=" kcal" />
                     <NutritionStat icon={Drumstick} label="Protein" value={recipe.protein} unit="g" />
                     <NutritionStat icon={Wheat} label="Carbs" value={recipe.carbs} unit="g" />

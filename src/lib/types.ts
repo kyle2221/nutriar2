@@ -20,6 +20,8 @@ export type Recipe = {
   fat?: number;
   suitabilityScore?: number;
   reviews?: Review[];
+  rating: number;
+  healthScore: number;
 };
 
 export type Meal = {

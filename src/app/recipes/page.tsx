@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Loader2, Wand2, Heart } from 'lucide-react';
+import { Loader2, Wand2, Heart, Star, ShieldCheck } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -18,9 +18,27 @@ import { suggestRecipesBasedOnGoals, SuggestRecipesOutput } from '@/ai/flows/sug
 import type { Recipe } from '@/lib/types';
 import { useRecipeStore } from '@/store/recipe-store';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 const categories = ['All', 'Breakfast', 'Lunch', 'Dinner', 'Snack', 'Dessert', 'Favorites'] as const;
 type Category = (typeof categories)[number];
+
+function StarRating({ rating, className }: { rating: number; className?: string }) {
+    return (
+      <div className={cn("flex items-center gap-0.5", className)}>
+        {[...Array(5)].map((_, i) => (
+          <Star
+            key={i}
+            className={cn(
+              "h-4 w-4",
+              i < Math.floor(rating) ? "text-amber-400 fill-amber-400" : "text-muted-foreground/30"
+            )}
+          />
+        ))}
+      </div>
+    );
+}
 
 function RecipeCard({ recipe }: { recipe: Recipe }) {
   const { toggleFavorite } = useRecipeStore();
@@ -31,13 +49,13 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
       <CardHeader className="p-0">
         <div className="relative w-full h-48">
           <Link href={`/recipes/${recipe.id}`} passHref>
-            <Image
-              src={placeholder.imageUrl}
-              alt={recipe.recipeName}
-              fill
-              className="object-cover cursor-pointer"
-              data-ai-hint={placeholder.imageHint}
-            />
+              <Image
+                src={placeholder.imageUrl}
+                alt={recipe.recipeName}
+                fill
+                className="object-cover cursor-pointer"
+                data-ai-hint={placeholder.imageHint}
+              />
           </Link>
           <Button 
             variant="ghost" 
@@ -48,15 +66,23 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
             <Heart className={recipe.isFavorited ? "text-red-500 fill-current" : "text-gray-500"} size={18} />
             <span className="sr-only">Favorite</span>
           </Button>
+           <Badge variant="secondary" className="absolute bottom-3 left-3 capitalize">
+            {recipe.category}
+          </Badge>
         </div>
       </CardHeader>
       <div className="p-6 flex flex-col flex-grow">
         <CardTitle className="font-headline mb-2">{recipe.recipeName}</CardTitle>
-        {recipe.suitabilityScore && (
-          <CardDescription className="text-xs mb-4">
-            Suitability Score: {recipe.suitabilityScore}/100
-          </CardDescription>
-        )}
+        <div className="flex items-center gap-4 mb-4 text-xs text-muted-foreground">
+           <div className="flex items-center gap-1">
+             <StarRating rating={recipe.rating} />
+             <span>({recipe.rating})</span>
+           </div>
+           <div className="flex items-center gap-1">
+             <ShieldCheck className="h-4 w-4 text-primary" />
+             <span>Health: {recipe.healthScore}/10</span>
+           </div>
+        </div>
         <CardContent className="p-0 flex-grow">
           <p className="text-sm text-muted-foreground line-clamp-3">
             {recipe.reasoning}

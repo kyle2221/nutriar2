@@ -27,6 +27,8 @@ export const STATIC_RECIPES: Recipe[] = [
     category: 'Breakfast',
     imageHint: 'oatmeal bowl',
     isFavorited: false,
+    rating: 4.8,
+    healthScore: 10,
     calories: 450,
     protein: 35,
     carbs: 50,
@@ -59,6 +61,8 @@ export const STATIC_RECIPES: Recipe[] = [
     category: 'Breakfast',
     imageHint: 'healthy breakfast',
     isFavorited: true,
+    rating: 5,
+    healthScore: 9,
     calories: 410,
     protein: 22,
     carbs: 32,
@@ -89,6 +93,8 @@ export const STATIC_RECIPES: Recipe[] = [
     category: 'Breakfast',
     imageHint: 'green smoothie',
     isFavorited: false,
+    rating: 4.6,
+    healthScore: 10,
     calories: 320,
     protein: 28,
     carbs: 25,
@@ -96,6 +102,41 @@ export const STATIC_RECIPES: Recipe[] = [
     reviews: [
       { author: 'Chloe W.', avatarUrl: 'https://picsum.photos/seed/chloe/100/100', rating: 5, comment: 'So easy to make in the morning and tastes amazing!' },
       { author: 'Ben R.', avatarUrl: 'https://picsum.photos/seed/ben/100/100', rating: 4, comment: 'I add a handful of frozen pineapple to mine for a tropical twist.' },
+    ]
+  },
+  {
+    id: '18',
+    recipeName: 'Cottage Cheese Protein Pancakes',
+    ingredients: [
+      '1/2 cup low-fat cottage cheese',
+      '1/2 cup rolled oats',
+      '2 large eggs',
+      '1/2 tsp vanilla extract',
+      '1/2 tsp baking powder',
+      'Pinch of salt',
+      'Toppings: fresh berries, maple syrup, Greek yogurt'
+    ],
+    instructions: [
+      'Combine cottage cheese, oats, eggs, vanilla extract, baking powder, and salt in a blender.',
+      'Blend until the batter is smooth and well combined.',
+      'Lightly grease a non-stick skillet or griddle and heat over medium heat.',
+      'Pour about 1/4 cup of batter per pancake onto the skillet.',
+      'Cook for 2-3 minutes per side, until golden brown and cooked through.',
+      'Serve immediately with your favorite healthy toppings.'
+    ],
+    reasoning: 'These flourless pancakes are packed with protein from cottage cheese and eggs, making them a satisfying and muscle-building start to your day.',
+    category: 'Breakfast',
+    imageHint: 'pancakes breakfast',
+    isFavorited: false,
+    rating: 4.7,
+    healthScore: 9,
+    calories: 380,
+    protein: 30,
+    carbs: 35,
+    fat: 13,
+    reviews: [
+      { author: 'Emily R.', avatarUrl: 'https://picsum.photos/seed/emily/100/100', rating: 5, comment: 'Best protein pancakes I\'ve ever made! Not dry at all.' },
+      { author: 'David L.', avatarUrl: 'https://picsum.photos/seed/david/100/100', rating: 4, comment: 'A little denser than regular pancakes but very filling.' },
     ]
   },
   // Lunch
@@ -123,11 +164,15 @@ export const STATIC_RECIPES: Recipe[] = [
     category: 'Lunch',
     imageHint: 'salad',
     isFavorited: true,
+    rating: 4.9,
+    healthScore: 10,
     calories: 550,
     protein: 40,
     carbs: 55,
     fat: 20,
-    reviews: []
+    reviews: [
+        { author: 'Sarah J.', avatarUrl: 'https://picsum.photos/seed/sarah/100/100', rating: 5, comment: 'Perfect for meal prep. I make a big batch for the week.' },
+    ]
   },
   {
     id: '14',
@@ -152,12 +197,47 @@ export const STATIC_RECIPES: Recipe[] = [
     category: 'Lunch',
     imageHint: 'avocado dish',
     isFavorited: false,
+    rating: 4.5,
+    healthScore: 9,
     calories: 450,
     protein: 35,
     carbs: 18,
     fat: 28,
     reviews: [
       { author: 'Mike P.', avatarUrl: 'https://picsum.photos/seed/mike/100/100', rating: 5, comment: 'So quick and delicious. I make this for lunch at least twice a week.' },
+    ]
+  },
+  {
+    id: '19',
+    recipeName: 'Chicken and Veggie Wrap',
+    ingredients: [
+      '1 large whole-wheat tortilla or wrap',
+      '4 oz grilled chicken breast, sliced',
+      '1/4 cup hummus',
+      '1/2 cup mixed greens (spinach, arugula)',
+      '1/4 cup shredded carrots',
+      '1/4 cup sliced cucumber',
+      '2 tbsp crumbled feta cheese (optional)'
+    ],
+    instructions: [
+      'Lay the tortilla flat and spread the hummus evenly over the surface, leaving a small border around the edges.',
+      'Arrange the mixed greens over the hummus.',
+      'Top with the sliced grilled chicken, shredded carrots, and sliced cucumber.',
+      'Sprinkle with feta cheese, if using.',
+      'Tightly roll up the wrap, tucking in the sides as you go. Slice in half and serve.'
+    ],
+    reasoning: 'A perfectly balanced and portable lunch. It provides lean protein, fiber-rich vegetables, and healthy fats, making it easy to hit your macros on the go.',
+    category: 'Lunch',
+    imageHint: 'wrap sandwich',
+    isFavorited: true,
+    rating: 4.7,
+    healthScore: 9,
+    calories: 450,
+    protein: 38,
+    carbs: 40,
+    fat: 15,
+    reviews: [
+        { author: 'Laura K.', avatarUrl: 'https://picsum.photos/seed/laura/100/100', rating: 5, comment: 'My favorite quick lunch. So versatile!' },
     ]
   },
   // Dinner
@@ -185,6 +265,8 @@ export const STATIC_RECIPES: Recipe[] = [
     category: 'Dinner',
     imageHint: 'salmon fish',
     isFavorited: true,
+    rating: 5,
+    healthScore: 10,
     calories: 490,
     protein: 42,
     carbs: 8,
@@ -218,11 +300,15 @@ export const STATIC_RECIPES: Recipe[] = [
     category: 'Dinner',
     imageHint: 'vegetable stir-fry',
     isFavorited: false,
+    rating: 4.6,
+    healthScore: 9,
     calories: 480,
     protein: 50,
     carbs: 25,
     fat: 20,
-    reviews: []
+    reviews: [
+        { author: 'Jess', avatarUrl: 'https://picsum.photos/seed/jess/100/100', rating: 5, comment: 'So much flavor and easy to make.' },
+    ]
   },
   {
     id: '15',
@@ -250,6 +336,8 @@ export const STATIC_RECIPES: Recipe[] = [
     category: 'Dinner',
     imageHint: 'burger',
     isFavorited: false,
+    rating: 4.7,
+    healthScore: 8,
     calories: 420,
     protein: 45,
     carbs: 30,
@@ -257,6 +345,42 @@ export const STATIC_RECIPES: Recipe[] = [
     reviews: [
       { author: 'Sam K.', avatarUrl: 'https://picsum.photos/seed/sam/100/100', rating: 5, comment: 'Juicy and flavorful! You don\'t even miss the beef.' },
       { author: 'Jenna H.', avatarUrl: 'https://picsum.photos/seed/jenna/100/100', rating: 4, comment: 'I added a little jalapeño for a kick. Delicious!' },
+    ]
+  },
+    {
+    id: '20',
+    recipeName: 'Sheet Pan Lemon Herb Chicken and Veggies',
+    ingredients: [
+      '1.5 lbs boneless, skinless chicken thighs',
+      '1 lb broccoli florets',
+      '1 red bell pepper, chopped',
+      '1 red onion, cut into wedges',
+      '2 tbsp olive oil',
+      '1 lemon, juiced and zested',
+      '2 cloves garlic, minced',
+      '1 tsp dried oregano',
+      '1 tsp dried thyme',
+      'Salt and pepper to taste'
+    ],
+    instructions: [
+      'Preheat oven to 425°F (220°C).',
+      'In a large bowl, toss chicken, broccoli, bell pepper, and onion with olive oil, lemon juice and zest, garlic, oregano, thyme, salt, and pepper.',
+      'Arrange everything in a single layer on a large baking sheet.',
+      'Bake for 20-25 minutes, or until chicken is cooked through and vegetables are tender and slightly browned.',
+      'Serve immediately for a complete one-pan meal.'
+    ],
+    reasoning: 'The ultimate easy weeknight dinner. This one-pan wonder is packed with protein and vegetables, and requires minimal cleanup.',
+    category: 'Dinner',
+    imageHint: 'chicken dish',
+    isFavorited: false,
+    rating: 4.8,
+    healthScore: 9,
+    calories: 520,
+    protein: 45,
+    carbs: 18,
+    fat: 30,
+    reviews: [
+      { author: 'Mark T.', avatarUrl: 'https://picsum.photos/seed/mark/100/100', rating: 5, comment: 'My family loves this recipe. So easy and flavorful.' },
     ]
   },
   // Snacks
@@ -283,11 +407,15 @@ export const STATIC_RECIPES: Recipe[] = [
     category: 'Snack',
     imageHint: 'cookies',
     isFavorited: false,
+    rating: 4.8,
+    healthScore: 8,
     calories: 130, // Per bite
     protein: 8,
     carbs: 12,
     fat: 6,
-    reviews: []
+    reviews: [
+        { author: 'Coach Dave', avatarUrl: 'https://picsum.photos/seed/dave/100/100', rating: 5, comment: 'I recommend these to all my clients. Perfect fuel.' },
+    ]
   },
   {
     id: '16',
@@ -312,12 +440,41 @@ export const STATIC_RECIPES: Recipe[] = [
     category: 'Snack',
     imageHint: 'chickpeas',
     isFavorited: false,
+    rating: 4.5,
+    healthScore: 9,
     calories: 220,
     protein: 8,
     carbs: 27,
     fat: 9,
     reviews: [
         { author: 'Dana V.', avatarUrl: 'https://picsum.photos/seed/dana/100/100', rating: 5, comment: 'Addicting! I make a big batch at the start of the week.' },
+    ]
+  },
+    {
+    id: '21',
+    recipeName: 'Apple Slices with Almond Butter',
+    ingredients: [
+      '1 medium apple, sliced',
+      '2 tbsp almond butter',
+      '1 tsp chia seeds (optional)'
+    ],
+    instructions: [
+      'Wash and slice the apple.',
+      'Serve the apple slices with almond butter for dipping.',
+      'If desired, sprinkle chia seeds over the almond butter for extra fiber and omega-3s.'
+    ],
+    reasoning: 'A simple, classic snack that combines fiber-rich carbohydrates from the apple with healthy fats and protein from almond butter for stable energy levels.',
+    category: 'Snack',
+    imageHint: 'fruit',
+    isFavorited: true,
+    rating: 4.9,
+    healthScore: 10,
+    calories: 280,
+    protein: 8,
+    carbs: 30,
+    fat: 16,
+    reviews: [
+      { author: 'Tim R.', avatarUrl: 'https://picsum.photos/seed/tim/100/100', rating: 5, comment: 'Can\'t beat a classic. My go-to afternoon snack.' },
     ]
   },
   // Desserts
@@ -346,6 +503,8 @@ export const STATIC_RECIPES: Recipe[] = [
     category: 'Dessert',
     imageHint: 'chocolate cake',
     isFavorited: false,
+    rating: 4.4,
+    healthScore: 8,
     calories: 250, // Per slice
     protein: 25,
     carbs: 10,
@@ -374,6 +533,8 @@ export const STATIC_RECIPES: Recipe[] = [
     category: 'Dessert',
     imageHint: 'chocolate mousse',
     isFavorited: true,
+    rating: 4.9,
+    healthScore: 7,
     calories: 280,
     protein: 5,
     carbs: 35,
@@ -381,6 +542,33 @@ export const STATIC_RECIPES: Recipe[] = [
     reviews: [
       { author: 'Sara L.', avatarUrl: 'https://picsum.photos/seed/sara/100/100', rating: 5, comment: 'You can\'t even taste the avocado! So rich and creamy.' },
       { author: 'Tom F.', avatarUrl: 'https://picsum.photos/seed/tom/100/100', rating: 5, comment: 'My kids love this and have no idea it\'s healthy.' },
+    ]
+  },
+    {
+    id: '22',
+    recipeName: '2-Ingredient Banana "Ice Cream"',
+    ingredients: [
+      '4 large ripe bananas, peeled, sliced, and frozen',
+      '2-4 tbsp unsweetened almond milk (as needed)'
+    ],
+    instructions: [
+      'Place the frozen banana slices in a high-powered blender or food processor.',
+      'Blend on high, scraping down the sides as necessary. The mixture will go from crumbly to gooey, and then suddenly become smooth and creamy like soft-serve ice cream.',
+      'If needed, add a tablespoon of almond milk at a time to help with blending.',
+      'Serve immediately for a soft-serve consistency, or transfer to a freezer-safe container and freeze for at least 1 hour for a firmer, scoopable ice cream.',
+    ],
+    reasoning: 'The ultimate healthy dessert hack. This "nice cream" is dairy-free, has no added sugar, and is surprisingly creamy, satisfying sweet cravings in a wholesome way.',
+    category: 'Dessert',
+    imageHint: 'ice cream',
+    isFavorited: false,
+    rating: 4.6,
+    healthScore: 10,
+    calories: 150,
+    protein: 2,
+    carbs: 40,
+    fat: 1,
+    reviews: [
+      { author: 'Nina B.', avatarUrl: 'https://picsum.photos/seed/nina/100/100', rating: 5, comment: 'I can\'t believe this is just bananas! I add a spoonful of cocoa powder for a chocolate version.' },
     ]
   }
 ];
