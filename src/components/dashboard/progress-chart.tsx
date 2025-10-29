@@ -81,6 +81,7 @@ const ProgressChart: React.FC<ProgressChartProps> = ({ data, metric }) => {
           cursor={false}
           content={<ChartTooltipContent 
             indicator="line" 
+            labelFormatter={(label) => label}
             formatter={(value) => `${value}${config.unit}`}
           />}
         />
