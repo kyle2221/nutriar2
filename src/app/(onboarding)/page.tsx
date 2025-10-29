@@ -11,6 +11,12 @@ import {
   MoveRight,
   Loader2,
   Sparkles,
+  User,
+  HeartPulse,
+  Dumbbell,
+  Weight,
+  Target,
+  Bike,
 } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import {
@@ -204,23 +210,23 @@ export default function GetStartedPage() {
               >
                 <Label
                   htmlFor="male"
-                  className="flex flex-col items-center justify-center gap-4 rounded-md border-2 p-4 hover:border-primary cursor-pointer transition-all [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:shadow-md"
+                  className="flex flex-col items-center justify-center gap-2 rounded-md border-2 p-6 hover:border-primary cursor-pointer transition-all [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:shadow-md"
                 >
                   <RadioGroupItem value="male" id="male" className="sr-only" />
-                  <span className="text-5xl drop-shadow-sm">👨</span>
-                  <span className="font-semibold">Male</span>
+                  <User className="h-10 w-10 text-muted-foreground transition-colors [&:has([data-state=checked])]:text-primary" />
+                  <span className="font-semibold text-lg">Male</span>
                 </Label>
                 <Label
                   htmlFor="female"
-                  className="flex flex-col items-center justify-center gap-4 rounded-md border-2 p-4 hover:border-primary cursor-pointer transition-all [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:shadow-md"
+                  className="flex flex-col items-center justify-center gap-2 rounded-md border-2 p-6 hover:border-primary cursor-pointer transition-all [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:shadow-md"
                 >
                   <RadioGroupItem
                     value="female"
                     id="female"
                     className="sr-only"
                   />
-                   <span className="text-5xl drop-shadow-sm">👩</span>
-                  <span className="font-semibold">Female</span>
+                  <User className="h-10 w-10 text-muted-foreground transition-colors [&:has([data-state=checked])]:text-primary" />
+                  <span className="font-semibold text-lg">Female</span>
                 </Label>
               </RadioGroup>
             </CardContent>
@@ -237,7 +243,9 @@ export default function GetStartedPage() {
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="height" className="font-semibold">Height (cm)</Label>
+                <Label htmlFor="height" className="font-semibold flex items-center gap-2">
+                    <HeartPulse className="h-4 w-4" /> Height (cm)
+                </Label>
                 <Input
                   id="height"
                   type="number"
@@ -250,7 +258,9 @@ export default function GetStartedPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="weight" className="font-semibold">Weight (kg)</Label>
+                 <Label htmlFor="weight" className="font-semibold flex items-center gap-2">
+                    <Weight className="h-4 w-4" /> Weight (kg)
+                </Label>
                 <Input
                   id="weight"
                   type="number"
@@ -284,18 +294,19 @@ export default function GetStartedPage() {
                 className="grid grid-cols-1 gap-3"
               >
                 {[
-                  'Lose Weight',
-                  'Build Muscle',
-                  'Maintain Weight',
-                  'Improve Health',
-                ].map((goal) => (
+                  { value: 'Lose Weight', icon: Target },
+                  { value: 'Build Muscle', icon: Dumbbell },
+                  { value: 'Maintain Weight', icon: HeartPulse },
+                  { value: 'Improve Health', icon: Sparkles },
+                ].map(({ value, icon: Icon }) => (
                   <Label
-                    key={goal}
-                    htmlFor={goal}
+                    key={value}
+                    htmlFor={value}
                     className="flex items-center gap-4 rounded-md border-2 p-4 hover:border-primary cursor-pointer transition-all [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5"
                   >
-                    <RadioGroupItem value={goal} id={goal} />
-                    <span className="font-semibold">{goal}</span>
+                    <RadioGroupItem value={value} id={value} />
+                     <Icon className="h-6 w-6 text-primary" />
+                    <span className="font-semibold text-base">{value}</span>
                   </Label>
                 ))}
               </RadioGroup>
@@ -311,14 +322,17 @@ export default function GetStartedPage() {
                 Be honest! This helps estimate your daily calorie needs.
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
+                 <Label htmlFor="activity-level" className="font-semibold flex items-center gap-2">
+                    <Bike className="h-4 w-4" /> Weekly Activity Level
+                </Label>
               <Select
                 value={formData.activityLevel}
                 onValueChange={(value) =>
                   setFormData({ ...formData, activityLevel: value })
                 }
               >
-                <SelectTrigger className="text-base">
+                <SelectTrigger id="activity-level" className="text-base h-12">
                   <SelectValue placeholder="Select your activity level" />
                 </SelectTrigger>
                 <SelectContent>
@@ -348,7 +362,7 @@ export default function GetStartedPage() {
             <CardHeader className="text-center">
               <CardTitle className="text-2xl font-bold font-headline">Dietary Preferences</CardTitle>
               <CardDescription>
-                Likes, dislikes, allergies? Let us know.
+                Likes, dislikes, allergies? The more detail, the better.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -382,7 +396,7 @@ export default function GetStartedPage() {
         );
       case 'result':
         return (
-          <Card className="w-full max-w-lg animate-in fade-in-50 shadow-lg">
+          <Card className="w-full max-w-2xl animate-in fade-in-50 shadow-lg">
             <CardHeader className="text-center pb-4">
               <Sparkles className="mx-auto h-12 w-12 text-primary" />
               <CardTitle className="text-3xl mt-4 font-bold font-headline">Your Personalized Plan</CardTitle>
@@ -392,7 +406,7 @@ export default function GetStartedPage() {
             </CardHeader>
             <CardContent>
               <div 
-                className="prose prose-sm dark:prose-invert rounded-md border bg-muted/30 p-6 max-h-72 overflow-y-auto"
+                className="prose prose-sm dark:prose-invert rounded-md border bg-muted/30 p-6 max-h-[40vh] overflow-y-auto"
                 dangerouslySetInnerHTML={{ __html: plan }}
               />
             </CardContent>
@@ -433,10 +447,24 @@ export default function GetStartedPage() {
     if(step === 'loading' && !plan) {
       generatePlan();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step, plan]);
 
   const showNav = step !== 'welcome' && step !== 'loading' && step !== 'result' && step !== 'signup';
   const showProgress = step !== 'welcome' && step !== 'loading' && step !== 'result' && step !== 'signup';
+
+  const isNextDisabled = () => {
+    switch (step) {
+      case 'measurements':
+        return !formData.height || !formData.weight;
+      case 'activity':
+        return !formData.activityLevel;
+      case 'diet':
+        return !formData.dietaryPreferences;
+      default:
+        return false;
+    }
+  }
 
   return (
     <div className="flex-1 w-full bg-background relative overflow-hidden">
@@ -472,6 +500,7 @@ export default function GetStartedPage() {
                   step === 'diet' ? generatePlan : handleNext
                 }
                 className="shadow-md"
+                disabled={isNextDisabled()}
               >
                 {step === 'diet' ? 'Generate Plan' : 'Next'}
                 <MoveRight className="ml-2 h-5 w-5" />
