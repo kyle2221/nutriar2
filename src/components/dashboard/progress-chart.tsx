@@ -23,7 +23,7 @@ type ProgressChartProps = {
 const chartConfig = {
   calories: {
     label: 'Calories',
-    color: '#f59e0b', // Light orange
+    color: 'hsl(var(--primary))',
   },
 } satisfies ChartConfig;
 
@@ -46,13 +46,24 @@ const ProgressChart: React.FC<ProgressChartProps> = ({ data }) => {
           tickLine={false}
           axisLine={false}
           tickMargin={8}
-          tickFormatter={(value) => value.slice(0, 3)}
+          tickFormatter={(value, index) => {
+            // Show fewer ticks for larger data sets to prevent clutter
+            if (data.length > 30 && index % Math.floor(data.length / 10) !== 0) {
+              return '';
+            }
+            if (data.length > 7 && value.includes('/')) {
+              return value.split('/')[0] + '/' + value.split('/')[1]; // Format to M/D
+            }
+            return value;
+          }}
+          interval={data.length > 30 ? 'preserveStartEnd' : 0}
         />
         <YAxis
           tickLine={false}
           axisLine={false}
           tickMargin={8}
           tickCount={4}
+          domain={['dataMin - 100', 'dataMax + 100']}
         />
         <Tooltip
           cursor={false}
@@ -62,13 +73,13 @@ const ProgressChart: React.FC<ProgressChartProps> = ({ data }) => {
           <linearGradient id="fillCalories" x1="0" y1="0" x2="0" y2="1">
             <stop
               offset="5%"
-              stopColor="var(--color-calories)"
-              stopOpacity={0.8}
+              stopColor="hsl(var(--primary))"
+              stopOpacity={0.4}
             />
             <stop
               offset="95%"
-              stopColor="var(--color-calories)"
-              stopOpacity={0.1}
+              stopColor="hsl(var(--primary))"
+              stopOpacity={0.05}
             />
           </linearGradient>
         </defs>
@@ -76,7 +87,8 @@ const ProgressChart: React.FC<ProgressChartProps> = ({ data }) => {
           dataKey="calories"
           type="natural"
           fill="url(#fillCalories)"
-          stroke="var(--color-calories)"
+          stroke="hsl(var(--primary))"
+          strokeWidth={2}
           stackId="a"
         />
       </AreaChart>
