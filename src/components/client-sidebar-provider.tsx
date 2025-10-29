@@ -7,11 +7,25 @@ import { useState, useEffect } from 'react';
 
 export function ClientSidebarProvider({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
-    const [isGetStartedPage, setIsGetStartedPage] = useState(pathname === '/');
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsGetStartedPage(pathname === '/');
-    }, [pathname]);
+        setIsClient(true);
+    }, []);
+
+    if (!isClient) {
+        // Render a consistent layout on the server to avoid hydration errors
+        return (
+            <SidebarProvider>
+                <Sidebar>
+                    <AppSidebar />
+                </Sidebar>
+                <SidebarInset>{children}</SidebarInset>
+            </SidebarProvider>
+        );
+    }
+    
+    const isGetStartedPage = pathname === '/';
 
     // Render only the children on the get-started page
     if (isGetStartedPage) {
