@@ -313,4 +313,5 @@ export default function PantryPalPage() {
       )}
     </div>
   );
-}
+
+    
