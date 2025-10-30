@@ -13,6 +13,8 @@ import {
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Check } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 
 const features = [
   'Unlimited AI Recipe Generation',
@@ -25,6 +27,14 @@ const features = [
 
 export default function PricingPage() {
   const [isYearly, setIsYearly] = useState(false);
+  const { toast } = useToast();
+
+  const handleChoosePlan = (planName: string) => {
+    toast({
+        title: 'Subscription Started!',
+        description: `You have successfully subscribed to the ${planName} plan.`,
+    });
+  };
 
   return (
     <div className="flex-1 space-y-8 p-4 md:p-8 pt-6">
@@ -48,7 +58,7 @@ export default function PricingPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-        <Card className="flex flex-col">
+        <Card className={cn("flex flex-col", !isYearly && "border-primary border-2")}>
           <CardHeader>
             <CardTitle>Monthly</CardTitle>
             <CardDescription>
@@ -72,13 +82,13 @@ export default function PricingPage() {
             </ul>
           </CardContent>
           <CardFooter>
-            <Button className="w-full" disabled={isYearly}>
+            <Button className="w-full" onClick={() => handleChoosePlan('Monthly')}>
               Choose Monthly
             </Button>
           </CardFooter>
         </Card>
 
-        <Card className="border-primary border-2 flex flex-col relative">
+        <Card className={cn("flex flex-col relative", isYearly && "border-primary border-2")}>
            <div className="absolute top-0 -translate-y-1/2 w-full flex justify-center">
             <div className="bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-semibold">
               Best Value
@@ -107,7 +117,7 @@ export default function PricingPage() {
             </ul>
           </CardContent>
           <CardFooter>
-            <Button className="w-full" disabled={!isYearly}>
+            <Button className="w-full" onClick={() => handleChoosePlan('Yearly')}>
               Choose Yearly
             </Button>
           </CardFooter>
