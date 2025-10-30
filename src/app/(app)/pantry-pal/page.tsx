@@ -48,6 +48,16 @@ export default function PantryPalPage() {
   useEffect(() => {
     if (pageState === 'camera' && isClient) {
         const getCameraPermission = async () => {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            console.error('Camera API is not available in this browser.');
+            setHasCameraPermission(false);
+            toast({
+                variant: 'destructive',
+                title: 'Camera Not Supported',
+                description: 'Your browser does not support camera access.',
+            });
+            return;
+        }
         try {
             const stream = await navigator.mediaDevices.getUserMedia({video: true});
             setHasCameraPermission(true);
