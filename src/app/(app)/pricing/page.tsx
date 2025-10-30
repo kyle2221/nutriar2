@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -10,8 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
 import { Check } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -26,7 +25,6 @@ const features = [
 ];
 
 export default function PricingPage() {
-  const [isYearly, setIsYearly] = useState(false);
   const { toast } = useToast();
 
   const handleChoosePlan = (planName: string) => {
@@ -46,19 +44,10 @@ export default function PricingPage() {
           Unlock the full power of NutriAR and start your journey to a healthier
           lifestyle today. No commitments, cancel anytime.
         </p>
-        <div className="flex items-center space-x-2">
-          <Label htmlFor="billing-cycle">Monthly</Label>
-          <Switch
-            id="billing-cycle"
-            checked={isYearly}
-            onCheckedChange={setIsYearly}
-          />
-          <Label htmlFor="billing-cycle">Yearly</Label>
-        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-        <Card className={cn("flex flex-col", !isYearly && "border-primary border-2")}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto pt-8">
+        <Card className="flex flex-col">
           <CardHeader>
             <CardTitle>Monthly</CardTitle>
             <CardDescription>
@@ -88,7 +77,7 @@ export default function PricingPage() {
           </CardFooter>
         </Card>
 
-        <Card className={cn("flex flex-col relative", isYearly && "border-primary border-2")}>
+        <Card className="flex flex-col relative border-primary border-2">
            <div className="absolute top-0 -translate-y-1/2 w-full flex justify-center">
             <div className="bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-semibold">
               Best Value
