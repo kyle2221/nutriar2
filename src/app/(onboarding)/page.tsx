@@ -25,6 +25,8 @@ import {
   Footprints,
   PersonStanding,
   Flame,
+  Cake,
+  Gift,
 } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import {
@@ -58,11 +60,13 @@ import Image from 'next/image';
 type Step =
   | 'welcome'
   | 'gender'
+  | 'age'
   | 'height'
   | 'weight'
   | 'goals'
   | 'activity'
   | 'diet'
+  | 'referral'
   | 'loading'
   | 'result'
   | 'signup';
@@ -72,7 +76,7 @@ type Units = 'metric' | 'imperial';
 const GoogleIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
+    viewBox="0 0 24"
     className="h-5 w-5"
   >
     <path
@@ -95,9 +99,9 @@ const GoogleIcon = () => (
   </svg>
 );
 
-const StepIndicator = ({ currentStep }: { currentStep: number }) => (
+const StepIndicator = ({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) => (
   <div className="flex items-center justify-center gap-2">
-    {[...Array(6)].map((_, i) => (
+    {[...Array(totalSteps)].map((_, i) => (
       <div
         key={i}
         className={cn('h-1.5 w-6 rounded-full transition-colors', 
@@ -138,11 +142,13 @@ export default function GetStartedPage() {
   const [units, setUnits] = useState<Units>('metric');
   const [formData, setFormData] = useState({
     gender: '',
+    age: '',
     height: '',
     weight: '',
     goal: '',
     activityLevel: '',
     dietaryPreferences: '',
+    referralCode: '',
   });
   const [imperialData, setImperialData] = useState({
     height_ft: '',
@@ -151,33 +157,38 @@ export default function GetStartedPage() {
   });
   const [plan, setPlan] = useState<PersonalizedPlanOutput | null>(null);
 
-  const stepNumber = useMemo(() => {
-    const order: Step[] = [
+  const onboardingSteps: Step[] = [
       'welcome',
       'gender',
+      'age',
       'height',
       'weight',
       'goals',
       'activity',
       'diet',
+      'referral',
     ];
-    const index = order.indexOf(step);
-    return index >= 0 ? index : 0;
-  }, [step]);
+
+  const stepNumber = useMemo(() => {
+    const index = onboardingSteps.indexOf(step);
+    return index > 0 ? index : 0;
+  }, [step, onboardingSteps]);
 
   const progress = useMemo(() => {
-    return (stepNumber / 6) * 100;
-  }, [stepNumber]);
+    return (stepNumber / (onboardingSteps.length -1)) * 100;
+  }, [stepNumber, onboardingSteps.length]);
 
   const handleNext = () => {
     const steps: Step[] = [
       'welcome',
       'gender',
+      'age',
       'height',
       'weight',
       'goals',
       'activity',
       'diet',
+      'referral',
       'loading',
     ];
     const currentIndex = steps.indexOf(step);
@@ -188,11 +199,13 @@ export default function GetStartedPage() {
 
   const handleBack = () => {
     const steps: Step[] = [
+      'referral',
       'diet',
       'activity',
       'goals',
       'weight',
       'height',
+      'age',
       'gender',
       'welcome',
     ];
@@ -225,7 +238,7 @@ export default function GetStartedPage() {
     } catch (e) {
       console.error(e);
       // Fallback to the diet step on error
-      setStep('diet');
+      setStep('referral');
     }
   };
   
@@ -239,6 +252,8 @@ export default function GetStartedPage() {
     switch (step) {
       case 'gender':
           return !formData.gender;
+      case 'age':
+          return !formData.age;
       case 'height':
         if (units === 'metric') {
           return !formData.height;
@@ -341,6 +356,34 @@ export default function GetStartedPage() {
                   />
                 </div>
               )}
+            </CardContent>
+          </Card>
+        );
+      case 'age':
+        return (
+          <Card className="w-full max-w-md shadow-lg">
+            <CardHeader className="text-center">
+              <CardTitle className="text-2xl font-bold font-headline">How old are you?</CardTitle>
+              <CardDescription>
+                Your age helps us tailor your nutritional needs.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+                <div className="space-y-2">
+                    <Label htmlFor="age" className="font-semibold flex items-center gap-2">
+                        <Cake className="h-4 w-4" /> Age (years)
+                    </Label>
+                    <Input
+                    id="age"
+                    type="number"
+                    placeholder="e.g., 25"
+                    value={formData.age}
+                    onChange={(e) =>
+                        setFormData({ ...formData, age: e.target.value })
+                    }
+                    className="text-lg"
+                    />
+                </div>
             </CardContent>
           </Card>
         );
@@ -567,6 +610,34 @@ export default function GetStartedPage() {
             </CardContent>
           </Card>
         );
+      case 'referral':
+        return (
+            <Card className="w-full max-w-md shadow-lg">
+                <CardHeader className="text-center">
+                <CardTitle className="text-2xl font-bold font-headline">Referral Code</CardTitle>
+                <CardDescription>
+                    If you have a referral code, please enter it below. (Optional)
+                </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                    <div className="space-y-2">
+                        <Label htmlFor="referral" className="font-semibold flex items-center gap-2">
+                            <Gift className="h-4 w-4" /> Referral Code
+                        </Label>
+                        <Input
+                        id="referral"
+                        type="text"
+                        placeholder="e.g., 0271"
+                        value={formData.referralCode}
+                        onChange={(e) =>
+                            setFormData({ ...formData, referralCode: e.target.value })
+                        }
+                        className="text-lg"
+                        />
+                    </div>
+                </CardContent>
+            </Card>
+        );
       case 'loading':
         return (
           <div className="text-center flex flex-col items-center gap-6">
@@ -724,15 +795,15 @@ export default function GetStartedPage() {
               <Button variant="ghost" onClick={handleBack} disabled={step === 'gender'}>
                 <MoveLeft className="mr-2 h-5 w-5" /> Back
               </Button>
-              <StepIndicator currentStep={stepNumber - 1} />
+              <StepIndicator currentStep={stepNumber - 1} totalSteps={onboardingSteps.length -1} />
               <Button
                 onClick={
-                  step === 'diet' ? generatePlan : handleNext
+                  step === 'referral' ? generatePlan : handleNext
                 }
                 className="shadow-md"
                 disabled={isNextDisabled()}
               >
-                {step === 'diet' ? 'Generate Plan' : 'Next'}
+                {step === 'diet' ? 'Next' : step === 'referral' ? 'Generate Plan' : 'Next'}
                 <MoveRight className="ml-2 h-5 w-5" />
               </Button>
             </div>
@@ -749,7 +820,3 @@ export default function GetStartedPage() {
     </div>
   );
 }
-
-    
-
-    
