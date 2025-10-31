@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Leaf } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
@@ -49,6 +49,11 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const { signUp, signIn, signInWithGoogle } = useAuth();
   const router = useRouter();
@@ -98,79 +103,83 @@ export default function LoginPage() {
           <Leaf className="h-8 w-8 text-primary" />
           <span className="font-bold text-xl tracking-tight">NutriAR</span>
         </div>
-        <Card className="w-full max-w-sm shadow-lg">
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold font-headline">
-              {mode === 'login' ? 'Welcome Back' : 'Create an Account'}
-            </CardTitle>
-            <CardDescription>
-              {mode === 'login'
-                ? 'Sign in to access your personalized health plan.'
-                : 'Enter your details to get started.'}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {error && (
-              <div className="bg-destructive/10 p-3 rounded-md flex items-center gap-2 text-sm text-destructive">
-                <p>{error}</p>
+        {!isClient ? (
+          <Loader2 className="h-16 w-16 animate-spin text-primary" />
+        ) : (
+          <Card className="w-full max-w-sm shadow-lg">
+            <CardHeader>
+              <CardTitle className="text-2xl font-bold font-headline">
+                {mode === 'login' ? 'Welcome Back' : 'Create an Account'}
+              </CardTitle>
+              <CardDescription>
+                {mode === 'login'
+                  ? 'Sign in to access your personalized health plan.'
+                  : 'Enter your details to get started.'}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {error && (
+                <div className="bg-destructive/10 p-3 rounded-md flex items-center gap-2 text-sm text-destructive">
+                  <p>{error}</p>
+                </div>
+              )}
+              <form onSubmit={handleEmailAuth} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="m@example.com"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="password">Password</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </div>
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading ? <Loader2 className="animate-spin" /> : (mode === 'login' ? 'Sign In' : 'Create Account')}
+                </Button>
+              </form>
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-muted-foreground">
+                    Or continue with
+                  </span>
+                </div>
               </div>
-            )}
-            <form onSubmit={handleEmailAuth} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? <Loader2 className="animate-spin" /> : (mode === 'login' ? 'Sign In' : 'Create Account')}
-              </Button>
-            </form>
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">
-                  Or continue with
+              <Button
+                className="w-full shadow-sm"
+                variant="outline"
+                onClick={handleGoogleSignIn}
+                disabled={loading}
+              >
+                <GoogleIcon />
+                <span className="ml-2">
+                  {mode === 'login' ? 'Sign in with Google' : 'Sign up with Google'}
                 </span>
-              </div>
-            </div>
-            <Button
-              className="w-full shadow-sm"
-              variant="outline"
-              onClick={handleGoogleSignIn}
-              disabled={loading}
-            >
-              <GoogleIcon />
-              <span className="ml-2">
-                {mode === 'login' ? 'Sign in with Google' : 'Sign up with Google'}
-              </span>
-            </Button>
-          </CardContent>
-          <CardFooter className="justify-center">
-            <Button variant="link" onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}>
-              {mode === 'login'
-                ? "Don't have an account? Sign up"
-                : 'Already have an account? Sign in'}
-            </Button>
-          </CardFooter>
-        </Card>
+              </Button>
+            </CardContent>
+            <CardFooter className="justify-center">
+              <Button variant="link" onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}>
+                {mode === 'login'
+                  ? "Don't have an account? Sign up"
+                  : 'Already have an account? Sign in'}
+              </Button>
+            </CardFooter>
+          </Card>
+        )}
       </div>
     </div>
   );
