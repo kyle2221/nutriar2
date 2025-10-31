@@ -35,7 +35,7 @@ export default function PricingPage() {
   };
 
   return (
-    <div className="flex-1 space-y-8 p-4 md:p-8 pt-6">
+    <div className="flex-1 space-y-8 p-4 md:p-8 pt-6 max-w-7xl mx-auto">
       <div className="flex flex-col items-center justify-center space-y-4 text-center">
         <h1 className="text-4xl font-bold tracking-tighter font-headline sm:text-5xl">
           Find the Perfect Plan
