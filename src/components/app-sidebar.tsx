@@ -80,19 +80,18 @@ export function AppSidebar() {
           ))}
         </SidebarMenu>
       </SidebarContent>
-      <SidebarFooter className="p-2">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <Link href="/settings">
-                <SidebarMenuButton tooltip="Settings" isActive={pathname === '/settings'} className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
-                    <Settings />
-                    <span>Settings</span>
-                </SidebarMenuButton>
-            </Link>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            {isMounted && (
-              <>
+      {isMounted && (
+        <SidebarFooter className="p-2">
+            <SidebarMenu>
+            <SidebarMenuItem>
+                <Link href="/settings">
+                    <SidebarMenuButton tooltip="Settings" isActive={pathname === '/settings'} className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                        <Settings />
+                        <span>Settings</span>
+                    </SidebarMenuButton>
+                </Link>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
                 {isAuthenticated ? (
                     <div className="flex items-center gap-2 p-2 rounded-md">
                         <Avatar className="h-8 w-8">
@@ -112,11 +111,10 @@ export function AppSidebar() {
                         </SidebarMenuButton>
                     </Link>
                 )}
-              </>
-            )}
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
+            </SidebarMenuItem>
+            </SidebarMenu>
+        </SidebarFooter>
+      )}
     </>
   );
 }
