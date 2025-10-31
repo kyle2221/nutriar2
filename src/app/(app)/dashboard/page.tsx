@@ -1,6 +1,7 @@
+
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useMealStore } from '@/store/meal-store';
 import CalorieGoalChart from '@/components/dashboard/calorie-goal-chart';
 import MacrosOverview from '@/components/dashboard/macros-overview';
@@ -35,6 +36,11 @@ export default function DashboardPage() {
   const { meals } = useMealStore();
   const [timeRange, setTimeRange] = useState<TimeRange>('5D');
   const [activeMetric, setActiveMetric] = useState<Metric>('calories');
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const todayTotals = useMemo(() => {
     return meals.reduce(
@@ -61,6 +67,10 @@ export default function DashboardPage() {
   }, [todayTotals]);
 
   const progressData = useMemo(() => {
+    if (!isClient) {
+      return [];
+    }
+
     const todayData = {
       date: 'Today',
       calories: todayTotals.calories,
@@ -105,7 +115,7 @@ export default function DashboardPage() {
       };
     }
     return data;
-  }, [timeRange, todayTotals]);
+  }, [timeRange, todayTotals, isClient]);
 
   const timeRanges: TimeRange[] = ['1D', '5D', '1M', '6M', '1Y', '5Y', 'MAX'];
   const metrics: { key: Metric; label: string }[] = [
@@ -115,6 +125,10 @@ export default function DashboardPage() {
     { key: 'fat', label: 'Fat' },
     { key: 'steps', label: 'Steps' },
   ];
+
+  if (!isClient) {
+    return null; // Or a loading spinner
+  }
 
   return (
     <div className="flex-1 space-y-8 p-4 md:p-8 pt-6">
