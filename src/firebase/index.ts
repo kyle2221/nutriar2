@@ -18,9 +18,15 @@ function initializeFirebase(): {
   firestore: Firestore | null;
   isFirebaseReady: boolean;
 } {
-  if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
+  const isConfigProvided = 
+    firebaseConfig.apiKey && 
+    firebaseConfig.apiKey !== 'YOUR_API_KEY' &&
+    firebaseConfig.projectId &&
+    firebaseConfig.projectId !== 'YOUR_PROJECT_ID';
+
+  if (!isConfigProvided) {
     console.warn(
-      'Firebase config is missing. Add your Firebase credentials to .env.local'
+      'Firebase config is missing or incomplete. Using placeholder values. Authentication will be disabled.'
     );
     return { app: null, auth: null, firestore: null, isFirebaseReady: false };
   }
