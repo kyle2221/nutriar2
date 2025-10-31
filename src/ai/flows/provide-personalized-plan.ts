@@ -12,11 +12,13 @@ import { z } from 'zod';
 
 const PersonalizedPlanInputSchema = z.object({
   gender: z.string().describe('The user\'s biological sex (e.g., "male", "female").'),
+  age: z.string().describe('The user\'s age in years (e.g., "28").'),
   height: z.string().describe('The user\'s height in centimeters (e.g., "180").'),
   weight: z.string().describe('The user\'s weight in kilograms (e.g., "75").'),
   goal: z.string().describe('The user\'s primary fitness goal (e.g., "Lose Weight", "Build Muscle").'),
   activityLevel: z.string().describe('The user\'s weekly activity level (e.g., "sedentary", "moderately_active").'),
   dietaryPreferences: z.string().describe('A description of the user\'s dietary likes, dislikes, and allergies (e.g., "I love spicy food, vegetarian, allergic to nuts.").'),
+  referralCode: z.string().optional().describe('An optional referral code provided by the user.'),
 });
 export type PersonalizedPlanInput = z.infer<typeof PersonalizedPlanInputSchema>;
 
@@ -61,11 +63,13 @@ const prompt = ai.definePrompt({
 
 User Data:
 - Gender: {{{gender}}}
+- Age: {{{age}}}
 - Height: {{{height}}} cm
 - Weight: {{{weight}}} kg
 - Goal: {{{goal}}}
 - Activity Level: {{{activityLevel}}}
 - Dietary Preferences: {{{dietaryPreferences}}}
+{{#if referralCode}}- Referral Code: {{{referralCode}}}{{/if}}
 
 Generate a structured 7-day plan. For each day of the week (Monday to Sunday):
 1.  Provide specific, simple meal suggestions for Breakfast, Lunch, Dinner, and a healthy Snack. The meals must align with the user's dietary preferences.
@@ -87,3 +91,5 @@ const personalizedPlanFlow = ai.defineFlow(
     return output!;
   }
 );
+
+    

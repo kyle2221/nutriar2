@@ -17,16 +17,13 @@ import {
   Weight,
   Target,
   Bike,
-  Zap,
-  Wheat,
-  Brain,
-  Drumstick,
   Sofa,
   Footprints,
   PersonStanding,
   Flame,
   Cake,
   Gift,
+  CheckCircle,
 } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import {
@@ -41,13 +38,6 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { providePersonalizedPlan, PersonalizedPlanOutput } from '@/ai/flows/provide-personalized-plan';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -621,12 +611,12 @@ export default function GetStartedPage() {
         return (
             <Card className="w-full max-w-md shadow-lg">
                 <CardHeader className="text-center">
-                <CardTitle className="text-2xl font-bold font-headline">Referral Code</CardTitle>
+                <CardTitle className="text-2xl font-bold font-headline">Referral Code (Optional)</CardTitle>
                 <CardDescription>
-                    If you have a referral code, please enter it below. (Optional)
+                    If you have a referral code from a friend, enter it here.
                 </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className="space-y-4">
                     <div className="space-y-2">
                         <Label htmlFor="referral" className="font-semibold flex items-center gap-2">
                             <Gift className="h-4 w-4" /> Referral Code
@@ -634,7 +624,7 @@ export default function GetStartedPage() {
                         <Input
                         id="referral"
                         type="text"
-                        placeholder="e.g. 0271"
+                        placeholder=""
                         value={formData.referralCode}
                         onChange={(e) =>
                             setFormData({ ...formData, referralCode: e.target.value })
@@ -642,6 +632,12 @@ export default function GetStartedPage() {
                         className="text-lg"
                         />
                     </div>
+                     {formData.referralCode === '0271' && (
+                        <div className="flex items-center gap-2 text-primary-600 bg-primary/10 p-3 rounded-md animate-in fade-in-25">
+                            <CheckCircle className="h-5 w-5" />
+                            <p className="font-medium text-sm">Congratulations! You've unlocked Pro features for free.</p>
+                        </div>
+                    )}
                 </CardContent>
             </Card>
         );
@@ -678,7 +674,7 @@ export default function GetStartedPage() {
                     ];
                     return (
                         <AccordionItem value={`item-${index}`} key={index}>
-                        <AccordionTrigger className="text-lg font-semibold font-headline">
+                        <AccordionTrigger className="text-lg font-semibold font-headline hover:no-underline">
                             <div className="flex justify-between items-center w-full pr-2">
                                 <span>{dayPlan.day}</span>
                                 <span className="text-sm font-normal text-muted-foreground">{dayPlan.dailyTotals.calories} kcal</span>
