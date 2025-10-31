@@ -183,7 +183,33 @@ export default function PantryPalPage() {
   };
   
   if (!isClient) {
-    return null;
+    return (
+        <div className="flex-1 space-y-8 p-4 md:p-8 pt-6">
+            <div className="flex items-center justify-between space-y-2">
+                <div>
+                <h1 className="text-3xl font-bold tracking-tight font-headline">
+                    Pantry Pal
+                </h1>
+                <p className="text-muted-foreground">
+                    Scan your pantry with AI to get recipe ideas.
+                </p>
+                </div>
+            </div>
+            <Card>
+                <CardContent className="p-6">
+                    <div className="relative w-full aspect-video rounded-md border bg-muted overflow-hidden flex items-center justify-center">
+                        <Loader2 className="h-12 w-12 animate-spin text-muted-foreground" />
+                    </div>
+                </CardContent>
+                <CardFooter>
+                    <Button disabled>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Scan Pantry
+                    </Button>
+                </CardFooter>
+            </Card>
+        </div>
+    );
   }
 
   return (
