@@ -627,7 +627,6 @@ export default function GetStartedPage() {
                         <Input
                         id="referral"
                         type="text"
-                        placeholder="e.g., 0271"
                         value={formData.referralCode}
                         onChange={(e) =>
                             setFormData({ ...formData, referralCode: e.target.value })
@@ -709,6 +708,7 @@ export default function GetStartedPage() {
                                             </div>
                                         </li>
                                         );
+custom-made
                                     })}
                                     </ul>
                                 </div>
