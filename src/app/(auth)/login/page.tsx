@@ -1,3 +1,4 @@
+
 'use client';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,6 +17,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const GoogleIcon = () => (
   <svg
@@ -55,7 +57,7 @@ export default function LoginPage() {
     setIsClient(true);
   }, []);
 
-  const { signUp, signIn, signInWithGoogle } = useAuth();
+  const { signUp, signIn, signInWithGoogle, isFirebaseReady } = useAuth();
   const router = useRouter();
 
   const handleGoogleSignIn = async () => {
@@ -118,6 +120,14 @@ export default function LoginPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              {!isFirebaseReady && (
+                <Alert variant="destructive">
+                  <AlertTitle>Firebase Not Configured</AlertTitle>
+                  <AlertDescription>
+                    The application is not connected to Firebase. Authentication is disabled.
+                  </AlertDescription>
+                </Alert>
+              )}
               {error && (
                 <div className="bg-destructive/10 p-3 rounded-md flex items-center gap-2 text-sm text-destructive">
                   <p>{error}</p>
@@ -133,6 +143,7 @@ export default function LoginPage() {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    disabled={!isFirebaseReady}
                   />
                 </div>
                 <div className="space-y-2">
@@ -143,9 +154,10 @@ export default function LoginPage() {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    disabled={!isFirebaseReady}
                   />
                 </div>
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button type="submit" className="w-full" disabled={loading || !isFirebaseReady}>
                   {loading ? <Loader2 className="animate-spin" /> : (mode === 'login' ? 'Sign In' : 'Create Account')}
                 </Button>
               </form>
@@ -163,7 +175,7 @@ export default function LoginPage() {
                 className="w-full shadow-sm"
                 variant="outline"
                 onClick={handleGoogleSignIn}
-                disabled={loading}
+                disabled={loading || !isFirebaseReady}
               >
                 <GoogleIcon />
                 <span className="ml-2">
@@ -172,7 +184,7 @@ export default function LoginPage() {
               </Button>
             </CardContent>
             <CardFooter className="justify-center">
-              <Button variant="link" onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}>
+              <Button variant="link" onClick={() => setMode(mode === 'login' ? 'signup' : 'login')} disabled={!isFirebaseReady}>
                 {mode === 'login'
                   ? "Don't have an account? Sign up"
                   : 'Already have an account? Sign in'}

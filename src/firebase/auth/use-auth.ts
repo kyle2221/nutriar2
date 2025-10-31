@@ -1,3 +1,4 @@
+
 'use client';
 import {
   createUserWithEmailAndPassword,
@@ -10,7 +11,7 @@ import { useFirebase } from '../provider';
 import { useUser } from './use-user';
 
 export function useAuth() {
-  const { auth } = useFirebase();
+  const { auth, isFirebaseReady } = useFirebase();
   const { user, loading } = useUser();
 
   const signUp = async (email: string, password: string) => {
@@ -41,5 +42,6 @@ export function useAuth() {
     signIn,
     signInWithGoogle,
     signOut,
+    isFirebaseReady,
   };
 }

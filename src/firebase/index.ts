@@ -1,3 +1,4 @@
+
 import { initializeApp, getApps, type FirebaseApp } from 'firebase/app';
 import { getAuth, type Auth } from 'firebase/auth';
 import { getFirestore, type Firestore } from 'firebase/firestore';
@@ -12,10 +13,15 @@ const firebaseConfig = {
 };
 
 function initializeFirebase(): {
-  app: FirebaseApp;
-  auth: Auth;
-  firestore: Firestore;
+  app: FirebaseApp | null;
+  auth: Auth | null;
+  firestore: Firestore | null;
 } {
+  if (!firebaseConfig.apiKey) {
+    console.warn("Firebase API key is missing. Firebase will not be initialized.");
+    return { app: null, auth: null, firestore: null };
+  }
+
   const apps = getApps();
   const app = apps.length > 0 ? apps[0] : initializeApp(firebaseConfig);
   const auth = getAuth(app);

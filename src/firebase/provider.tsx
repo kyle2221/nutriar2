@@ -1,3 +1,4 @@
+
 'use client';
 import {
   createContext,
@@ -15,6 +16,7 @@ type FirebaseContextType = {
   app: FirebaseApp | null;
   auth: Auth | null;
   firestore: Firestore | null;
+  isFirebaseReady: boolean;
 };
 
 const FirebaseContext = createContext<FirebaseContextType | undefined>(
@@ -26,11 +28,12 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     app: null,
     auth: null,
     firestore: null,
+    isFirebaseReady: false,
   });
 
   useEffect(() => {
     const { app, auth, firestore } = initializeFirebase();
-    setFirebase({ app, auth, firestore });
+    setFirebase({ app, auth, firestore, isFirebaseReady: !!app });
   }, []);
 
   return (

@@ -39,7 +39,7 @@ const menuItems = [
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const { user, signOut } = useAuth();
+  const { user, signOut, isFirebaseReady } = useAuth();
   const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
 
@@ -48,6 +48,7 @@ export function AppSidebar() {
   }, []);
 
   const handleSignOut = async () => {
+    if (!isFirebaseReady) return;
     await signOut();
     router.push('/login');
   };
@@ -115,9 +116,9 @@ export function AppSidebar() {
                     </div>
                 ) : (
                     <Link href="/login" className="w-full">
-                        <SidebarMenuButton tooltip="Login" className="w-full text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                        <SidebarMenuButton tooltip="Login" className="w-full text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground" disabled={!isFirebaseReady}>
                             <LogIn />
-                            <span>Login</span>
+                            <span>{isFirebaseReady ? 'Login' : 'Auth Disabled'}</span>
                         </SidebarMenuButton>
                     </Link>
                 )}
