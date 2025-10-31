@@ -56,7 +56,7 @@ export function AppSidebar() {
   return (
     <>
       <SidebarHeader>
-        <Link href="/" className='w-full'>
+        <Link href="/dashboard" className='w-full'>
             <div className="flex items-center gap-2">
             <Button variant="ghost" size="icon" className="h-9 w-9 text-sidebar-primary hover:bg-sidebar-accent">
                 <Leaf className="h-6 w-6" />

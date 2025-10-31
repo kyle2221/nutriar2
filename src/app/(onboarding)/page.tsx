@@ -795,8 +795,10 @@ export default function GetStartedPage() {
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
       <div className="container relative z-10 flex min-h-screen flex-col items-center justify-center px-4 md:px-6">
         <div className="absolute top-6 left-6 flex items-center gap-2">
-          <Leaf className="h-8 w-8 text-primary" />
-          <span className="font-bold text-xl tracking-tight">NutriAR</span>
+          <Link href="/dashboard" className="flex items-center gap-2">
+            <Leaf className="h-8 w-8 text-primary" />
+            <span className="font-bold text-xl tracking-tight">NutriAR</span>
+          </Link>
         </div>
 
         <div className="flex flex-col items-center justify-center w-full flex-1 py-20">
@@ -839,5 +841,3 @@ export default function GetStartedPage() {
     </div>
   );
 }
-
-    
