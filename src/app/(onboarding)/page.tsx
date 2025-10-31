@@ -783,7 +783,7 @@ export default function GetStartedPage() {
   const showProgress = step !== 'welcome' && step !== 'loading' && step !== 'result' && step !== 'signup';
 
   return (
-    <div className="flex-1 w-full bg-background relative overflow-hidden">
+    <div className="w-full bg-background relative overflow-hidden">
       <div
         className="absolute inset-0 w-full h-full bg-cover bg-center"
         style={{
@@ -799,37 +799,41 @@ export default function GetStartedPage() {
           <span className="font-bold text-xl tracking-tight">NutriAR</span>
         </div>
 
-        <div className="flex flex-col items-center justify-center w-full min-h-[500px] py-20">
+        <div className="flex flex-col items-center justify-center w-full flex-1 py-20">
           {renderStep()}
         </div>
 
-        <div className="absolute bottom-6 w-full max-w-4xl px-4">
-          {showProgress && <Progress value={progress} className="mb-4 h-2" />}
-          {showNav && (
-            <div className="flex justify-between items-center">
-              <Button variant="ghost" onClick={handleBack} disabled={step === 'gender'}>
-                <MoveLeft className="mr-2 h-5 w-5" /> Back
-              </Button>
-              <StepIndicator currentStep={stepNumber - 1} totalSteps={onboardingSteps.length -1} />
-              <Button
-                onClick={
-                  step === 'referral' ? generatePlan : handleNext
-                }
-                className="shadow-md"
-                disabled={isNextDisabled()}
-              >
-                {step === 'diet' ? 'Next' : step === 'referral' ? 'Generate Plan' : 'Next'}
-                <MoveRight className="ml-2 h-5 w-5" />
-              </Button>
-            </div>
-          )}
-          {step === 'result' && (
-             <div className="flex justify-center">
-                <Button size="lg" onClick={() => setStep('signup')} className="shadow-lg">
-                    Save Plan & Sign Up <MoveRight className="ml-2 h-5 w-5" />
+        <div className="sticky bottom-0 w-full bg-background/80 backdrop-blur-sm py-4">
+          <div className="container max-w-4xl">
+            {showProgress && <Progress value={progress} className="mb-4 h-2" />}
+            {showNav && (
+              <div className="flex justify-between items-center">
+                <Button variant="ghost" onClick={handleBack} disabled={step === 'gender'}>
+                  <MoveLeft className="mr-2 h-5 w-5" /> Back
                 </Button>
-             </div>
-          )}
+                <div className="hidden sm:block">
+                  <StepIndicator currentStep={stepNumber - 1} totalSteps={onboardingSteps.length -1} />
+                </div>
+                <Button
+                  onClick={
+                    step === 'referral' ? generatePlan : handleNext
+                  }
+                  className="shadow-md"
+                  disabled={isNextDisabled()}
+                >
+                  {step === 'diet' ? 'Next' : step === 'referral' ? 'Generate Plan' : 'Next'}
+                  <MoveRight className="ml-2 h-5 w-5" />
+                </Button>
+              </div>
+            )}
+            {step === 'result' && (
+              <div className="flex justify-center">
+                  <Button size="lg" onClick={() => setStep('signup')} className="shadow-lg">
+                      Save Plan & Sign Up <MoveRight className="ml-2 h-5 w-5" />
+                  </Button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
