@@ -19,6 +19,7 @@ import {
   Leaf,
   Scan,
   DollarSign,
+  LogIn
 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from './ui/button';
@@ -34,6 +35,8 @@ const menuItems = [
 
 export function AppSidebar() {
   const pathname = usePathname();
+  // Placeholder for authentication status
+  const isAuthenticated = false; 
 
   return (
     <>
@@ -72,22 +75,33 @@ export function AppSidebar() {
       <SidebarFooter className="p-2">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Settings" className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
-              <Settings />
-              <span>Settings</span>
-            </SidebarMenuButton>
+            <Link href="/settings">
+                <SidebarMenuButton tooltip="Settings" isActive={pathname === '/settings'} className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                    <Settings />
+                    <span>Settings</span>
+                </SidebarMenuButton>
+            </Link>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <div className="flex items-center gap-2 p-2 rounded-md">
-              <Avatar className="h-8 w-8">
-                <AvatarImage src="https://picsum.photos/seed/user/100/100" />
-                <AvatarFallback>U</AvatarFallback>
-              </Avatar>
-              <div className="flex flex-col text-sm">
-                <span className="font-semibold text-sidebar-foreground">User</span>
-                <span className="text-sidebar-foreground/70">user@email.com</span>
-              </div>
-            </div>
+            {isAuthenticated ? (
+                 <div className="flex items-center gap-2 p-2 rounded-md">
+                    <Avatar className="h-8 w-8">
+                        <AvatarImage src="https://picsum.photos/seed/user/100/100" />
+                        <AvatarFallback>U</AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col text-sm">
+                        <span className="font-semibold text-sidebar-foreground">User</span>
+                        <span className="text-sidebar-foreground/70">user@email.com</span>
+                    </div>
+                </div>
+            ) : (
+                <Link href="/login" className="w-full">
+                    <SidebarMenuButton tooltip="Login" className="w-full text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                        <LogIn />
+                        <span>Login</span>
+                    </SidebarMenuButton>
+                </Link>
+            )}
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
