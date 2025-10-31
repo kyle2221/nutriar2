@@ -16,7 +16,7 @@ import {
   ChartContainer,
   ChartTooltipContent,
 } from '@/components/ui/chart';
-import type { Metric } from '@/app/dashboard/page';
+import type { Metric } from '@/app/(app)/dashboard/page';
 
 type ProgressChartProps = {
   data: { date: string; [key: string]: any }[];
@@ -125,8 +125,9 @@ const ProgressChart: React.FC<ProgressChartProps> = ({ data, metric }) => {
           stackId="a"
           dot={(props) => {
             if (props.index === data.length - 1) {
+              const { key, ...rest } = props;
               return (
-                <Dot {...props} r={5} fill={config.color} stroke="hsl(var(--background))" strokeWidth={2} />
+                <Dot key={key} {...rest} r={5} fill={config.color} stroke="hsl(var(--background))" strokeWidth={2} />
               );
             }
             return null;
