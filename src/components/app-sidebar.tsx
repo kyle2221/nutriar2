@@ -1,7 +1,7 @@
 
 'use client';
 
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   SidebarHeader,
   SidebarContent,
@@ -20,11 +20,13 @@ import {
   Leaf,
   Scan,
   DollarSign,
-  LogIn
+  LogIn,
+  LogOut,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from './ui/button';
 import { useEffect, useState } from 'react';
+import { useAuth } from '@/firebase';
 
 const menuItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -37,14 +39,18 @@ const menuItems = [
 
 export function AppSidebar() {
   const pathname = usePathname();
-  // Placeholder for authentication status
-  const isAuthenticated = false; 
+  const { user, signOut } = useAuth();
+  const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
+  const handleSignOut = async () => {
+    await signOut();
+    router.push('/login');
+  };
 
   return (
     <>
@@ -92,16 +98,20 @@ export function AppSidebar() {
                 </Link>
             </SidebarMenuItem>
             <SidebarMenuItem>
-                {isAuthenticated ? (
-                    <div className="flex items-center gap-2 p-2 rounded-md">
-                        <Avatar className="h-8 w-8">
-                            <AvatarImage src="https://picsum.photos/seed/user/100/100" />
-                            <AvatarFallback>U</AvatarFallback>
-                        </Avatar>
-                        <div className="flex flex-col text-sm">
-                            <span className="font-semibold text-sidebar-foreground">User</span>
-                            <span className="text-sidebar-foreground/70">user@email.com</span>
+                {user ? (
+                    <div className="flex items-center justify-between gap-2 p-2 rounded-md w-full">
+                        <div className='flex items-center gap-2'>
+                            <Avatar className="h-8 w-8">
+                                <AvatarImage src={user.photoURL || undefined} />
+                                <AvatarFallback>{user.email?.[0].toUpperCase()}</AvatarFallback>
+                            </Avatar>
+                            <div className="flex flex-col text-sm">
+                                <span className="font-semibold text-sidebar-foreground truncate">{user.displayName || user.email}</span>
+                            </div>
                         </div>
+                        <SidebarMenuButton tooltip="Logout" onClick={handleSignOut} className="h-8 w-8 p-0 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                            <LogOut />
+                        </SidebarMenuButton>
                     </div>
                 ) : (
                     <Link href="/login" className="w-full">

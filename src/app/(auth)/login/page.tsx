@@ -10,14 +10,17 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Leaf, Mail } from 'lucide-react';
+import { Leaf } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
+import { useAuth } from '@/firebase';
+import { useRouter } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
 
 const GoogleIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
+    viewBox="0 0 24"
     className="h-5 w-5"
   >
     <path
@@ -44,20 +47,38 @@ export default function LoginPage() {
   const [mode, setMode] = useState<'login' | 'signup'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const { signUp, signIn, signInWithGoogle } = useAuth();
+  const router = useRouter();
 
   const handleGoogleSignIn = async () => {
-    // Placeholder for Google Sign-In logic
-    console.log('Signing in with Google...');
+    setLoading(true);
+    setError(null);
+    try {
+      await signInWithGoogle();
+      router.push('/dashboard');
+    } catch (err: any) {
+      setError(err.message);
+      setLoading(false);
+    }
   };
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (mode === 'login') {
-      console.log('Logging in with email:', email);
-      // Placeholder for email login logic
-    } else {
-      console.log('Signing up with email:', email);
-      // Placeholder for email sign-up logic
+    setLoading(true);
+    setError(null);
+    try {
+      if (mode === 'login') {
+        await signIn(email, password);
+      } else {
+        await signUp(email, password);
+      }
+      router.push('/dashboard');
+    } catch (err: any) {
+      setError(err.message);
+      setLoading(false);
     }
   };
 
@@ -89,6 +110,11 @@ export default function LoginPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
+            {error && (
+              <div className="bg-destructive/10 p-3 rounded-md flex items-center gap-2 text-sm text-destructive">
+                <p>{error}</p>
+              </div>
+            )}
             <form onSubmit={handleEmailAuth} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
@@ -111,8 +137,8 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              <Button type="submit" className="w-full">
-                {mode === 'login' ? 'Sign In' : 'Create Account'}
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? <Loader2 className="animate-spin" /> : (mode === 'login' ? 'Sign In' : 'Create Account')}
               </Button>
             </form>
             <div className="relative">
@@ -129,6 +155,7 @@ export default function LoginPage() {
               className="w-full shadow-sm"
               variant="outline"
               onClick={handleGoogleSignIn}
+              disabled={loading}
             >
               <GoogleIcon />
               <span className="ml-2">

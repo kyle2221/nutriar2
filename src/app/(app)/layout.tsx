@@ -1,4 +1,5 @@
 import { ClientSidebarProvider } from '@/components/client-sidebar-provider';
+import { FirebaseProvider } from '@/firebase';
 
 export default function AppLayout({
   children,
@@ -7,5 +8,9 @@ export default function AppLayout({
 }>) {
   // In a real app, you'd protect this layout
   // based on authentication status.
-  return <ClientSidebarProvider>{children}</ClientSidebarProvider>;
+  return (
+    <FirebaseProvider>
+      <ClientSidebarProvider>{children}</ClientSidebarProvider>
+    </FirebaseProvider>
+  );
 }
