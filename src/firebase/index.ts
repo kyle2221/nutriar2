@@ -16,10 +16,13 @@ function initializeFirebase(): {
   app: FirebaseApp | null;
   auth: Auth | null;
   firestore: Firestore | null;
+  isFirebaseReady: boolean;
 } {
-  if (!firebaseConfig.apiKey) {
-    console.warn("Firebase API key is missing. Firebase will not be initialized.");
-    return { app: null, auth: null, firestore: null };
+  if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
+    console.warn(
+      'Firebase config is missing. Add your Firebase credentials to .env.local'
+    );
+    return { app: null, auth: null, firestore: null, isFirebaseReady: false };
   }
 
   const apps = getApps();
@@ -27,7 +30,7 @@ function initializeFirebase(): {
   const auth = getAuth(app);
   const firestore = getFirestore(app);
 
-  return { app, auth, firestore };
+  return { app, auth, firestore, isFirebaseReady: true };
 }
 
 export { initializeFirebase };
