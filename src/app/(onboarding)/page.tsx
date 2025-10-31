@@ -156,6 +156,12 @@ export default function GetStartedPage() {
     weight_lbs: '',
   });
   const [plan, setPlan] = useState<PersonalizedPlanOutput | null>(null);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
 
   const onboardingSteps: Step[] = [
       'welcome',
@@ -708,7 +714,6 @@ export default function GetStartedPage() {
                                             </div>
                                         </li>
                                         );
-custom-made
                                     })}
                                     </ul>
                                 </div>
@@ -763,6 +768,16 @@ custom-made
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step, plan]);
+
+  if (!isClient) {
+    return (
+      <div className="flex-1 w-full bg-background relative overflow-hidden">
+        <div className="container relative z-10 flex min-h-screen flex-col items-center justify-center px-4 md:px-6">
+            <Loader2 className="h-16 w-16 animate-spin text-primary" />
+        </div>
+      </div>
+    );
+  }
 
   const showNav = step !== 'welcome' && step !== 'loading' && step !== 'result' && step !== 'signup';
   const showProgress = step !== 'welcome' && step !== 'loading' && step !== 'result' && step !== 'signup';
@@ -820,3 +835,5 @@ custom-made
     </div>
   );
 }
+
+    
