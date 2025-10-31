@@ -56,6 +56,7 @@ import { Switch } from '@/components/ui/switch';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Image from 'next/image';
+import Link from 'next/link';
 
 type Step =
   | 'welcome'
@@ -633,6 +634,7 @@ export default function GetStartedPage() {
                         <Input
                         id="referral"
                         type="text"
+                        placeholder="e.g. 0271"
                         value={formData.referralCode}
                         onChange={(e) =>
                             setFormData({ ...formData, referralCode: e.target.value })
@@ -748,9 +750,11 @@ export default function GetStartedPage() {
               <Button className="w-full bg-black hover:bg-black/80 text-white shadow-sm" onClick={handleSignUp}>
                 <Apple className="mr-2 h-5 w-5" style={{ color: 'hsl(var(--primary-foreground))' }}/> Sign up with Apple
               </Button>
-              <Button className="w-full shadow-sm" onClick={handleSignUp}>
-                <Mail className="mr-2 h-5 w-5" /> Sign up with Email
-              </Button>
+              <Link href="/login" className='w-full'>
+                <Button className="w-full shadow-sm">
+                    <Mail className="mr-2 h-5 w-5" /> Sign up with Email
+                </Button>
+              </Link>
             </CardContent>
             <CardFooter>
                  <p className="text-xs text-muted-foreground text-center w-full">By signing up, you agree to our Terms of Service.</p>
