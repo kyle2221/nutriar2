@@ -1,3 +1,4 @@
+
 'use client';
 
 import { usePathname } from 'next/navigation';
@@ -23,6 +24,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from './ui/button';
+import { useEffect, useState } from 'react';
 
 const menuItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -37,6 +39,12 @@ export function AppSidebar() {
   const pathname = usePathname();
   // Placeholder for authentication status
   const isAuthenticated = false; 
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
 
   return (
     <>
@@ -83,24 +91,28 @@ export function AppSidebar() {
             </Link>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            {isAuthenticated ? (
-                 <div className="flex items-center gap-2 p-2 rounded-md">
-                    <Avatar className="h-8 w-8">
-                        <AvatarImage src="https://picsum.photos/seed/user/100/100" />
-                        <AvatarFallback>U</AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col text-sm">
-                        <span className="font-semibold text-sidebar-foreground">User</span>
-                        <span className="text-sidebar-foreground/70">user@email.com</span>
+            {isMounted && (
+              <>
+                {isAuthenticated ? (
+                    <div className="flex items-center gap-2 p-2 rounded-md">
+                        <Avatar className="h-8 w-8">
+                            <AvatarImage src="https://picsum.photos/seed/user/100/100" />
+                            <AvatarFallback>U</AvatarFallback>
+                        </Avatar>
+                        <div className="flex flex-col text-sm">
+                            <span className="font-semibold text-sidebar-foreground">User</span>
+                            <span className="text-sidebar-foreground/70">user@email.com</span>
+                        </div>
                     </div>
-                </div>
-            ) : (
-                <Link href="/login" className="w-full">
-                    <SidebarMenuButton tooltip="Login" className="w-full text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
-                        <LogIn />
-                        <span>Login</span>
-                    </SidebarMenuButton>
-                </Link>
+                ) : (
+                    <Link href="/login" className="w-full">
+                        <SidebarMenuButton tooltip="Login" className="w-full text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                            <LogIn />
+                            <span>Login</span>
+                        </SidebarMenuButton>
+                    </Link>
+                )}
+              </>
             )}
           </SidebarMenuItem>
         </SidebarMenu>
