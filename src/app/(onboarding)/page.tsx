@@ -246,7 +246,7 @@ export default function GetStartedPage() {
     }
   };
   
-  const handleSignUp = async () => {
+  const handleGoogleSignUp = async () => {
     setLoadingAuth(true);
     try {
       await signInWithGoogle();
@@ -755,17 +755,17 @@ export default function GetStartedPage() {
                 Create an account to save your plan and unlock all features.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <Button className="w-full shadow-sm" variant="outline" onClick={handleSignUp} disabled={!isFirebaseReady || loadingAuth}>
+            <CardContent className="flex flex-col space-y-3">
+              <Button className="w-full shadow-sm" variant="outline" onClick={handleGoogleSignUp} disabled={!isFirebaseReady || loadingAuth}>
                 {loadingAuth ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <GoogleIcon />}
                 <span className="ml-2">Sign up with Google</span>
               </Button>
-              <Button className="w-full bg-black hover:bg-black/80 text-white shadow-sm" onClick={handleSignUp} disabled={!isFirebaseReady || loadingAuth}>
+              <Button className="w-full bg-black hover:bg-black/80 text-white shadow-sm" onClick={handleGoogleSignUp} disabled={!isFirebaseReady || loadingAuth}>
                  {loadingAuth ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Apple className="mr-2 h-5 w-5" />}
                  Sign up with Apple
               </Button>
               <Link href="/login" className='w-full'>
-                <Button className="w-full shadow-sm" disabled={!isFirebaseReady || loadingAuth}>
+                <Button className="w-full shadow-sm" variant="secondary" disabled={!isFirebaseReady || loadingAuth}>
                     <Mail className="mr-2 h-5 w-5" /> Sign up with Email
                 </Button>
               </Link>
@@ -789,7 +789,7 @@ export default function GetStartedPage() {
 
   if (!isClient) {
     return (
-      <div className="flex-1 w-full bg-background relative overflow-hidden">
+      <div className="w-full bg-background relative overflow-hidden">
         <div className="container relative z-10 flex min-h-screen flex-col items-center justify-center px-4 md:px-6">
             <Loader2 className="h-16 w-16 animate-spin text-primary" />
         </div>
@@ -811,19 +811,20 @@ export default function GetStartedPage() {
         }}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
-      <div className="container relative z-10 flex min-h-screen flex-col items-center justify-center px-4 md:px-6">
-        <div className="absolute top-6 left-6 flex items-center gap-2">
+      
+      <div className="container relative z-10 flex min-h-screen flex-col items-center justify-between px-4 md:px-6">
+        <header className="absolute top-6 left-6 flex items-center gap-2">
           <Link href="/dashboard" className="flex items-center gap-2">
             <Leaf className="h-8 w-8 text-primary" />
             <span className="font-bold text-xl tracking-tight">NutriAR</span>
           </Link>
-        </div>
+        </header>
 
-        <div className="flex flex-col items-center justify-center w-full flex-1 py-20">
+        <main className="flex flex-col items-center justify-center w-full flex-1 py-24">
           {renderStep()}
-        </div>
-
-        <div className="sticky bottom-0 w-full bg-background/80 backdrop-blur-sm py-4">
+        </main>
+        
+        <footer className="sticky bottom-0 w-full bg-background/80 backdrop-blur-sm py-4">
           <div className="container max-w-4xl">
             {showProgress && <Progress value={progress} className="mb-4 h-2" />}
             {showNav && (
@@ -854,7 +855,7 @@ export default function GetStartedPage() {
               </div>
             )}
           </div>
-        </div>
+        </footer>
       </div>
     </div>
   );
