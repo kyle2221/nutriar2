@@ -1,7 +1,9 @@
+import { FirebaseProvider } from '@/firebase';
+
 export default function OnboardingLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <>{children}</>;
+  return <FirebaseProvider>{children}</FirebaseProvider>;
 }

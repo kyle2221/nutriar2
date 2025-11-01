@@ -47,6 +47,8 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useAuth } from '@/firebase';
+import { useToast } from '@/hooks/use-toast';
 
 type Step =
   | 'welcome'
@@ -129,6 +131,9 @@ const CustomTooltip = ({ active, payload }: any) => {
 
 export default function GetStartedPage() {
   const router = useRouter();
+  const { signInWithGoogle, isFirebaseReady } = useAuth();
+  const { toast } = useToast();
+
   const [step, setStep] = useState<Step>('welcome');
   const [units, setUnits] = useState<Units>('metric');
   const [formData, setFormData] = useState({
@@ -148,6 +153,8 @@ export default function GetStartedPage() {
   });
   const [plan, setPlan] = useState<PersonalizedPlanOutput | null>(null);
   const [isClient, setIsClient] = useState(false);
+  const [loadingAuth, setLoadingAuth] = useState(false);
+
 
   useEffect(() => {
     setIsClient(true);
@@ -239,10 +246,20 @@ export default function GetStartedPage() {
     }
   };
   
-  const handleSignUp = () => {
-    // In a real app, this would handle the sign-up logic.
-    // For now, it will just redirect to the dashboard.
-    router.push('/dashboard');
+  const handleSignUp = async () => {
+    setLoadingAuth(true);
+    try {
+      await signInWithGoogle();
+      router.push('/dashboard');
+    } catch (err: any) {
+      console.error(err);
+      toast({
+        variant: 'destructive',
+        title: 'Sign Up Failed',
+        description: err.message || 'Could not sign you up with Google. Please try again.',
+      });
+      setLoadingAuth(false);
+    }
   }
 
   const isNextDisabled = () => {
@@ -739,15 +756,16 @@ export default function GetStartedPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Button className="w-full shadow-sm" variant="outline" onClick={handleSignUp}>
-                <GoogleIcon />
+              <Button className="w-full shadow-sm" variant="outline" onClick={handleSignUp} disabled={!isFirebaseReady || loadingAuth}>
+                {loadingAuth ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <GoogleIcon />}
                 <span className="ml-2">Sign up with Google</span>
               </Button>
-              <Button className="w-full bg-black hover:bg-black/80 text-white shadow-sm" onClick={handleSignUp}>
-                <Apple className="mr-2 h-5 w-5" style={{ color: 'hsl(var(--primary-foreground))' }}/> Sign up with Apple
+              <Button className="w-full bg-black hover:bg-black/80 text-white shadow-sm" onClick={handleSignUp} disabled={!isFirebaseReady || loadingAuth}>
+                 {loadingAuth ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Apple className="mr-2 h-5 w-5" />}
+                 Sign up with Apple
               </Button>
               <Link href="/login" className='w-full'>
-                <Button className="w-full shadow-sm">
+                <Button className="w-full shadow-sm" disabled={!isFirebaseReady || loadingAuth}>
                     <Mail className="mr-2 h-5 w-5" /> Sign up with Email
                 </Button>
               </Link>
@@ -841,3 +859,5 @@ export default function GetStartedPage() {
     </div>
   );
 }
+
+    
